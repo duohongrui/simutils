@@ -1,0 +1,25 @@
+Package: simutils
+Type: Package
+Title: Common functions used in data simulation and evaluation
+Version: 0.0.0.9000
+Authors@R: 
+    c(person("Hongrui", "Duo", role = c("aut", "cre"),
+      email = "Duohongrui@cqnu.edu.cn",
+      comment = c(ORCID = "0000-0001-8683-015X")),
+      person("Bo", "Li", role = c("aut"),
+      email = "libo@cqnu.edu.cn",
+      comment = c(ORCID = "0000-0001-9944-0003")))
+Maintainer: Hongrui Duo <duohongrui@cqnu.edu.cn>
+Description: Simutils contains all of the functions that are necessary for the
+    middle processing steps of preparation, simluation and evaluation.
+License: GPL-3
+Depends: R (>= 4.1)
+Imports: harmony (>= 0.1.0), dplyr (>= 1.0.8), SingleCellExperiment (>= 1.14.1)
+Suggests: dynwrap (>= 1.2.2)
+URL: https://github.com/duohongrui/simutils
+BugReports: https://github.com/duohongrui/simutils/issues
+Encoding: UTF-8
+LazyData: true
+Author: Hongrui Duo [aut, cre] (<https://orcid.org/0000-0001-8683-015X>),
+  Bo Li [aut] (<https://orcid.org/0000-0001-9944-0003>)
+RoxygenNote: 7.1.2
