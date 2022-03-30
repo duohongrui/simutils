@@ -280,7 +280,7 @@ match_cells <- function(ref_data, sim_data){
 #' tree_format <- make_tree(ref_data, group = group)
 make_tree <- function(ref_data, group, is_Newick=TRUE, is_parenthetic=FALSE){
 
-  data <- Seurat::CreateSeuratObject(counts = ref_data, verbose=FALSE)
+  data <- Seurat::CreateSeuratObject(counts = t(ref_data), verbose=FALSE)
 
   data <- Seurat::NormalizeData(data,
                                 normalization.method = "LogNormalize",
