@@ -7,7 +7,7 @@
 match_cells(ref_data, sim_data)
 }
 \arguments{
-\item{ref_data, sim_data}{A matrix or dynwrap object created by `dynwrap::wrap_expression()`.
+\item{ref_data, sim_data}{A matrix or dynwrap object created by \code{\link[dynwrap]{wrap_expression}}.
 Note that every row represents a cell and every column represents a gene.
 Simulation and reference data must have the same size.}
 }

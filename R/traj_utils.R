@@ -4,12 +4,14 @@
 #' data. Each cell in reference data corresponds to only one cell in
 #' simulation data and the correlation between them is also calculated and returned.
 #'
-#' @param ref_data,sim_data A matrix or dynwrap object created by `dynwrap::wrap_expression()`.
+#' @param ref_data,sim_data A matrix or dynwrap object created by \code{\link[dynwrap]{wrap_expression}}.
 #' Note that every row represents a cell and every column represents a gene.
 #' Simulation and reference data must have the same size.
 #' @return A list contains the correlation matrix and a dataframe of the paired
 #' cells in reference and simulation data.
 #' @export
+#' @importFrom stats prcomp cor
+#' @importFrom harmony HarmonyMatrix
 #' @examples
 #' # Generate a reference data
 #' set.seed(1)
@@ -27,44 +29,42 @@ match_cells <- function(ref_data, sim_data){
 
   ### Remove batch effect using Harmony
 
-  if("dynwrap::data_wrapper" %in% class(ref_data)){
-
+  if(dynwrap::is_wrapper_with_expression(ref_data)){
 
     if(is.null(ref_data$expression)){
 
       ref_data <- ref_data$counts
 
-      pca_ref <- stats::prcomp(ref_data, rank. = 50)
+      pca_ref <- prcomp(ref_data, rank. = 50)
 
     }else{
 
       ref_data <- ref_data$expression
 
-      pca_ref <- stats::prcomp(ref_data, rank. = 50)
+      pca_ref <- prcomp(ref_data, rank. = 50)
 
     }
   }
 
-  if("matrix" %in% class(ref_data)){
+  if(is.matrix(ref_data)){
 
-    pca_ref <- stats::prcomp(ref_data, rank. = 50)
+    pca_ref <- prcomp(ref_data, rank. = 50)
 
   }
 
-  if("dynwrap::data_wrapper" %in% class(sim_data)){
-
+  if(dynwrap::is_wrapper_with_expression(sim_data)){
 
     if(is.null(sim_data$expression)){
 
       sim_data <- sim_data$counts
 
-      pca_ref <- stats::prcomp(sim_data, rank. = 50)
+      pca_sim <- prcomp(sim_data, rank. = 50)
 
     }else{
 
       sim_data <- sim_data$expression
 
-      pca_ref <- stats::prcomp(sim_data, rank. = 50)
+      pca_sim <- prcomp(sim_data, rank. = 50)
 
     }
   }
@@ -73,36 +73,35 @@ match_cells <- function(ref_data, sim_data){
 
     sim_data <- t(SingleCellExperiment::logcounts(sim_data))
 
-    pca_sim <- stats::prcomp(sim_data, rank. = 50)
+    pca_sim <- prcomp(sim_data, rank. = 50)
 
   }
 
-  if("list" %in% class(sim_data)){
+  if(is.list(sim_data)){
 
-    pca_sim <- stats::prcomp(sim_data$expression, rank. = 50)
+    pca_sim <- prcomp(sim_data$expression, rank. = 50)
 
   }
 
-  if("matrix" %in% class(sim_data)){
+  if(is.matrix(sim_data)){
 
-    pca_sim <- stats::prcomp(sim_data, rank. = 50)
+    pca_sim <- prcomp(sim_data, rank. = 50)
 
   }
 
   pca_input <- rbind(pca_ref$x, pca_sim$x)
-
   meta_data <- data.frame('Classification' = c(rep('reference', nrow(ref_data)),
                                                rep('simulation', nrow(ref_data))))
   set.seed(1)
-  harmony_embeddings <- harmony::HarmonyMatrix(pca_input,
-                                               meta_data,
-                                               'Classification',
-                                               do_pca=FALSE,
-                                               verbose=FALSE)
+  harmony_embeddings <- HarmonyMatrix(pca_input,
+                                      meta_data,
+                                      'Classification',
+                                      do_pca=FALSE,
+                                      verbose=FALSE)
 
 
   ### Calculate correlation matrix
-  cor_result <- stats::cor(t(harmony_embeddings), method = 'spearman')
+  cor_result <- cor(t(harmony_embeddings), method = 'spearman')
 
   index <- dim(cor_result)[1]/2
 
@@ -110,7 +109,7 @@ match_cells <- function(ref_data, sim_data){
 
   print(cor_result[1:5,1:5])
 
-  a <- base::apply(cor_result, 2, function(x) return(unname(which(x==max(x)))))
+  a <- apply(cor_result, 2, function(x) return(unname(which(x==max(x)))))
 
   if(class(a)=='list'){
 
@@ -144,7 +143,6 @@ match_cells <- function(ref_data, sim_data){
         max_ref_cell <- max_ref_cell[1]
 
       }
-
       second_rank_ref_cell <- which(a == i)[-max_ref_cell]
 
       rank_change_index <- which(record_ref_cell_rank[, 1] %in% names(second_rank_ref_cell))
@@ -158,8 +156,6 @@ match_cells <- function(ref_data, sim_data){
         colnames(rep_ref_cell) <- names(second_rank_ref_cell)
 
       }
-
-
       ncell <- length(colnames(rep_ref_cell))
 
       for(w in 1:ncell){
@@ -209,9 +205,7 @@ match_cells <- function(ref_data, sim_data){
 
   }
 
-
-  match_value <- base::apply(as.matrix(cell_pair), 1, value)
-
+  match_value <- apply(as.matrix(cell_pair), 1, value)
 
   cell_pair <- cbind(cell_pair, match_value)
 
@@ -219,13 +213,6 @@ match_cells <- function(ref_data, sim_data){
               'cell_pair'=cell_pair))
 
 }
-
-
-
-
-
-
-
 
 
 #' Convert An Expression Matrix into Tree Format
@@ -241,6 +228,10 @@ match_cells <- function(ref_data, sim_data){
 #' @param is_parenthetic If TRUE, return the parenthetic format.
 #' @return A file of parenthetic format or Newick format
 #' @export
+#' @importFrom  Seurat CreateSeuratObject NormalizeData FindVariableFeatures
+#' ScaleData AverageExpression
+#' @importFrom stringr str_remove_all str_replace_all
+#' @importFrom stats hclust dist
 #'
 #' @examples
 #' ref_data <- matrix(rpois(n = 2500, lambda = 2), nrow = 50)
@@ -250,33 +241,31 @@ match_cells <- function(ref_data, sim_data){
 #' tree_format <- make_tree(ref_data, group = group)
 make_tree <- function(ref_data, group, is_Newick=TRUE, is_parenthetic=FALSE){
 
-  data <- Seurat::CreateSeuratObject(counts = t(ref_data), verbose=FALSE)
+  data <- CreateSeuratObject(counts = t(ref_data), verbose=FALSE)
 
-  data <- Seurat::NormalizeData(data,
-                                normalization.method = "LogNormalize",
-                                scale.factor = 10000,
-                                verbose=FALSE)
+  data <- NormalizeData(data,
+                        normalization.method = "LogNormalize",
+                        scale.factor = 10000,
+                        verbose=FALSE)
 
-  data <- Seurat::FindVariableFeatures(data,
-                                       selection.method = "vst",
-                                       nfeatures = 2000,
-                                       verbose=FALSE)
-
+  data <- FindVariableFeatures(data,
+                               selection.method = "vst",
+                               nfeatures = 2000,
+                               verbose=FALSE)
   all.genes <- rownames(data)
 
-  data <- Seurat::ScaleData(data, features = all.genes, verbose=FALSE)
+  data <- ScaleData(data, features = all.genes, verbose=FALSE)
 
-  data@meta.data$'group' <- stringr::str_remove_all(group, pattern = "[(].+[)]")
+  data@meta.data$'group' <- str_remove_all(group, pattern = "[(].+[)]")
 
   #Get state tree by hierachical clustering on the state means
-  exp_data <- Seurat::AverageExpression(data, slot = 'scale.data', group.by = 'group')
+  exp_data <- AverageExpression(data, slot = 'scale.data', group.by = 'group')
 
-  clu <- stats::hclust(stats::dist(t(exp_data$RNA)), method = 'ward.D')
-
+  clu <- hclust(dist(t(exp_data$RNA)), method = 'ward.D')
 
   for(i in 1:length(clu[["labels"]])){
 
-    clu[["labels"]][i] <- stringr::str_replace_all(clu[["labels"]][i], ",", "_")
+    clu[["labels"]][i] <- str_replace_all(clu[["labels"]][i], ",", "_")
 
   }
 
@@ -305,17 +294,11 @@ make_tree <- function(ref_data, group, is_Newick=TRUE, is_parenthetic=FALSE){
 }
 
 
-
-
-
 .change_info <- function(model_ref, match_result){
 
   model_ref$cell_ids <- match_result[["cell_pair"]][["simulation"]]
-
   model_ref[["progressions"]][["cell_id"]] <- match_result[["cell_pair"]][["simulation"]]
-
   times <- dim(model_ref[["milestone_percentages"]])[1]/length(model_ref[["cell_ids"]])
-
   model_ref[["milestone_percentages"]][["cell_id"]] <- rep(match_result[["cell_pair"]][["simulation"]], times)
 
   return(model_ref)
@@ -323,8 +306,7 @@ make_tree <- function(ref_data, group, is_Newick=TRUE, is_parenthetic=FALSE){
 }
 
 
-
-#' Title Calculate the correlation between geodesic distances
+#' Calculate the Correlation Between Geodesic Distances
 #'
 #' This function calculate the correlation between geodesic distances which refer
 #' to the relative distance of one cell to all other cell in the trajectory. The
@@ -333,49 +315,51 @@ make_tree <- function(ref_data, group, is_Newick=TRUE, is_parenthetic=FALSE){
 #'
 #'
 #' @param model_ref,model_sim A matrix.
-#' @param match_result The result generated by `match_cells` function.
+#' @param match_result The result generated by \code{\link[simutils]{match_cells}} function.
 #' @return A value ranged from 0 to 1
 #' @export
+#' @importFrom dplyr arrange desc
+#' @importFrom stats quantile
 #'
 #' @examples
 #' # Check the docker status
-#' dynwrap::test_docker_installation(detailed = TRUE)
+#' # dynwrap::test_docker_installation(detailed = TRUE)
+#'
+#' # Open Terminal and execute the command
+#' # docker pull dynverse/ti_slingshot:v1.0.3
 #'
 #' # Generate a reference data
 #' set.seed(1)
 #' a <- matrix(rpois(n = 2500, lambda = 2), nrow = 50)
 #' rownames(a) <- paste0("cell_", 1:ncol(a))
 #' colnames(a) <- paste0("gene_", 1:nrow(a))
-
 #' dataset_ref <- dynwrap::wrap_expression(
 #'   counts = a,
 #'   expression = log2(a+1)
 #' )
+#' # Trajectory inference
 
-#' model_ref <- dynwrap::infer_trajectory(dataset_ref, 'slingshot')
-
-# Generate a simulation data
+#'
+#' #Generate a simulation data
 #' set.seed(1)
 #' b <- matrix(rpois(n = 2500, lambda = 1.5), nrow = 50)
 #' rownames(b) <- paste0("fcell_", 1:ncol(b))
 #' colnames(b) <- paste0("fgene_", 1:nrow(b))
-
 #' dataset_sim <- dynwrap::wrap_expression(
 #'   counts = b,
 #'   expression = log2(b+1)
 #' )
+#' # Trajectory inference
 
-#' model_sim <- dynwrap::infer_trajectory(dataset_sim, 'slingshot')
+#'
+#' # Match cells
+#' match_result <- match_cells(ref_data = dataset_ref,
+#'                             sim_data = dataset_sim)
 
-# Match cells
-#' match_result <- simutils::match_cells(ref_data = dataset_ref, sim_data = dataset_sim)
+cal_cor_dist <- function(model_ref, model_sim, match_result){
 
-#' cor_dist <- cal_corr(model_ref = model_ref, model_sim = model_sim, match_result = match_result)
-cal_corr <- function(model_ref, model_sim, match_result){
-
-  m <- dplyr::arrange(match_result$cell_pair,
-                      dplyr::desc(match_result$cell_pair$match_value))
-  print(utils::head(m))
+  m <- arrange(match_result$cell_pair,
+               desc(match_result$cell_pair$match_value))
 
   model_ref <- .change_info(model_ref = model_ref,
                             match_result = match_result)
@@ -386,8 +370,7 @@ cal_corr <- function(model_ref, model_sim, match_result){
   model_ref <- dynwrap::add_cell_waypoints(trajectory = model_ref,
                                            num_cells_selected = 50)
 
-  waypoints_num <- round(stats::quantile(1:length(model_ref[["cell_ids"]]), seq(0.05, 0.5, 0.05)))
-  print(waypoints_num)
+  waypoints_num <- round(quantile(1:length(model_ref[["cell_ids"]]), seq(0.05, 0.5, 0.05)))
 
   record <- data.frame()
 
@@ -414,11 +397,259 @@ cal_corr <- function(model_ref, model_sim, match_result){
 }
 
 
+#' Calculate Four Metrics to Compare Two Trajectories
+#'
+#' @param model_ref,model_sim The object generated by \code{\link[dynwrap]{infer_trajectory}}.
+#'
+#' @return A list containing the results of four metrics.
+#' @export
+#'
+#' @examples
+#' # Check the docker status
+#' # dynwrap::test_docker_installation(detailed = TRUE)
+#'
+#' # Generate a reference data
+#' set.seed(1)
+#' a <- matrix(rpois(n = 2500, lambda = 2), nrow = 50)
+#' rownames(a) <- paste0("cell_", 1:ncol(a))
+#' colnames(a) <- paste0("gene_", 1:nrow(a))
+#' dataset_ref <- dynwrap::wrap_expression(
+#'   counts = a,
+#'   expression = log2(a+1)
+#' )
+
+#' #Generate a simulation data
+#' set.seed(1)
+#' b <- matrix(rpois(n = 2500, lambda = 1.5), nrow = 50)
+#' rownames(b) <- paste0("fcell_", 1:ncol(b))
+#' colnames(b) <- paste0("fgene_", 1:nrow(b))
+#' dataset_sim <- dynwrap::wrap_expression(
+#'   counts = b,
+#'   expression = log2(b+1)
+#' )
+
+
+calculate_traj_metrics <- function(model_ref,
+                                   model_sim){
+  ## Match cells
+  match_result <- match_cells(ref_data = model_ref, sim_data = model_sim)
+
+  ## Calculate correlation
+  cor_dist <- cal_cor_dist(model_ref = model_ref,
+                           model_sim = model_sim,
+                           match_result = match_result)
+
+  ## Change information in reference data
+  model_ref <- .change_info(model_ref = model_ref,
+                            match_result = match_result)
+
+  ## Calculate metrics
+  him <- dyneval::calculate_metrics(dataset = model_ref,
+                                    model = model_sim,
+                                    metrics = "him")
+
+  f1_branches <- dyneval::calculate_metrics(dataset = model_ref,
+                                            model = model_sim,
+                                            metrics = "F1_branches")
+
+  f1_milestones <- dyneval::calculate_metrics(dataset = model_ref,
+                                              model = model_sim,
+                                              metrics = "F1_milestones")
+
+  return(list(him, f1_branches, f1_milestones, cor_dist))
+
+}
+
+
+#' Add Gene Expression Data to Model
+#'
+#' This function is used to add the gene expression data into the result of
+#' trajectory inference generated by \code{\link[dynwrap]{infer_trajectory}} function.
+#'
+#' @param model A dynwrap::with_trajectory object generated by \code{\link[dynwrap]{infer_trajectory}}.
+#' function.
+#' @param dataset A dynwrap::data_wrapper object generated by \code{\link[dynwrap]{infer_trajectory}}.
+#' function.
+#'
+#' @return A new dynwrap::with_trajectory object.
+#' @export
+#'
+#' @examples
+#' # Generate a reference data
+#' set.seed(1)
+#' a <- matrix(rpois(n = 2500, lambda = 2), nrow = 50)
+#' rownames(a) <- paste0("cell", 1:ncol(a))
+#' colnames(a) <- paste0("gene", 1:nrow(a))
+#' dataset_ref <- dynwrap::wrap_expression(
+#'   counts = a,
+#'   expression = log2(a+1)
+#' )
+#' # Trajectory inference
+
+add_data_to_model <- function(model, dataset){
+
+  checkmate::assertClass(model, "dynwrap::with_trajectory")
+  checkmate::assertClass(dataset, "dynwrap::data_wrapper")
+
+  if(is.null(model[["counts"]])){
+
+    model <- dynwrap::add_expression(dataset = model,
+                                     counts = dataset[['counts']])
+
+  }
+
+  if(is.null(model[["expression"]])){
+
+    model <- dynwrap::add_expression(dataset = model,
+                                     expression = dataset[['expression']])
+
+  }
+
+  return(model)
+
+}
 
 
 
+#' Synthesize Fake Cells
+#'
+#' This function is used to synthesize fake cells via linear combination when the
+#' number of cells is not the power of 2. First, we need cell group information
+#' where real cells are sampled from. If no group information input, we perform
+#' k-means algorithm on the data and use \code{\link[NbClust]{NbClust}} funciton
+#' to determin the best cluster number. Finally, we merge the synthesized and
+#' real data as the output result.
+#'
+#' @param dataset A matrix or the result generated by \code{\link[dynwrap]{wrap_expression}}
+#' @param group A vector. Default is NULL.
+#' @param seed Integer. A random seed.
+#'
+#' @return A list generated by \code{\link[dynwrap]{wrap_expression}}
+#' @importFrom stats runif
+#' @export
+#'
+#' @examples
+#' set.seed(1)
+#' a <- matrix(rpois(n = 2500, lambda = 2), nrow = 50)
+#' rownames(a) <- paste0("cell_", 1:ncol(a))
+#' colnames(a) <- paste0("gene_", 1:nrow(a))
+#' dataset_ref <- dynwrap::wrap_expression(
+#'   counts = a,
+#'   expression = log2(a+1)
+#' )
+#' result <- syn_cell(dataset = a, seed = 2)
+syn_cell <- function(dataset, group = NULL, seed){
+
+  if(is.matrix(dataset)){
+
+    dataset <- dynwrap::wrap_expression(counts = dataset,
+                                        expression = log2(dataset+1))
+
+  }
+
+  if(!dynwrap::is_wrapper_with_grouping(dataset)){
+
+    message("Performing k-means and determin the best number of clusters...")
+
+    if(is.null(dataset[['expression']])){
+
+      stop("No expression data is detected. Please use dynwrap::wrap_expression function\nto specify expression parameter.")
+
+    }
+
+    clust <- NbClust::NbClust(data = dataset[['expression']],
+                              distance = 'euclidean',
+                              min.nc = 2,
+                              max.nc = sqrt(nrow(dataset[['expression']])),
+                              method = "kmeans",
+                              index = "silhouette")
+
+    dataset <- dynwrap::add_grouping(dataset = dataset,
+                                     grouping = clust[["Best.partition"]])
+
+  }
+
+  if(is.null(dataset[['counts']])){
+
+    stop("No counts data is detected. Please use dynwrap::wrap_expression function\nto specify counts parameter.")
+
+  }
+
+  ncells <- length(dataset$cell_ids)
+
+  if(log2(ncells) != as.integer(log2(ncells))){
+
+    ## The number of additional cells which should be synthesized.
+    diff_num <- 2^ceiling(log2(ncells))-ncells
+
+    group <- dataset$group_ids
+
+    group_num <- length(group)
+
+    if(diff_num < group_num){
+
+      group <- group[(group_num-diff_num+1):group_num]
+
+    }
 
 
+    ## Allocate cell number for every group
+    num_allo <- c(rep(round(diff_num/group_num), group_num-1),
+                  diff_num-sum(rep(round(diff_num/group_num), group_num-1)))
 
+    add_syn_result <- matrix(ncol = dim(dataset[["counts"]])[2])
+
+
+    ### Synthesize fake cells
+    message("Synthesize fake cells...")
+    for(i in 1:group_num){
+
+      index <- which(dataset$grouping == group[i])
+
+      set.seed(seed)
+
+      add_syn <- matrix(data = runif(10*num_allo[i], min = 0, max = 0.2),
+                        nrow = num_allo[i])
+
+
+      set.seed(seed)
+
+      tmp <- dataset[["counts"]][sample(index, 10, replace = TRUE), ]
+
+      add_syn_matrix <- add_syn %*% tmp
+
+      add_syn_matrix <- round(add_syn_matrix)
+
+      add_syn_result <- rbind(add_syn_result, add_syn_matrix)
+
+    }
+
+    ## Add synthesized information in reference data
+    add_syn_result <- add_syn_result[-1, ]
+
+    message("Add the synthesized data to the real data...")
+    syncell_id <- paste0(rep('syncell', diff_num), seq(1, diff_num))
+
+    rownames(add_syn_result) <- syncell_id
+
+    dataset[["cell_ids"]] <- c(dataset[["cell_ids"]], syncell_id)
+
+    group_tmp <- rep(group, num_allo)
+
+    names(group_tmp) <- syncell_id
+
+    dataset[["grouping"]] <- c(dataset[["grouping"]], group_tmp)
+
+    dataset[["counts"]] <- rbind(dataset[["counts"]], add_syn_result)
+
+    dataset[["expression"]] <- rbind(dataset[["expression"]], log2(add_syn_result+1))
+
+    message("Done")
+
+  }
+
+  return(dataset)
+
+}
 
 
