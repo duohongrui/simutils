@@ -28,7 +28,9 @@ Imports: harmony (>= 0.1.0),
          dynparam (>= 1.0.2),
          dynguidelines (>= 1.0.1),
          checkmate (>= 2.0.0),
-         NbClust (>= 3.0)
+         NbClust (>= 3.0),
+         assertthat,
+         tibble
 Suggests:
 URL: https://github.com/duohongrui/simutils
 BugReports: https://github.com/duohongrui/simutils/issues
