@@ -4,7 +4,13 @@
 \alias{param_Boolean}
 \title{Define Logical Parameters}
 \usage{
-param_Boolean(id, type = "logical", default, description)
+param_Boolean(
+  id,
+  type = "logical",
+  default,
+  description,
+  process = "simulation"
+)
 }
 \arguments{
 \item{id}{A parameter name.}
@@ -14,12 +20,15 @@ param_Boolean(id, type = "logical", default, description)
 \item{default}{The default value. TRUE or FALSE.}
 
 \item{description}{The description information of this parameter.}
+
+\item{process}{Two options, simulation or estimation. Which process does this
+parameter involved in.}
 }
 \value{
 A list.
 }
 \description{
-Define Logical Parameters
+Define a Boolean parameter.
 }
 \examples{
 verbose <- param_Boolean(id = "verbose",

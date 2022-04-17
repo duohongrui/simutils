@@ -11,7 +11,8 @@ param_numeric(
   lower = NULL,
   upper = NULL,
   border = TRUE,
-  description
+  description,
+  process = "simulation"
 )
 }
 \arguments{
@@ -28,12 +29,15 @@ param_numeric(
 \item{border}{Boolean. Whether the default value can get to the range border.}
 
 \item{description}{The description information of this parameter.}
+
+\item{process}{Two options, simulation or estimation. Which process does this
+parameter involved in.}
 }
 \value{
 A list.
 }
 \description{
-Define Numeric Parameters
+Define a numeric parameter.
 }
 \examples{
 probability <- param_numeric(id = "probability",
@@ -41,5 +45,5 @@ probability <- param_numeric(id = "probability",
                              lower = 0,
                              upper = 1,
                              border = TRUE,
-                             description = "A numeric value to specify the probability to randomly select the right number")
+                             description = "The probability to select the right number")
 }

@@ -4,7 +4,14 @@
 \alias{param_character}
 \title{Define Character Parameters}
 \usage{
-param_character(id, type = "character", default, alternatives, description)
+param_character(
+  id,
+  type = "character",
+  default,
+  alternatives,
+  description,
+  process = "simulation"
+)
 }
 \arguments{
 \item{id}{A parameter name.}
@@ -16,16 +23,21 @@ param_character(id, type = "character", default, alternatives, description)
 \item{alternatives}{Options that can be chosen.}
 
 \item{description}{The description information of this parameter.}
+
+\item{process}{Two options, simulation or estimation. Which process does this
+parameter involved in.}
 }
 \value{
 A list.
 }
 \description{
-Define Character Parameters
+Define a character parameter.
 }
 \examples{
 dimension_method <- param_character(id = 'dimension_method',
                                     default = "UMAP",
+                                    process = "estimation",
                                     alternatives = c("UMAP", "TSNE", "PCA"),
-                                    description = " A character string specifying the algorithm to use for dimensionality reduction.")
+                                    description = "The algorithm to use for
+                                                   dimension reduction.")
 }
