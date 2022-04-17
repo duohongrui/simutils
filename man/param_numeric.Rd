@@ -11,7 +11,7 @@ param_numeric(
   lower = NULL,
   upper = NULL,
   border = TRUE,
-  description,
+  description = NULL,
   process = "simulation"
 )
 }

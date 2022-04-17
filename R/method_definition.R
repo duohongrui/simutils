@@ -17,7 +17,7 @@
 #' programming = "Python",
 #' url = "www.xxxx.com",
 #' authors = authors_definition(first = "Duo",
-#'                              last = "hongrui",
+#'                              last = "Zappia",
 #'                              email = "duohongrui@cqnu.edu.cn",
 #'                              github = "https://github.com/duohongrui",
 #'                              orcid = "0000-0001-8683-015X"),

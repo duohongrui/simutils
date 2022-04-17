@@ -106,12 +106,11 @@ param_numeric <- function(id,
                           lower = NULL,
                           upper = NULL,
                           border = TRUE,
-                          description,
+                          description = NULL,
                           process = "simulation"){
 
   assertthat::assert_that(is.character(id),
-                          is.numeric(default),
-                          is.character(description))
+                          is.numeric(default))
   if(type != "numeric"){
     stop("This is not fit for other types except for numeric values")
   }
@@ -184,12 +183,11 @@ param_integer <- function(id,
                           lower = NULL,
                           upper = NULL,
                           border = TRUE,
-                          description,
+                          description = NULL,
                           process = "simulation"){
 
   assertthat::assert_that(is.character(id),
-                          is.integer(default),
-                          is.character(description))
+                          is.integer(default))
   if(type != "integer"){
     stop("This is not fit for other types except for integers")
   }
@@ -253,12 +251,11 @@ param_integer <- function(id,
 param_Boolean <- function(id,
                           type = "logical",
                           default,
-                          description,
+                          description = NULL,
                           process = "simulation"){
 
   assertthat::assert_that(is.character(id),
-                          is.logical(default),
-                          is.character(description))
+                          is.logical(default))
   if(type != "logical"){
     stop("This is not fit for other types except for logical values")
   }
@@ -299,12 +296,11 @@ param_character <- function(id,
                             type = "character",
                             default,
                             alternatives,
-                            description,
+                            description = NULL,
                             process = "simulation"){
 
   assertthat::assert_that(is.character(id),
-                          is.character(default),
-                          is.character(description))
+                          is.character(default))
   if(type != "character"){
     stop("This is not fit for other types except for characters")
   }
@@ -323,3 +319,37 @@ param_character <- function(id,
 }
 
 
+#' Define Vector Parameters
+#'
+#' @param id A parameter name.
+#' @param type The type of parameter.
+#' @param default The default values. Length to one or more.
+#' @param description The description information of this parameter.
+#' @param process Two options, simulation or estimation. Which process does this
+#' parameter involved in.
+#'
+#' @return A list.
+#' @export
+#'
+#' @examples
+#' path_method <- param_vector(
+#' id = 'path',
+#' default = c(0,1,2,3),
+#' process = "simulation",
+#' description = "The algorithm to use for dimension reduction."
+#' )
+param_vector <- function(id,
+                         type = "vector",
+                         default,
+                         description = NULL,
+                         process = "simulation"){
+
+  assertthat::assert_that(is.character(id))
+
+  tibble::lst(id,
+              type,
+              default,
+              process,
+              description) %>% add_class("vector_parameter")
+
+}

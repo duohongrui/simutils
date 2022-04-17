@@ -8,7 +8,7 @@ param_Boolean(
   id,
   type = "logical",
   default,
-  description,
+  description = NULL,
   process = "simulation"
 )
 }
