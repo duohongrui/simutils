@@ -123,21 +123,16 @@ param_numeric <- function(id,
     cat("The parameter upper is not defined and will be set to Inf")
     upper <- Inf
   }
-  assertthat::assert_that(is.numeric(lower),
-                          is.numeric(upper))
-  if(lower >= upper){
-    stop('Lower value must be smaller than upper value')
-  }
-
-  if(default < lower | default > upper){
-    stop("The defaul value is not between the lower and the upper")
-  }
-  if(!border){
-    if(default == lower | default == upper){
-      stop("The defaul value can not euqal to the lower or the upper\nPlease reset!")
+  if(!is.infinite(lower) & !is.infinite(upper)){
+    if(lower >= upper){
+      stop('Lower value must be smaller than upper value')
+    }
+    if(!border){
+      if(default == lower | default == upper){
+        stop("The defaul value can not euqal to the lower or the upper\nPlease reset!")
+      }
     }
   }
-
   tibble::lst(id,
               type,
               default,
@@ -192,24 +187,11 @@ param_integer <- function(id,
     stop("This is not fit for other types except for integers")
   }
 
-  if(is.null(lower)){
-    cat("The parameter lower is not defined and will be set to -Inf")
-    lower <- -Inf
+  if(!is.null(lower) & !is.null(upper)){
+    if(lower >= upper){
+      stop('Lower value must be smaller than upper value')
+    }
   }
-  if(is.null(upper)){
-    cat("The parameter upper is not defined and will be set to Inf")
-    upper <- Inf
-  }
-  assertthat::assert_that(is.integer(lower),
-                          is.integer(upper))
-  if(lower >= upper){
-    stop('Lower value must be smaller than upper value')
-  }
-
-  if(default < lower | default > upper){
-    stop("The defaul value is not between the lower and the upper")
-  }
-
   if(!border){
     if(default == lower | default == upper){
       stop("The defaul value can not euqal to the lower or the upper\nPlease reset!")
