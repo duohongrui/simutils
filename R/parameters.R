@@ -353,7 +353,7 @@ param_reference <- function(id = NULL,
                             description = NULL,
                             process = "simulation"){
   assertthat::assert_that(is.character(id))
-  assertthat::assert_that(type %in% alternatives)
+  assertthat::assert_that(all(type %in% alternatives))
   tibble::lst(id,
               type,
               alternatives,
