@@ -2,7 +2,7 @@
 % Please edit documentation in R/parameters.R
 \name{param_dataframe}
 \alias{param_dataframe}
-\title{Define Dataframe Object Parameter}
+\title{Define Dataframe Object Parameters}
 \usage{
 param_dataframe(
   id = NULL,
@@ -25,7 +25,7 @@ parameter involved in.}
 A list.
 }
 \description{
-Define Dataframe Object Parameter
+Define Dataframe Object Parameters
 }
 \examples{
 network_input <- param_dataframe(

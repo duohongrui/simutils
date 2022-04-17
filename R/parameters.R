@@ -328,7 +328,7 @@ param_vector <- function(id,
 }
 
 
-#' Define Inference Dataset Parameter
+#' Define Reference Dataset Parameters
 #'
 #' @param id A parameter name. Default is NULL, which means no reference matrix input.
 #' @param type The type of parameter. Default is NULL. See \code{alternatives}.
@@ -341,13 +341,13 @@ param_vector <- function(id,
 #' @export
 #'
 #' @examples
-#' matrix_input_method <- param_inference(
+#' matrix_input_method <- param_reference(
 #' id = 'matrix_input',
 #' type = "SingleCellExperiment",
 #' process = "estimation",
 #' description = "The matrix to use for parameters estimating."
 #' )
-param_inference <- function(id = NULL,
+param_reference <- function(id = NULL,
                             type = NULL,
                             alternatives = c("matrix", "SingleCellExperiment"),
                             description = NULL,
@@ -362,7 +362,7 @@ param_inference <- function(id = NULL,
 }
 
 
-#' Define Dataframe Object Parameter
+#' Define Dataframe Object Parameters
 #'
 #' @param id A parameter name. Default is NULL, which means no dataframe object input.
 #' @param type The type of parameter. Must be a data.frame or tibble.
@@ -388,4 +388,32 @@ param_dataframe <- function(id = NULL,
               type,
               process,
               description) %>% add_class("dataframe_parameter")
+}
+
+
+#' Define Other Object Parameters
+#'
+#' @param id A parameter name. Default is NULL.
+#' @param type The type of parameter, which can be a list or any other object you input.
+#' @param description The description information of this parameter.
+#' @param process Two options, simulation or estimation. Which process does this
+#' parameter involved in.
+#'
+#' @return A list.
+#' @export
+#'
+#' @examples
+#' list_input <- param_others(
+#' id = 'input_list',
+#' type = "list",
+#' process = "simulation"
+#' )
+param_others <- function(id = NULL,
+                         type = NULL,
+                         description = NULL,
+                         process = "simulation"){
+  tibble::lst(id,
+              type,
+              process,
+              description) %>% add_class(base::paste0(type, "_parameter"))
 }
