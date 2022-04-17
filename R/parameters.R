@@ -319,6 +319,8 @@ param_vector <- function(id,
                          description = NULL,
                          process = "simulation"){
   assertthat::assert_that(is.character(id))
+  assertthat::assert_that(length(id) == length(default))
+
   tibble::lst(id,
               type,
               default,
