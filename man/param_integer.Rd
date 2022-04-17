@@ -40,11 +40,13 @@ A list.
 Define an integer parameter.
 }
 \examples{
-group_num <- param_integer(id = "group_num",
-                           default = 1L,
-                           lower = 1L,
-                           upper = 50L,
-                           border = TRUE,
-                           process = "estimation",
-                           description = "How many groups to be simulated")
+group_num <- param_integer(
+id = "group_num",
+default = 1L,
+lower = 1L,
+upper = 50L,
+border = TRUE,
+process = "estimation",
+description = "How many groups to be simulated"
+)
 }

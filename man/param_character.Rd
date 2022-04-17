@@ -34,10 +34,11 @@ A list.
 Define a character parameter.
 }
 \examples{
-dimension_method <- param_character(id = 'dimension_method',
-                                    default = "UMAP",
-                                    process = "estimation",
-                                    alternatives = c("UMAP", "TSNE", "PCA"),
-                                    description = "The algorithm to use for
-                                                   dimension reduction.")
+dimension_method <- param_character(
+id = 'dimension_method',
+default = "UMAP",
+process = "estimation",
+alternatives = c("UMAP", "TSNE", "PCA"),
+description = "The algorithm to use for dimension reduction."
+)
 }

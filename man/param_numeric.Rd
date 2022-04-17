@@ -40,10 +40,12 @@ A list.
 Define a numeric parameter.
 }
 \examples{
-probability <- param_numeric(id = "probability",
-                             default = 0.5,
-                             lower = 0,
-                             upper = 1,
-                             border = TRUE,
-                             description = "The probability to select the right number")
+probability <- param_numeric(
+id = "probability",
+default = 0.5,
+lower = 0,
+upper = 1,
+border = TRUE,
+description = "The probability to select the right number"
+)
 }

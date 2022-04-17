@@ -31,7 +31,9 @@ A list.
 Define a Boolean parameter.
 }
 \examples{
-verbose <- param_Boolean(id = "verbose",
-                         default = TRUE,
-                         description = "Whether to return the information during the process")
+verbose <- param_Boolean(
+id = "verbose",
+default = TRUE,
+description = "Whether to return the information during the process"
+)
 }

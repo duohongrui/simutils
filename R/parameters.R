@@ -9,7 +9,6 @@
 #' @export
 #'
 is_define_parameters <- function(parameters_list){
-
   purrr::map(parameters_list, .f = function(x){
     assertthat::assert_that(is.list(x))
     if(!any(base::grepl(x = unlist(class(x)), pattern = "_parameter"))){
@@ -19,7 +18,6 @@ is_define_parameters <- function(parameters_list){
   })
 
 }
-
 
 
 #' Generate Parameter sets
@@ -94,12 +92,14 @@ parameter_sets <- function(...){
 #' @export
 #'
 #' @examples
-#' probability <- param_numeric(id = "probability",
-#'                              default = 0.5,
-#'                              lower = 0,
-#'                              upper = 1,
-#'                              border = TRUE,
-#'                              description = "The probability to select the right number")
+#' probability <- param_numeric(
+#' id = "probability",
+#' default = 0.5,
+#' lower = 0,
+#' upper = 1,
+#' border = TRUE,
+#' description = "The probability to select the right number"
+#' )
 param_numeric <- function(id,
                           type = "numeric",
                           default,
@@ -151,7 +151,6 @@ param_numeric <- function(id,
 }
 
 
-
 #' Define Integer Parameters
 #'
 #' @description Define an integer parameter.
@@ -170,13 +169,15 @@ param_numeric <- function(id,
 #' @export
 #'
 #' @examples
-#' group_num <- param_integer(id = "group_num",
-#'                            default = 1L,
-#'                            lower = 1L,
-#'                            upper = 50L,
-#'                            border = TRUE,
-#'                            process = "estimation",
-#'                            description = "How many groups to be simulated")
+#' group_num <- param_integer(
+#' id = "group_num",
+#' default = 1L,
+#' lower = 1L,
+#' upper = 50L,
+#' border = TRUE,
+#' process = "estimation",
+#' description = "How many groups to be simulated"
+#' )
 param_integer <- function(id,
                           type = "integer",
                           default,
@@ -229,7 +230,6 @@ param_integer <- function(id,
 }
 
 
-
 #' Define Logical Parameters
 #'
 #' @description Define a Boolean parameter.
@@ -245,9 +245,11 @@ param_integer <- function(id,
 #' @export
 #'
 #' @examples
-#' verbose <- param_Boolean(id = "verbose",
-#'                          default = TRUE,
-#'                          description = "Whether to return the information during the process")
+#' verbose <- param_Boolean(
+#' id = "verbose",
+#' default = TRUE,
+#' description = "Whether to return the information during the process"
+#' )
 param_Boolean <- function(id,
                           type = "logical",
                           default,
@@ -270,7 +272,6 @@ param_Boolean <- function(id,
 }
 
 
-
 #' Define Character Parameters
 #'
 #' @description  Define a character parameter.
@@ -287,12 +288,13 @@ param_Boolean <- function(id,
 #' @export
 #'
 #' @examples
-#' dimension_method <- param_character(id = 'dimension_method',
-#'                                     default = "UMAP",
-#'                                     process = "estimation",
-#'                                     alternatives = c("UMAP", "TSNE", "PCA"),
-#'                                     description = "The algorithm to use for
-#'                                                    dimension reduction.")
+#' dimension_method <- param_character(
+#' id = 'dimension_method',
+#' default = "UMAP",
+#' process = "estimation",
+#' alternatives = c("UMAP", "TSNE", "PCA"),
+#' description = "The algorithm to use for dimension reduction."
+#' )
 param_character <- function(id,
                             type = "character",
                             default,
