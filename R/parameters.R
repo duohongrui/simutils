@@ -108,7 +108,6 @@ param_numeric <- function(id,
                           border = TRUE,
                           description = NULL,
                           process = "simulation"){
-
   assertthat::assert_that(is.character(id),
                           is.numeric(default))
   if(type != "numeric"){
@@ -141,7 +140,6 @@ param_numeric <- function(id,
               border,
               process,
               description) %>% add_class("numeric_parameter")
-
 }
 
 
@@ -197,7 +195,6 @@ param_integer <- function(id,
       stop("The defaul value can not euqal to the lower or the upper\nPlease reset!")
     }
   }
-
   tibble::lst(id,
               type,
               default,
@@ -235,13 +232,11 @@ param_Boolean <- function(id,
                           default,
                           description = NULL,
                           process = "simulation"){
-
   assertthat::assert_that(is.character(id),
                           is.logical(default))
   if(type != "logical"){
     stop("This is not fit for other types except for logical values")
   }
-
   tibble::lst(id,
               type,
               default,
@@ -297,7 +292,6 @@ param_character <- function(id,
               alternatives,
               process,
               description) %>% add_class("character_parameter")
-
 }
 
 
@@ -324,9 +318,7 @@ param_vector <- function(id,
                          default,
                          description = NULL,
                          process = "simulation"){
-
   assertthat::assert_that(is.character(id))
-
   tibble::lst(id,
               type,
               default,
@@ -360,15 +352,40 @@ param_inference <- function(id = NULL,
                             alternatives = c("matrix", "SingleCellExperiment"),
                             description = NULL,
                             process = "simulation"){
-
   assertthat::assert_that(is.character(id))
-
   assertthat::assert_that(type %in% alternatives)
-
   tibble::lst(id,
               type,
               alternatives,
               process,
               description) %>% add_class("inference_parameter")
+}
 
+
+#' Define Dataframe Object Parameter
+#'
+#' @param id A parameter name. Default is NULL, which means no dataframe object input.
+#' @param type The type of parameter. Must be a data.frame or tibble.
+#' @param description The description information of this parameter.
+#' @param process Two options, simulation or estimation. Which process does this
+#' parameter involved in.
+#'
+#' @return A list.
+#' @export
+#'
+#' @examples
+#' network_input <- param_dataframe(
+#' id = 'network',
+#' process = "simulation",
+#' description = "The network information is used to show the relationship of nodes."
+#' )
+param_dataframe <- function(id = NULL,
+                            type = c("data.frame", "tibble"),
+                            description = NULL,
+                            process = "simulation"){
+  assertthat::assert_that(is.character(id))
+  tibble::lst(id,
+              type,
+              process,
+              description) %>% add_class("dataframe_parameter")
 }
