@@ -317,8 +317,7 @@ param_character <- function(id,
 #' path_method <- param_vector(
 #' id = 'path',
 #' default = c(0,1,2,3),
-#' process = "simulation",
-#' description = "The algorithm to use for dimension reduction."
+#' process = "simulation"
 #' )
 param_vector <- function(id,
                          type = "vector",
@@ -333,5 +332,43 @@ param_vector <- function(id,
               default,
               process,
               description) %>% add_class("vector_parameter")
+
+}
+
+
+#' Define Inference Dataset Parameter
+#'
+#' @param id A parameter name. Default is NULL, which means no reference matrix input.
+#' @param type The type of parameter. Default is NULL. See \code{alternatives}.
+#' @param alternatives Alternative options.
+#' @param description The description information of this parameter.
+#' @param process Two options, simulation or estimation. Which process does this
+#' parameter involved in.
+#'
+#' @return A list.
+#' @export
+#'
+#' @examples
+#' matrix_input_method <- param_inference(
+#' id = 'matrix_input',
+#' type = "SingleCellExperiment",
+#' process = "estimation",
+#' description = "The matrix to use for parameters estimating."
+#' )
+param_inference <- function(id = NULL,
+                            type = NULL,
+                            alternatives = c("matrix", "SingleCellExperiment"),
+                            description = NULL,
+                            process = "simulation"){
+
+  assertthat::assert_that(is.character(id))
+
+  assertthat::assert_that(type %in% alternatives)
+
+  tibble::lst(id,
+              type,
+              alternatives,
+              process,
+              description) %>% add_class("inference_parameter")
 
 }

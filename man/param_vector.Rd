@@ -34,7 +34,6 @@ Define Vector Parameters
 path_method <- param_vector(
 id = 'path',
 default = c(0,1,2,3),
-process = "simulation",
-description = "The algorithm to use for dimension reduction."
+process = "simulation"
 )
 }
