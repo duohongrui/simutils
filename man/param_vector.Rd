@@ -7,7 +7,7 @@
 param_vector(
   id,
   type = "vector",
-  default,
+  default = NULL,
   description = NULL,
   process = "simulation"
 )

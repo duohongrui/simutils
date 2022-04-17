@@ -12,7 +12,9 @@ is_define_parameters <- function(parameters_list){
   purrr::map(parameters_list, .f = function(x){
     assertthat::assert_that(is.list(x))
     if(!any(base::grepl(x = unlist(class(x)), pattern = "_parameter"))){
-      cat(x[["id"]], "is not supported", sep = " ")
+      if(!is.null(x[["id"]])){
+        cat(x[["id"]], "is not supported", sep = " ")
+      }
       return(FALSE)
     }else return(TRUE)
   })
@@ -319,10 +321,6 @@ param_vector <- function(id,
                          description = NULL,
                          process = "simulation"){
   assertthat::assert_that(is.character(id))
-
-  if(!is.null(id) & !is.null(default)){
-    assertthat::assert_that(length(id) == length(default))
-  }
   tibble::lst(id,
               type,
               default,
@@ -416,6 +414,7 @@ param_others <- function(id = NULL,
                          type = NULL,
                          description = NULL,
                          process = "simulation"){
+  if(!is.null(id) & is.null(type)) stop("Please set a type to the parameter.")
   tibble::lst(id,
               type,
               process,
