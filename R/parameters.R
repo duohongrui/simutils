@@ -412,11 +412,13 @@ param_dataframe <- function(id = NULL,
 #' )
 param_others <- function(id = NULL,
                          type = NULL,
+                         default = NULL,
                          description = NULL,
                          process = "simulation"){
   if(!is.null(id) & is.null(type)) stop("Please set a type to the parameter.")
   tibble::lst(id,
               type,
               process,
+              default,
               description) %>% add_class(base::paste0(type, "_parameter"))
 }

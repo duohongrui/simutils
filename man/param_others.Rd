@@ -7,6 +7,7 @@
 param_others(
   id = NULL,
   type = NULL,
+  default = NULL,
   description = NULL,
   process = "simulation"
 )
