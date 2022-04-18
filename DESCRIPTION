@@ -31,7 +31,8 @@ Imports: harmony (>= 0.1.0),
          NbClust (>= 3.0),
          assertthat,
          tibble,
-         purrr
+         purrr,
+         crayon
 Suggests:
 URL: https://github.com/duohongrui/simutils
 BugReports: https://github.com/duohongrui/simutils/issues
