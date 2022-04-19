@@ -42,5 +42,3 @@ set_param <- function(method, param_list, reset){
   }) %>% setNames(method)
   param_name
 }
-
-
