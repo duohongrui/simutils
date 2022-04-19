@@ -11,7 +11,3 @@ add_class <- function(x, define_class){
   base::class(x) <- c(base::class(x), define_class)
   x
 }
-
-
-
-

@@ -11,7 +11,7 @@
 #' @examples
 #' ## The first example
 #' # reset <- list(splat = "nCells:10000")
-#' # devtools::install_github("duohongrui/simmethods")
+#' # if (!require("simmethods", quietly = TRUE)) devtools::install_github("duohongrui/simmethods")
 #' # param_list <- simmethods::get_method()
 #' # new_param_list <- set_param(method = "splat", param_list = param_list, reset = reset)
 #'
@@ -19,7 +19,7 @@
 #' # method <- c("splat", "PROSSTT")
 #' # reset <- list(splat = c("nCells:2000", "nGenes:20000"),
 #' #               PROSSTT = c("nCells:5000", "nGenes:5000"))
-#' # devtools::install_github("duohongrui/simmethods")
+#' # if (!require("simmethods", quietly = TRUE)) devtools::install_github("duohongrui/simmethods")
 #' # param_list <- simmethods::get_method()
 #' # new_param_list <- set_param(method = method, param_list = param_list, reset = reset)
 set_param <- function(method, param_list, reset){
@@ -56,6 +56,7 @@ set_param <- function(method, param_list, reset){
       }
     }
   }
+  return(param_list)
 
 }
 
@@ -63,7 +64,7 @@ set_param <- function(method, param_list, reset){
 
 .get_param_name <- function(method, param_list){
   param_name <- purrr::map(method, .f = function(method){
-    names(param_list[[method]][[base::paste0(method, "_parameters")]][["parameters"]])
+    names(param_list[[method]][[base::paste0(method, "_parameters")]])
   }) %>% setNames(method)
   param_name
 }
