@@ -65,13 +65,14 @@ parameter_sets <- function(...){
   # Check class of parameter object
   is_define_parameters(parameters_list)
 
-  # Define the parameters of two processes
-  estimate_process <- parameters_list[unlist(purrr::map(parameters_list, .f = function(x) x[["process"]] == "estimation"))]
-  simulation_process <- parameters_list[unlist(purrr::map(parameters_list, .f = function(x) x[["process"]] == "simulation"))]
-
-  # Return a list
-  list(estimate_process = estimate_process,
-       simulation_process = simulation_process)
+  # # Define the parameters of two processes
+  # estimate_process <- parameters_list[unlist(purrr::map(parameters_list, .f = function(x) x[["process"]] == "estimation"))]
+  # simulation_process <- parameters_list[unlist(purrr::map(parameters_list, .f = function(x) x[["process"]] == "simulation"))]
+  #
+  # # Return a list
+  # list(estimate_process = estimate_process,
+  #      simulation_process = simulation_process)
+  list(parameters = parameters_list)
 
 }
 
