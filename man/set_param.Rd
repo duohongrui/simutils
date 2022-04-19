@@ -22,7 +22,7 @@ Set Parameter Values
 \examples{
 ## The first example
 # reset <- list(splat = "nCells:10000")
-# devtools::install_github("duohongrui/simmethods")
+# if (!require("simmethods", quietly = TRUE)) devtools::install_github("duohongrui/simmethods")
 # param_list <- simmethods::get_method()
 # new_param_list <- set_param(method = "splat", param_list = param_list, reset = reset)
 
@@ -30,7 +30,7 @@ Set Parameter Values
 # method <- c("splat", "PROSSTT")
 # reset <- list(splat = c("nCells:2000", "nGenes:20000"),
 #               PROSSTT = c("nCells:5000", "nGenes:5000"))
-# devtools::install_github("duohongrui/simmethods")
+# if (!require("simmethods", quietly = TRUE)) devtools::install_github("duohongrui/simmethods")
 # param_list <- simmethods::get_method()
 # new_param_list <- set_param(method = method, param_list = param_list, reset = reset)
 }
