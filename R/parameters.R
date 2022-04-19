@@ -72,7 +72,7 @@ parameter_sets <- function(...){
   # # Return a list
   # list(estimate_process = estimate_process,
   #      simulation_process = simulation_process)
-  parameters_list
+  parameters_list[["parameters"]]
 
 }
 
