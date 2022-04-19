@@ -34,6 +34,12 @@ Imports: harmony (>= 0.1.0),
          purrr,
          crayon
 Suggests:
+Remotes:  
+    dynverse/dynparam@master,
+    dynverse/dynguidelines@master,
+    dynverse/dynmethods@master,
+    dynverse/dyneval@master,
+    dynverse/dynwrap@master
 URL: https://github.com/duohongrui/simutils
 BugReports: https://github.com/duohongrui/simutils/issues
 Encoding: UTF-8

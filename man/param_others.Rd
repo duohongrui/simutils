@@ -17,6 +17,8 @@ param_others(
 
 \item{type}{The type of parameter, which can be a list or any other object you input.}
 
+\item{default}{The default input.}
+
 \item{description}{The description information of this parameter.}
 
 \item{process}{Two options, simulation or estimation. Which process does this
