@@ -19,6 +19,14 @@ An update list of parameters
 \description{
 Set Parameter Values
 }
+\examples{
+# method <- c("splat", "PROSSTT")
+# reset <- list(splat = c("nCells:2000", "nGenes:20000"),
+#               PROSSTT = c("nCells:5000", "nGenes:5000"))
+# devtools::install_github("duohongrui/simmethods")
+# param_list <- simmethods::get_method()
+# new_param_list <- set_param(method = method, param_list = param_list, reset = reset)
+}
 \seealso{
 \code{\link[simmethods:get_method]{simmethods::get_method()}}
 }

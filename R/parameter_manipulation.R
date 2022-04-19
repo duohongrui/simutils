@@ -8,10 +8,16 @@
 #' @importFrom purrr map
 #' @importFrom stringr str_split
 #' @export
-#'
+#' @examples
+#' # method <- c("splat", "PROSSTT")
+#' # reset <- list(splat = c("nCells:2000", "nGenes:20000"),
+#' #               PROSSTT = c("nCells:5000", "nGenes:5000"))
+#' # devtools::install_github("duohongrui/simmethods")
+#' # param_list <- simmethods::get_method()
+#' # new_param_list <- set_param(method = method, param_list = param_list, reset = reset)
 set_param <- function(method, param_list, reset){
 
-  purrr::map(method, .f = function(method){
+  for(method in method){
     # Make sure the method name is right
     if(!method %in% names(reset)) stop(base::paste(method, " does not match the method name in reset"))
     # Extract the new parameters
@@ -27,10 +33,22 @@ set_param <- function(method, param_list, reset){
       }else{
         # Replacement
         value <- param_value[2]
-        param_list[[method]][[base::paste0(method, "_parameters")]][["parameters"]][[param]][["default"]] <- value
+        class_name <- param_list[[method]][[base::paste0(method, "_parameters")]][[param]][["type"]]
+        if(class_name == "integer"){
+          value <- as.integer(value)
+        }else if(class_name == "numeric"){
+          value <- as.numeric(value)
+        }else if(class_name == "logic"){
+          value <- as.logical(value)
+        }else if(class_name == "character"){
+          value <- as.character(value)
+        }else if(class_name == "vector"){
+          value <- as.vector(value)
+        }
+        param_list[[method]][[base::paste0(method, "_parameters")]][[param]][["default"]] <- value
       }
     }
-  })
+  }
 
 }
 
