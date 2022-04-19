@@ -72,7 +72,7 @@ parameter_sets <- function(...){
   # # Return a list
   # list(estimate_process = estimate_process,
   #      simulation_process = simulation_process)
-  list(parameters = parameters_list)
+  parameters_list
 
 }
 
@@ -398,6 +398,7 @@ param_dataframe <- function(id = NULL,
 #'
 #' @param id A parameter name. Default is NULL.
 #' @param type The type of parameter, which can be a list or any other object you input.
+#' @param default The default input.
 #' @param description The description information of this parameter.
 #' @param process Two options, simulation or estimation. Which process does this
 #' parameter involved in.
