@@ -336,6 +336,7 @@ param_vector <- function(id,
 #' @param id A parameter name. Default is NULL, which means no reference matrix input.
 #' @param type The type of parameter. Default is NULL. See \code{alternatives}.
 #' @param alternatives Alternative options.
+#' @param default In simulation, it means the reference dataset where methods learn the parameters from. Default is NULL.
 #' @param description The description information of this parameter.
 #' @param process Two options, simulation or estimation. Which process does this
 #' parameter involved in.
@@ -352,6 +353,7 @@ param_vector <- function(id,
 #' )
 param_reference <- function(id = NULL,
                             type = NULL,
+                            default = NULL,
                             alternatives = c("matrix", "SingleCellExperiment"),
                             description = NULL,
                             process = "simulation"){
@@ -360,6 +362,7 @@ param_reference <- function(id = NULL,
   tibble::lst(id,
               type,
               alternatives,
+              default,
               process,
               description) %>% add_class("inference_parameter")
 }

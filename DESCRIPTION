@@ -32,7 +32,8 @@ Imports: harmony (>= 0.1.0),
          assertthat,
          tibble,
          purrr,
-         crayon
+         crayon,
+         hdf5r
 Suggests:
 Remotes:  
     dynverse/dynparam@master,
