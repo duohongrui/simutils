@@ -1,28 +1,3 @@
-#' Get the Default Value
-#'
-#' @param x An object created by [simmethods::get_method]
-#'
-#' @return A list
-#' @export
-#'
-#' @examples
-#' # x <- simmethods::get_method()
-#' # params <- get_default_value(x)
-get_default_value <- function(x){
-  method_name <- names(x)
-  param_list_name <- paste0(method_name, '_parameters')
-  default_value <- list()
-  for(i in seq_len(length(method_name))){
-    sublist <- x[[method_name[i]]][[param_list_name[i]]]
-    param_names <- names(sublist)
-    default_value[[method_name[i]]] <- purrr::map(param_names, function(x){
-      sublist[[x]][["default"]]
-    }) %>% stats::setNames(param_names)
-  }
-  return(default_value)
-}
-
-
 #' Write R object to .h5 Files
 #'
 #' This function facilitates the progress of converting any R object into .h5 file
@@ -72,7 +47,7 @@ write_h5files <- function(data, file_path = NULL){
 }
 
 
-#' @param h5file A new h5file
+#' @param h5file A new h5 file
 #' @param data The data remain to be write
 #' @param name Default is NULL. One of the names of a list.
 #' @rdname write_h5files
@@ -158,7 +133,7 @@ h5_to_r <- function(file_path){
 }
 
 
-#' @param h5file An h5file
+#' @param h5file An h5 file
 #' @rdname h5_to_r
 .h5_to_r <- function(h5file){
   class_check <- hdf5r::h5attr(h5file, "class")

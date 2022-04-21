@@ -23,7 +23,6 @@
 #' # param_list <- simmethods::get_method()
 #' # new_param_list <- set_param(method = method, param_list = param_list, reset = reset)
 set_param <- function(method, param_list, reset){
-
   for(method in method){
     # Make sure the method name is right
     if(!method %in% names(reset)) stop(base::paste(method, " does not match the method name in reset"))
@@ -67,4 +66,29 @@ set_param <- function(method, param_list, reset){
     names(param_list[[method]][[base::paste0(method, "_parameters")]])
   }) %>% setNames(method)
   param_name
+}
+
+
+#' Get the Default Value
+#'
+#' @param x An object created by [simmethods::get_method]
+#'
+#' @return A list
+#' @export
+#'
+#' @examples
+#' # x <- simmethods::get_method()
+#' # params <- get_default_value(x)
+get_default_value <- function(x){
+  method_name <- names(x)
+  param_list_name <- paste0(method_name, '_parameters')
+  default_value <- list()
+  for(i in seq_len(length(method_name))){
+    sublist <- x[[method_name[i]]][[param_list_name[i]]]
+    param_names <- names(sublist)
+    default_value[[method_name[i]]] <- purrr::map(param_names, function(x){
+      sublist[[x]][["default"]]
+    }) %>% stats::setNames(param_names)
+  }
+  return(default_value)
 }
