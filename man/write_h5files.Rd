@@ -15,7 +15,7 @@ write_h5files(data, file_path = NULL)
 \item{file_path}{The file path of the h5file. Default is NULL and h5 file will
 be generated automatically}
 
-\item{h5file}{A new h5file}
+\item{h5file}{A new h5 file}
 
 \item{name}{Default is NULL. One of the names of a list.}
 }
