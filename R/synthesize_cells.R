@@ -24,7 +24,7 @@
 #'   counts = a,
 #'   expression = log2(a+1)
 #' )
-#' result <- syn_cell(dataset = a, seed = 2)
+#' result <- synthesize_cells(dataset = a, seed = 2)
 synthesize_cells <- function(dataset, group = NULL, seed){
 
   if(is.matrix(dataset)){

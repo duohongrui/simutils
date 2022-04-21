@@ -7,6 +7,7 @@
 param_reference(
   id = NULL,
   type = NULL,
+  default = NULL,
   alternatives = c("matrix", "SingleCellExperiment"),
   description = NULL,
   process = "simulation"
@@ -16,6 +17,8 @@ param_reference(
 \item{id}{A parameter name. Default is NULL, which means no reference matrix input.}
 
 \item{type}{The type of parameter. Default is NULL. See \code{alternatives}.}
+
+\item{default}{In simulation, it means the reference dataset where methods learn the parameters from. Default is NULL.}
 
 \item{alternatives}{Alternative options.}
 

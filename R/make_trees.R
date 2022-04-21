@@ -21,7 +21,7 @@
 #' rownames(ref_data) <- paste0("cell_", 1:ncol(ref_data))
 #' colnames(ref_data) <- paste0("gene_", 1:nrow(ref_data))
 #' group <- c(rep("A", 15), rep("B", 5), rep("C", 20), rep("D", 10))
-#' tree_format <- make_tree(ref_data, group = group)
+#' tree_format <- make_trees(ref_data, group = group)
 make_trees <- function(ref_data, group, is_Newick=TRUE, is_parenthetic=FALSE){
 
   data <- CreateSeuratObject(counts = t(ref_data), verbose=FALSE)
