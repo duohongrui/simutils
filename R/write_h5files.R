@@ -40,7 +40,12 @@
 #' # Load the h5 file
 #' file.h5 <- hdf5r::H5File$new(file_path, mode = "r")
 write_h5files <- function(data, file_path = NULL){
-  if(is.null(file_path)) file_name <- tempfile(fileext = ".h5") else file_name <- file_path
+  if(is.null(file_path)){
+    file_name <- tempfile(fileext = ".h5")
+  }else{
+    file_name <- file_path
+  }
+  cat(paste0("Your .h5 file is in: ", file_path, ". Go for it!"))
   file.h5 <- hdf5r::H5File$new(file_name, mode = "w")
   on.exit(file.h5$close_all(), add = TRUE)
   .write_h5files(file.h5, data)
@@ -52,7 +57,6 @@ write_h5files <- function(data, file_path = NULL){
 #' @param name Default is NULL. One of the names of a list.
 #' @rdname write_h5files
 .write_h5files <- function(h5file, data, name = NULL){
-
   if(is.null(name)) subfile <- h5file else subfile <- h5file$create_group(name)
   if(is.null(data)){
     hdf5r::h5attr(subfile, "class") <- "null"
