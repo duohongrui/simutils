@@ -48,7 +48,7 @@ h5_to_r <- function(file_path){
   }else if(class_check == "character" | class_check == "numeric"){
     h5file[["data"]][]
   }else if(class_check == "matrix"){
-    as.integer(h5file[["data"]][,])
+    as.matrix(h5file[["data"]][,])
   }else if(class_check == "integer"){
     as.integer(h5file[["data"]][])
   }else if(class_check == "null"){
