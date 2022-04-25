@@ -74,6 +74,8 @@ write_h5files <- function(data, file_path = NULL){
   }else if(is.atomic(data)){
     if(is.matrix(data)){
       hdf5r::h5attr(subfile, "class") <- "matrix"
+      if(!is.null(rownames(data))) hdf5r::h5attr(subfile, "rownames") <- rownames(data)
+      if(!is.null(colnames(data))) hdf5r::h5attr(subfile, "colnames") <- colnames(data)
     }else if(is.character(data)){
       hdf5r::h5attr(subfile, "class") <- "character"
     }else if(is.integer(data)){
@@ -90,8 +92,8 @@ write_h5files <- function(data, file_path = NULL){
   }else if(is.data.frame(data)){
     hdf5r::h5attr(subfile, "class") <- "data.frame"
     if(!is.null(names(data))) subfile[["names"]] <- names(data)
-    if(!is.null(data)) hdf5r::h5attr(subfile, "rownames") <- rownames(data)
-    if(!is.null(data)) hdf5r::h5attr(subfile, "colnames") <- colnames(data)
+    if(!is.null(rownames(data))) hdf5r::h5attr(subfile, "rownames") <- rownames(data)
+    if(!is.null(colnames(data))) hdf5r::h5attr(subfile, "colnames") <- colnames(data)
     subfile2 <- subfile$create_group("data")
     for(col_name in names(data)){
       .write_h5files(h5file = subfile2,

@@ -48,7 +48,10 @@ h5_to_r <- function(file_path){
   }else if(class_check == "character" | class_check == "numeric"){
     h5file[["data"]][]
   }else if(class_check == "matrix"){
-    as.matrix(h5file[["data"]][,])
+    r_output <- as.matrix(h5file[["data"]][,])
+    if(!is.null(hdf5r::h5attr(h5file, "colnames"))) colnames(r_output) <- hdf5r::h5attr(h5file, "colnames")
+    if(!is.null(hdf5r::h5attr(h5file, "rownames"))) rownames(r_output) <- hdf5r::h5attr(h5file, "rownames")
+    r_output
   }else if(class_check == "integer"){
     as.integer(h5file[["data"]][])
   }else if(class_check == "null"){
