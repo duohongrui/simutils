@@ -23,7 +23,7 @@ get_S4_values <- function(S4Object){
       get_S4_values(sub_S4)
     }) %>% stats::setNames(names(S4_list))
     # Return
-    result
+    return(result)
   }
   # If S4Object is a S4 object and then get the slot values from it.
   if(!is.list(S4Object) & base::isS4(S4Object)){
