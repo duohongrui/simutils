@@ -7,11 +7,12 @@
 get_S4_values(S4Object)
 }
 \arguments{
-\item{S4Object}{A S4object}
+\item{S4Object}{A S4 object or a list only containing S4 objects.}
 }
 \value{
 A list
 }
 \description{
-Get Values From S4 Object
+This function is used to get the slot values from S4 objects conveniently. In
+addition, a list only containing one or more S4 subjects is supported.
 }
