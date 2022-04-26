@@ -21,15 +21,16 @@ get_S4_values <- function(S4Object){
     result <- purrr::map(names(S4_list), function(i){
       sub_S4 <- S4_list[[i]]
       get_S4_values(sub_S4)
-    })
+    }) %>% stats::setNames(names(S4_list))
     # Return
     result
   }
   # If S4Object is a S4 object and then get the slot values from it.
   if(!is.list(S4Object) & base::isS4(S4Object)){
-    purrr::map(methods::slotNames(S4Object), function(x){
+    result <- purrr::map(methods::slotNames(S4Object), function(x){
       exp <- paste0(quote(S4Object),"@", x)
       eval(parse(text = exp))
     })%>% stats::setNames(methods::slotNames(S4Object))
+    result
   }
 }
