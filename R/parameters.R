@@ -118,11 +118,9 @@ param_numeric <- function(id,
   }
 
   if(is.null(lower)){
-    cat(id,":", "The parameter lower is not defined and will be set to -Inf\n")
     lower <- -Inf
   }
   if(is.null(upper)){
-    cat(id,":", "The parameter upper is not defined and will be set to Inf\n")
     upper <- Inf
   }
   if(!is.infinite(lower) & !is.infinite(upper)){
