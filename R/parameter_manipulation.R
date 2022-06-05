@@ -71,7 +71,7 @@ set_param <- function(method, param_list, reset){
 
 #' Get the Default Value
 #'
-#' @param x An object created by [simmethods::get_method]
+#' @param x An object created by [simmethods::get_method()]
 #'
 #' @return A list
 #' @export

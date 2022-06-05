@@ -45,7 +45,7 @@ write_h5files <- function(data, file_path = NULL){
   }else{
     file_name <- file_path
   }
-  cat(paste0("Your .h5 file is in: ", file_path, ". Go for it!"))
+  cat(paste0("Your .h5 file is in: ", file_path, ".\n"))
   file.h5 <- hdf5r::H5File$new(file_name, mode = "w")
   on.exit(file.h5$close_all(), add = TRUE)
   .write_h5files(file.h5, data)
