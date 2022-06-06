@@ -7,7 +7,7 @@
 get_default_value(x)
 }
 \arguments{
-\item{x}{An object created by \code{\link[simmethods:get_method]{simmethods::get_method()}}}
+\item{x}{An object created by \code{simmethods::get_method()}}
 }
 \value{
 A list
