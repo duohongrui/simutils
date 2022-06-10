@@ -111,7 +111,7 @@ match_cells <- function(ref_data, sim_data){
 
   a <- apply(cor_result, 2, function(x) return(unname(which(x==max(x)))))
 
-  if(class(a)=='list'){
+  if(is.list(a)){
 
     a<- lapply(a, dplyr::first)
 

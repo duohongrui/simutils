@@ -186,16 +186,32 @@ param_integer <- function(id,
     stop("This is not fit for other types except for integers")
   }
 
-  if(!is.null(lower) & !is.null(upper)){
+  if(is.null(lower)){
+    lower <- -Inf
+  }
+  if(is.null(upper)){
+    upper <- Inf
+  }
+  if(!is.infinite(lower) & !is.infinite(upper)){
     if(lower >= upper){
       stop('Lower value must be smaller than upper value')
     }
-  }
-  if(!border){
-    if(default == lower | default == upper){
-      stop("The defaul value can not euqal to the lower or the upper\nPlease reset!")
+    if(!border){
+      if(default == lower | default == upper){
+        stop("The defaul value can not euqal to the lower or the upper\nPlease reset!")
+      }
     }
   }
+  # if(!is.null(lower) & !is.null(upper)){
+  #   if(lower >= upper){
+  #     stop('Lower value must be smaller than upper value')
+  #   }
+  # }
+  # if(!border){
+  #   if(default == lower | default == upper){
+  #     stop("The defaul value can not euqal to the lower or the upper\nPlease reset!")
+  #   }
+  # }
   tibble::lst(id,
               type,
               default,
