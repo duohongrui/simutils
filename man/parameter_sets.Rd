@@ -20,6 +20,7 @@ param_set <- parameter_sets(
 param_character(id = 'dimension_method',
                 default = "UMAP",
                 alternatives = c("UMAP", "TSNE", "PCA"),
+                force = TRUE,
                 description = "The algorithm to use for dimensionality reduction."),
 param_Boolean(id = "verbose",
               default = TRUE,
@@ -36,6 +37,7 @@ param_numeric(id = "probability",
               lower = 0,
               upper = 1,
               border = TRUE,
+              force = TRUE,
               process = 'estimation',
               description = "The probability to select the right number")
 )

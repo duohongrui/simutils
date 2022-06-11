@@ -9,6 +9,7 @@ param_others(
   type = NULL,
   default = NULL,
   description = NULL,
+  force = FALSE,
   process = "simulation"
 )
 }
@@ -20,6 +21,8 @@ param_others(
 \item{default}{The default input.}
 
 \item{description}{The description information of this parameter.}
+
+\item{force}{Logical, whether this parameter must be needed or not.}
 
 \item{process}{Two options, simulation or estimation. Which process does this
 parameter involved in.}

@@ -11,6 +11,7 @@ param_numeric(
   lower = NULL,
   upper = NULL,
   border = TRUE,
+  force = FALSE,
   description = NULL,
   process = "simulation"
 )
@@ -27,6 +28,8 @@ param_numeric(
 \item{upper}{The highest range of this parameter.}
 
 \item{border}{Boolean. Whether the default value can get to the range border.}
+
+\item{force}{Logical, whether this parameter must be needed or not.}
 
 \item{description}{The description information of this parameter.}
 

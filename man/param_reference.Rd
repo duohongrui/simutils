@@ -9,6 +9,7 @@ param_reference(
   type = NULL,
   default = NULL,
   alternatives = c("matrix", "SingleCellExperiment"),
+  force = FALSE,
   description = NULL,
   process = "simulation"
 )
@@ -21,6 +22,8 @@ param_reference(
 \item{default}{In simulation, it means the reference dataset where methods learn the parameters from. Default is NULL.}
 
 \item{alternatives}{Alternative options.}
+
+\item{force}{Logical, whether this parameter must be needed or not.}
 
 \item{description}{The description information of this parameter.}
 

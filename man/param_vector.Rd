@@ -8,6 +8,7 @@ param_vector(
   id,
   type = "vector",
   default = NULL,
+  force = FALSE,
   description = NULL,
   process = "simulation"
 )
@@ -18,6 +19,8 @@ param_vector(
 \item{type}{The type of parameter.}
 
 \item{default}{The default values. Length to one or more.}
+
+\item{force}{Logical, whether this parameter must be needed or not.}
 
 \item{description}{The description information of this parameter.}
 

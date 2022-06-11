@@ -8,6 +8,7 @@ param_Boolean(
   id,
   type = "logical",
   default,
+  force = FALSE,
   description = NULL,
   process = "simulation"
 )
@@ -18,6 +19,8 @@ param_Boolean(
 \item{type}{The type of parameter. Must be a logical value.}
 
 \item{default}{The default value. TRUE or FALSE.}
+
+\item{force}{Logical, whether this parameter must be needed or not.}
 
 \item{description}{The description information of this parameter.}
 
@@ -34,6 +37,7 @@ Define a Boolean parameter.
 verbose <- param_Boolean(
 id = "verbose",
 default = TRUE,
+force = TRUE,
 description = "Whether to return the information during the process"
 )
 }

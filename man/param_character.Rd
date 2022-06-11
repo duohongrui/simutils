@@ -9,6 +9,7 @@ param_character(
   type = "character",
   default,
   alternatives,
+  force = FALSE,
   description = NULL,
   process = "simulation"
 )
@@ -21,6 +22,8 @@ param_character(
 \item{default}{The default values. Length to one or more.}
 
 \item{alternatives}{Options that can be chosen.}
+
+\item{force}{Logical, whether this parameter must be needed or not.}
 
 \item{description}{The description information of this parameter.}
 
@@ -39,6 +42,7 @@ id = 'dimension_method',
 default = "UMAP",
 process = "estimation",
 alternatives = c("UMAP", "TSNE", "PCA"),
+force = TRUE,
 description = "The algorithm to use for dimension reduction."
 )
 }

@@ -8,6 +8,7 @@ param_dataframe(
   id = NULL,
   type = c("data.frame", "tibble"),
   description = NULL,
+  force = FALSE,
   process = "simulation"
 )
 }
@@ -17,6 +18,8 @@ param_dataframe(
 \item{type}{The type of parameter. Must be a data.frame or tibble.}
 
 \item{description}{The description information of this parameter.}
+
+\item{force}{Logical, whether this parameter must be needed or not.}
 
 \item{process}{Two options, simulation or estimation. Which process does this
 parameter involved in.}

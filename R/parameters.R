@@ -37,6 +37,7 @@ is_define_parameters <- function(parameters_list){
 #' param_character(id = 'dimension_method',
 #'                 default = "UMAP",
 #'                 alternatives = c("UMAP", "TSNE", "PCA"),
+#'                 force = TRUE,
 #'                 description = "The algorithm to use for dimensionality reduction."),
 #' param_Boolean(id = "verbose",
 #'               default = TRUE,
@@ -53,6 +54,7 @@ is_define_parameters <- function(parameters_list){
 #'               lower = 0,
 #'               upper = 1,
 #'               border = TRUE,
+#'               force = TRUE,
 #'               process = 'estimation',
 #'               description = "The probability to select the right number")
 #' )
@@ -88,6 +90,7 @@ parameter_sets <- function(...){
 #' @param upper The highest range of this parameter.
 #' @param border Boolean. Whether the default value can get to the range border.
 #' @param description The description information of this parameter.
+#' @param force Logical, whether this parameter must be needed or not.
 #' @param process Two options, simulation or estimation. Which process does this
 #' parameter involved in.
 #'
@@ -109,6 +112,7 @@ param_numeric <- function(id,
                           lower = NULL,
                           upper = NULL,
                           border = TRUE,
+                          force = FALSE,
                           description = NULL,
                           process = "simulation"){
   assertthat::assert_that(is.character(id),
@@ -155,6 +159,7 @@ param_numeric <- function(id,
 #' @param upper The highest range of this parameter.
 #' @param border Boolean. Whether the default value can get to the range border.
 #' @param description The description information of this parameter.
+#' @param force Logical, whether this parameter must be needed or not.
 #' @param process Two options, simulation or estimation. Which process does this
 #' parameter involved in.
 #'
@@ -177,6 +182,7 @@ param_integer <- function(id,
                           lower = NULL,
                           upper = NULL,
                           border = TRUE,
+                          force = FALSE,
                           description = NULL,
                           process = "simulation"){
 
@@ -202,16 +208,7 @@ param_integer <- function(id,
       }
     }
   }
-  # if(!is.null(lower) & !is.null(upper)){
-  #   if(lower >= upper){
-  #     stop('Lower value must be smaller than upper value')
-  #   }
-  # }
-  # if(!border){
-  #   if(default == lower | default == upper){
-  #     stop("The defaul value can not euqal to the lower or the upper\nPlease reset!")
-  #   }
-  # }
+
   tibble::lst(id,
               type,
               default,
@@ -232,6 +229,7 @@ param_integer <- function(id,
 #' @param type The type of parameter. Must be a logical value.
 #' @param default The default value. TRUE or FALSE.
 #' @param description The description information of this parameter.
+#' @param force Logical, whether this parameter must be needed or not.
 #' @param process Two options, simulation or estimation. Which process does this
 #' parameter involved in.
 #'
@@ -242,11 +240,13 @@ param_integer <- function(id,
 #' verbose <- param_Boolean(
 #' id = "verbose",
 #' default = TRUE,
+#' force = TRUE,
 #' description = "Whether to return the information during the process"
 #' )
 param_Boolean <- function(id,
                           type = "logical",
                           default,
+                          force = FALSE,
                           description = NULL,
                           process = "simulation"){
   assertthat::assert_that(is.character(id),
@@ -272,6 +272,7 @@ param_Boolean <- function(id,
 #' @param default The default values. Length to one or more.
 #' @param alternatives Options that can be chosen.
 #' @param description The description information of this parameter.
+#' @param force Logical, whether this parameter must be needed or not.
 #' @param process Two options, simulation or estimation. Which process does this
 #' parameter involved in.
 #'
@@ -284,12 +285,14 @@ param_Boolean <- function(id,
 #' default = "UMAP",
 #' process = "estimation",
 #' alternatives = c("UMAP", "TSNE", "PCA"),
+#' force = TRUE,
 #' description = "The algorithm to use for dimension reduction."
 #' )
 param_character <- function(id,
                             type = "character",
                             default,
                             alternatives,
+                            force = FALSE,
                             description = NULL,
                             process = "simulation"){
 
@@ -318,6 +321,7 @@ param_character <- function(id,
 #' @param type The type of parameter.
 #' @param default The default values. Length to one or more.
 #' @param description The description information of this parameter.
+#' @param force Logical, whether this parameter must be needed or not.
 #' @param process Two options, simulation or estimation. Which process does this
 #' parameter involved in.
 #'
@@ -333,6 +337,7 @@ param_character <- function(id,
 param_vector <- function(id,
                          type = "vector",
                          default = NULL,
+                         force = FALSE,
                          description = NULL,
                          process = "simulation"){
   assertthat::assert_that(is.character(id))
@@ -352,6 +357,7 @@ param_vector <- function(id,
 #' @param alternatives Alternative options.
 #' @param default In simulation, it means the reference dataset where methods learn the parameters from. Default is NULL.
 #' @param description The description information of this parameter.
+#' @param force Logical, whether this parameter must be needed or not.
 #' @param process Two options, simulation or estimation. Which process does this
 #' parameter involved in.
 #'
@@ -369,6 +375,7 @@ param_reference <- function(id = NULL,
                             type = NULL,
                             default = NULL,
                             alternatives = c("matrix", "SingleCellExperiment"),
+                            force = FALSE,
                             description = NULL,
                             process = "simulation"){
   assertthat::assert_that(is.character(id))
@@ -387,6 +394,7 @@ param_reference <- function(id = NULL,
 #' @param id A parameter name. Default is NULL, which means no dataframe object input.
 #' @param type The type of parameter. Must be a data.frame or tibble.
 #' @param description The description information of this parameter.
+#' @param force Logical, whether this parameter must be needed or not.
 #' @param process Two options, simulation or estimation. Which process does this
 #' parameter involved in.
 #'
@@ -402,6 +410,7 @@ param_reference <- function(id = NULL,
 param_dataframe <- function(id = NULL,
                             type = c("data.frame", "tibble"),
                             description = NULL,
+                            force = FALSE,
                             process = "simulation"){
   assertthat::assert_that(is.character(id))
   tibble::lst(id,
@@ -417,6 +426,7 @@ param_dataframe <- function(id = NULL,
 #' @param type The type of parameter, which can be a list or any other object you input.
 #' @param default The default input.
 #' @param description The description information of this parameter.
+#' @param force Logical, whether this parameter must be needed or not.
 #' @param process Two options, simulation or estimation. Which process does this
 #' parameter involved in.
 #'
@@ -433,6 +443,7 @@ param_others <- function(id = NULL,
                          type = NULL,
                          default = NULL,
                          description = NULL,
+                         force = FALSE,
                          process = "simulation"){
   if(!is.null(id) & is.null(type)) stop("Please set a type to the parameter.")
   tibble::lst(id,
