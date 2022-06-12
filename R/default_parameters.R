@@ -3,14 +3,14 @@
 #' This function is used to get the default parameters of a simulation method.
 #'
 #' @param method Method name
-#' @importFrom splatter newSplatParams
+#' @import splatter
 #'
 #' @export
 #'
 #' @examples
-#' parameters <- default_parameters(method = "splat")
+#' parameters <- default_parameters(method = "Splat")
 default_parameters <- function(method){
-  if(method == "Splat"){
+  if(method == "Splat" | method == "SCRIP"){
     parameters <- splatter::newSplatParams()
   }
   if(method == "Simple"){

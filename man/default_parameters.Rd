@@ -13,5 +13,5 @@ default_parameters(method)
 This function is used to get the default parameters of a simulation method.
 }
 \examples{
-parameters <- default_parameters(method = "splat")
+parameters <- default_parameters(method = "Splat")
 }
