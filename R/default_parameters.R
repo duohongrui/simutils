@@ -10,8 +10,23 @@
 #' @examples
 #' parameters <- default_parameters(method = "splat")
 default_parameters <- function(method){
-  if(method == "splat"){
+  if(method == "Splat"){
     parameters <- splatter::newSplatParams()
+  }
+  if(method == "Simple"){
+    parameters <- splatter::newSimpleParams()
+  }
+  if(method == "Kersplat"){
+    parameters <- splatter::newKersplatParams()
+  }
+  if(method == "SplatPop"){
+    parameters <- splatter::newSplatPopParams()
+  }
+  if(method == "Lun"){
+    parameters <- splatter::newLunParams()
+  }
+  if(method == "Lun2"){
+    parameters <- splatter::newLun2Params()
   }
 
   return(parameters)
