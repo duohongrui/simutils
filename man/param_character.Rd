@@ -7,7 +7,7 @@
 param_character(
   id,
   type = "character",
-  default,
+  default = NULL,
   alternatives,
   force = FALSE,
   description = NULL,

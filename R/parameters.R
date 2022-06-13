@@ -301,21 +301,16 @@ param_Boolean <- function(id,
 #' )
 param_character <- function(id,
                             type = "character",
-                            default,
+                            default = NULL,
                             alternatives,
                             force = FALSE,
                             description = NULL,
                             process = "simulation",
                             function_name){
 
-  assertthat::assert_that(is.character(id),
-                          is.character(default))
+  assertthat::assert_that(is.character(id))
   if(type != "character"){
     stop("This is not fit for other types except for characters")
-  }
-
-  if(!default %in% alternatives){
-    stop("The default value is not in your alternatives. Please check the spelling and input")
   }
 
   tibble::lst(id,
