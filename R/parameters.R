@@ -38,17 +38,20 @@ is_define_parameters <- function(parameters_list){
 #'                 default = "UMAP",
 #'                 alternatives = c("UMAP", "TSNE", "PCA"),
 #'                 force = TRUE,
-#'                 description = "The algorithm to use for dimensionality reduction."),
+#'                 description = "The algorithm to use for dimensionality reduction.",
+#'                 function_name = "a"),
 #' param_Boolean(id = "verbose",
 #'               default = TRUE,
 #'               process = 'estimation',
-#'               description = "Whether to return the information during the process"),
+#'               description = "Whether to return the information during the process",
+#'               function_name = "a"),
 #' param_integer(id = "group_num",
 #'               default = 1L,
 #'               lower = 1L,
 #'               upper = 50L,
 #'               border = TRUE,
-#'               description = "How many groups to be simulated"),
+#'               description = "How many groups to be simulated",
+#'               function_name = "b"),
 #' param_numeric(id = "probability",
 #'               default = 0.5,
 #'               lower = 0,
@@ -56,7 +59,8 @@ is_define_parameters <- function(parameters_list){
 #'               border = TRUE,
 #'               force = TRUE,
 #'               process = 'estimation',
-#'               description = "The probability to select the right number")
+#'               description = "The probability to select the right number",
+#'               function_name = "b")
 #' )
 parameter_sets <- function(...){
 
@@ -93,6 +97,7 @@ parameter_sets <- function(...){
 #' @param force Logical, whether this parameter must be needed or not.
 #' @param process Two options, simulation or estimation. Which process does this
 #' parameter involved in.
+#' @param function_name The function name where the parameter exists.
 #'
 #' @return A list.
 #' @export
@@ -114,7 +119,8 @@ param_numeric <- function(id,
                           border = TRUE,
                           force = FALSE,
                           description = NULL,
-                          process = "simulation"){
+                          process = "simulation",
+                          function_name){
   assertthat::assert_that(is.character(id),
                           is.numeric(default))
   if(type != "numeric"){
@@ -162,6 +168,7 @@ param_numeric <- function(id,
 #' @param force Logical, whether this parameter must be needed or not.
 #' @param process Two options, simulation or estimation. Which process does this
 #' parameter involved in.
+#' @param function_name The function name where the parameter exists.
 #'
 #' @return A list.
 #' @export
@@ -184,7 +191,8 @@ param_integer <- function(id,
                           border = TRUE,
                           force = FALSE,
                           description = NULL,
-                          process = "simulation"){
+                          process = "simulation",
+                          function_name){
 
   assertthat::assert_that(is.character(id),
                           is.integer(default))
@@ -232,6 +240,7 @@ param_integer <- function(id,
 #' @param force Logical, whether this parameter must be needed or not.
 #' @param process Two options, simulation or estimation. Which process does this
 #' parameter involved in.
+#' @param function_name The function name where the parameter exists.
 #'
 #' @return A list.
 #' @export
@@ -248,7 +257,8 @@ param_Boolean <- function(id,
                           default,
                           force = FALSE,
                           description = NULL,
-                          process = "simulation"){
+                          process = "simulation",
+                          function_name){
   assertthat::assert_that(is.character(id),
                           is.logical(default))
   if(type != "logical"){
@@ -275,6 +285,7 @@ param_Boolean <- function(id,
 #' @param force Logical, whether this parameter must be needed or not.
 #' @param process Two options, simulation or estimation. Which process does this
 #' parameter involved in.
+#' @param function_name The function name where the parameter exists.
 #'
 #' @return A list.
 #' @export
@@ -294,7 +305,8 @@ param_character <- function(id,
                             alternatives,
                             force = FALSE,
                             description = NULL,
-                            process = "simulation"){
+                            process = "simulation",
+                            function_name){
 
   assertthat::assert_that(is.character(id),
                           is.character(default))
@@ -324,6 +336,7 @@ param_character <- function(id,
 #' @param force Logical, whether this parameter must be needed or not.
 #' @param process Two options, simulation or estimation. Which process does this
 #' parameter involved in.
+#' @param function_name The function name where the parameter exists.
 #'
 #' @return A list.
 #' @export
@@ -339,7 +352,8 @@ param_vector <- function(id,
                          default = NULL,
                          force = FALSE,
                          description = NULL,
-                         process = "simulation"){
+                         process = "simulation",
+                         function_name){
   assertthat::assert_that(is.character(id))
   tibble::lst(id,
               type,
@@ -360,6 +374,7 @@ param_vector <- function(id,
 #' @param force Logical, whether this parameter must be needed or not.
 #' @param process Two options, simulation or estimation. Which process does this
 #' parameter involved in.
+#' @param function_name The function name where the parameter exists.
 #'
 #' @return A list.
 #' @export
@@ -377,7 +392,8 @@ param_reference <- function(id = NULL,
                             alternatives = c("matrix", "SingleCellExperiment"),
                             force = FALSE,
                             description = NULL,
-                            process = "simulation"){
+                            process = "simulation",
+                            function_name){
   assertthat::assert_that(is.character(id))
   assertthat::assert_that(all(type %in% alternatives))
   tibble::lst(id,
@@ -397,6 +413,7 @@ param_reference <- function(id = NULL,
 #' @param force Logical, whether this parameter must be needed or not.
 #' @param process Two options, simulation or estimation. Which process does this
 #' parameter involved in.
+#' @param function_name The function name where the parameter exists.
 #'
 #' @return A list.
 #' @export
@@ -411,7 +428,8 @@ param_dataframe <- function(id = NULL,
                             type = c("data.frame", "tibble"),
                             description = NULL,
                             force = FALSE,
-                            process = "simulation"){
+                            process = "simulation",
+                            function_name){
   assertthat::assert_that(is.character(id))
   tibble::lst(id,
               type,
@@ -429,6 +447,7 @@ param_dataframe <- function(id = NULL,
 #' @param force Logical, whether this parameter must be needed or not.
 #' @param process Two options, simulation or estimation. Which process does this
 #' parameter involved in.
+#' @param function_name The function name where the parameter exists.
 #'
 #' @return A list.
 #' @export
@@ -444,7 +463,8 @@ param_others <- function(id = NULL,
                          default = NULL,
                          description = NULL,
                          force = FALSE,
-                         process = "simulation"){
+                         process = "simulation",
+                         function_name){
   if(!is.null(id) & is.null(type)) stop("Please set a type to the parameter.")
   tibble::lst(id,
               type,

@@ -13,7 +13,8 @@ param_numeric(
   border = TRUE,
   force = FALSE,
   description = NULL,
-  process = "simulation"
+  process = "simulation",
+  function_name
 )
 }
 \arguments{
@@ -35,6 +36,8 @@ param_numeric(
 
 \item{process}{Two options, simulation or estimation. Which process does this
 parameter involved in.}
+
+\item{function_name}{The function name where the parameter exists.}
 }
 \value{
 A list.

@@ -10,7 +10,8 @@ param_Boolean(
   default,
   force = FALSE,
   description = NULL,
-  process = "simulation"
+  process = "simulation",
+  function_name
 )
 }
 \arguments{
@@ -26,6 +27,8 @@ param_Boolean(
 
 \item{process}{Two options, simulation or estimation. Which process does this
 parameter involved in.}
+
+\item{function_name}{The function name where the parameter exists.}
 }
 \value{
 A list.

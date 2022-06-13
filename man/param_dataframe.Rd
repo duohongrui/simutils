@@ -9,7 +9,8 @@ param_dataframe(
   type = c("data.frame", "tibble"),
   description = NULL,
   force = FALSE,
-  process = "simulation"
+  process = "simulation",
+  function_name
 )
 }
 \arguments{
@@ -23,6 +24,8 @@ param_dataframe(
 
 \item{process}{Two options, simulation or estimation. Which process does this
 parameter involved in.}
+
+\item{function_name}{The function name where the parameter exists.}
 }
 \value{
 A list.
