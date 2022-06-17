@@ -30,6 +30,8 @@ set_parameters <- function(parameters, other_prior, method){
     parameters <- splatter::setParams(parameters, other_prior)
     # return
     return(parameters)
+  }else{
+    return(parameters)
   }
 }
 
