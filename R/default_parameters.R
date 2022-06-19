@@ -28,6 +28,9 @@ default_parameters <- function(method){
   if(method == "Lun2"){
     parameters <- splatter::newLun2Params()
   }
+  if(method == "scDesign"){
+    parameters <- NULL
+  }
 
   return(parameters)
 }
