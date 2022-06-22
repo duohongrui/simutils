@@ -17,6 +17,8 @@ Depends: R (>= 4.0)
 Imports: harmony (>= 0.1.0),
          dplyr (>= 1.0.8),
          SingleCellExperiment,
+         glue,
+         SeuratDisk,
          ctc,
          ape (>= 5.6),
          Seurat (>= 4.1.0),

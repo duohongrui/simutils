@@ -31,6 +31,12 @@ default_parameters <- function(method){
   if(method == "scDesign"){
     parameters <- NULL
   }
+  if(method == "zinbwave"){
+    parameters <- splatter::newZINBParams()
+  }
+  if(method == "BASiCS"){
+    parameters <- splatter::newBASiCSParams()()
+  }
 
   return(parameters)
 }
