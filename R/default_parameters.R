@@ -35,7 +35,10 @@ default_parameters <- function(method){
     parameters <- splatter::newZINBParams()
   }
   if(method == "BASiCS"){
-    parameters <- splatter::newBASiCSParams()()
+    parameters <- splatter::newBASiCSParams()
+  }
+  if(method == "SPsimSeq"){
+    parameters <- NULL
   }
 
   return(parameters)
