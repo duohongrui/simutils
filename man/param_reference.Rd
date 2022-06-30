@@ -8,7 +8,7 @@ param_reference(
   id = NULL,
   type = NULL,
   default = NULL,
-  alternatives = c("matrix", "SingleCellExperiment"),
+  alternatives = c("matrix", "SingleCellExperiment", "dataframe"),
   force = FALSE,
   description = NULL,
   process = "simulation",
