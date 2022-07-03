@@ -2,8 +2,7 @@
 check_prior_info <- function(
     method,
     step,
-    other_prior,
-    er
+    other_prior
 ){
   ## group.condition
   if(step == "estimation"){
@@ -22,7 +21,7 @@ check_prior_info <- function(
       stop(paste0("Please input group condition information when you use ", method))
     }else{
       other_prior_exec <- other_prior
-      other_prior_exec[["group.condition"]] <- other_prior[["group.condition"]][[er]]
+      other_prior_exec[["group.condition"]] <- other_prior[["group.condition"]]
     }
   }else{
     other_prior_exec <- other_prior
