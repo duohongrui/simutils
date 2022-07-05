@@ -50,13 +50,16 @@ data_conversion <- function(
     }else{
       # Tmp file
       tmp_path <- tempdir()
-      data_save_name <- file.path(tmp_path, paste0(time_string(), ".h5Seurat")) %>%
+      data_save_name <- file.path(tmp_path, paste0(simutils::time_string(), ".h5Seurat")) %>%
         simutils::fix_path()
     }
     SeuratDisk::SaveH5Seurat(simulate_result, filename = data_save_name)
     SeuratDisk::Convert(data_save_name, dest = "h5ad")
 
     # data path
+    if(in_docker){
+      data_save_name <- file.path(local_path, data_name)
+    }
     data_path <- stringr::str_replace(data_save_name,
                                       pattern = "h5Seurat",
                                       replacement = "h5ad")
