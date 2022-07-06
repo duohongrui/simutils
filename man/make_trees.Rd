@@ -4,7 +4,7 @@
 \alias{make_trees}
 \title{Convert An Expression Matrix into Tree Format}
 \usage{
-make_trees(ref_data, group, is_Newick = TRUE, is_parenthetic = FALSE)
+make_trees(ref_data, group = NULL, is_Newick = TRUE, is_parenthetic = FALSE)
 }
 \arguments{
 \item{ref_data}{A Matrix. The gene expression matrix where every row represents
