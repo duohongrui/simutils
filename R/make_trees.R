@@ -24,9 +24,9 @@
 #' tree_format <- make_trees(ref_data, group = group)
 make_trees <- function(ref_data,
                        group = NULL,
-                       is_Newick=TRUE,
-                       is_parenthetic=FALSE){
-  data <- Seurat::CreateSeuratObject(counts = t(ref_data), verbose=FALSE)
+                       is_Newick = TRUE,
+                       is_parenthetic = FALSE){
+  data <- Seurat::CreateSeuratObject(counts = t(ref_data), verbose = FALSE)
   data <- Seurat::NormalizeData(data,
                                 normalization.method = "LogNormalize",
                                 scale.factor = 10000,

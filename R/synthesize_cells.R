@@ -31,28 +31,29 @@ synthesize_cells <- function(dataset,
                              seed,
                              verbose = FALSE){
   if(is.matrix(dataset)){
-    dataset <- dynwrap::wrap_expression(counts = dataset,
-                                        expression = log2(dataset+1))
+    ## Transform data
+    dataset <- dynwrap::wrap_expression(counts = t(dataset),
+                                        expression = log2(t(dataset) + 1))
   }
-  if(!dynwrap::is_wrapper_with_grouping(dataset)){
+  if(is.null(group)){
     if(verbose){
-      message("Performing k-means and determin the best number of clusters... \n")
-    }
-    if(is.null(dataset[['expression']])){
-      stop("No expression data is detected. Please use dynwrap::wrap_expression function\nto specify expression parameter.")
+      message("Performing k-means and determin the best number of clusters...")
     }
     clust <- NbClust::NbClust(data = dataset[['expression']],
                               distance = 'euclidean',
                               min.nc = 2,
                               max.nc = sqrt(nrow(dataset[['expression']])),
                               method = "kmeans",
-                              index = "silhouette")
-    dataset <- dynwrap::add_grouping(dataset = dataset,
-                                     grouping = clust[["Best.partition"]])
+                              index = "dunn")
+    group <- clust[["Best.partition"]]
   }
-  if(is.null(dataset[['counts']])){
-    stop("No counts data is detected. Please use dynwrap::wrap_expression function\nto specify counts parameter.")
+  ## Add group
+  if(verbose){
+    message("Add grouping to data...")
   }
+  dataset <- dynwrap::add_grouping(dataset = dataset,
+                                   grouping = group)
+  ## Extra cells
   ncells <- length(dataset$cell_ids)
   if(log2(ncells) != as.integer(log2(ncells))){
     ## The number of additional cells which should be synthesized.
@@ -68,7 +69,7 @@ synthesize_cells <- function(dataset,
     add_syn_result <- matrix(ncol = dim(dataset[["counts"]])[2])
     ### Synthesize fake cells
     if(verbose){
-      message("Synthesize fake cells... \n")
+      message("Synthesize fake cells...")
     }
     for(i in 1:group_num){
       index <- which(dataset$grouping == group[i])
