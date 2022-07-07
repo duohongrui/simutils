@@ -25,10 +25,10 @@ check_python_installation <- function(...){
                                  timeout = 2)
     if(version_out$status != 0 & version_out$stdout == ""){
       stop(crayon::red(paste0("\u274C Python is not installed on your device.")))
-    }else{
-      message(crayon::green(paste0("\u2714 Python is already installed.")))
     }
   }
+  message(crayon::green(paste0("\u2714 Python is already installed.")))
+  # version
   version <- stringr::str_split(version_out$stdout, pattern = " ", simplify = T)[2] %>% trimws()
   if(utils::compareVersion("3.6.0", version) > 0){
     stop(crayon::red(paste0("\u274C Your python is ", version, ". But 3.6.0 or higher is required.")))
@@ -70,3 +70,4 @@ check_python_installation <- function(...){
 print_error <- function(x, proc){
   print(x)
 }
+
