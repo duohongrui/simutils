@@ -1,3 +1,7 @@
+#' @title Check Prior Information
+#' @param method Which method
+#' @param step Simulation or estimation
+#' @param other_prior Prior information
 #' @export
 check_prior_info <- function(
     method,
