@@ -25,8 +25,9 @@
 make_trees <- function(ref_data,
                        group = NULL,
                        is_Newick = TRUE,
-                       is_parenthetic = FALSE){
-  data <- Seurat::CreateSeuratObject(counts = t(ref_data), verbose = FALSE)
+                       is_parenthetic = FALSE,
+                       return_group = FALSE){
+  data <- Seurat::CreateSeuratObject(counts = ref_data, verbose = FALSE)
   data <- Seurat::NormalizeData(data,
                                 normalization.method = "LogNormalize",
                                 scale.factor = 10000,
@@ -47,20 +48,20 @@ make_trees <- function(ref_data,
   }
   data@meta.data$'group' <- stringr::str_remove_all(group, pattern = "[(].+[)]")
   #Get state tree by hierachical clustering on the state means
-  exp_data <- Seurat::AverageExpression(data, slot = 'scale.data', group.by = 'group')
+  exp_data <- Seurat::AverageExpression(data, slot = 'data', group.by = 'group')
   clu <- stats::hclust(stats::dist(t(exp_data$RNA)), method = 'ward.D')
   for(i in 1:length(clu[["labels"]])){
     clu[["labels"]][i] <- stringr::str_replace_all(clu[["labels"]][i], ",", "_")
   }
   phyla <- ctc::hc2Newick(clu, flat=TRUE)
   if(is_Newick){
-    return(phyla)
+    if(return_group) return(list(phyla = phyla, group = group)) else return(phyla)
   }
   phyla <- ape::read.tree(text = phyla)
   if(is_parenthetic){
-    return(list(phyla))
+    if(return_group) return(list(phyla = phyla <- list(phyla), group = group)) else return(phyla <- list(phyla))
   }
   phyla$edge.length <- ceiling(phyla$edge.length)
   phyla$edge.length[phyla$edge.length == 0] <- 1
-  return(phyla)
+  if(return_group) return(list(phyla = phyla, group = group)) else return(phyla)
 }
