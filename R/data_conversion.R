@@ -49,7 +49,10 @@ data_conversion <- function(
       data_save_name <- file.path(tmp_path, data_name) %>% simutils::fix_path()
     }else{
       # Tmp file
-      tmp_path <- tempdir()
+      if(is.null(local_path)){
+        tmp_path <- tempdir()
+      }
+      tmp_path <- local_path
       data_save_name <- file.path(tmp_path, paste0(simutils::time_string(), ".h5Seurat")) %>%
         simutils::fix_path()
     }
