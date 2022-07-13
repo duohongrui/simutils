@@ -32,3 +32,48 @@ change_parameters <- function(
     return(simulate_formals)
   }
 }
+
+
+
+#' Change Parameters About scGAN
+#'
+#' @param project_name Name your experiment
+#' @param ... Other parameters
+#' @importFrom rjson fromJSON
+#'
+#' @export
+#'
+change_scGAN_parameters <- function(
+    project_name,
+    ...
+){
+  scGAN_params <- system.file("scGAN_parameters.json", package = "simmethods")
+  params <- rjson::fromJSON(file = scGAN_params)
+  names(params[["experiments"]]) <- project_name
+  params <- change_values_in_list(list = params, ...)
+  return(params)
+}
+
+#' Change Values From a List
+#'
+#' @param list The list
+#' @param ... Other attributes and new values
+#' @importFrom rrapply rrapply
+#'
+#' @export
+#'
+change_values_in_list <- function(
+    list,
+    ...
+){
+  reset_params <- list(...)
+  for(id in names(reset_params)){
+    reset_value <- reset_params[[id]]
+    list <- rrapply::rrapply(list,
+                             condition = function(x, .xname) .xname == id,
+                             f = function(x) reset_value,
+                             how = "replace")
+
+  }
+  return(list)
+}
