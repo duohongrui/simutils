@@ -185,7 +185,7 @@ param_numeric <- function(id,
 #' )
 param_integer <- function(id,
                           type = "integer",
-                          default,
+                          default = NULL,
                           lower = NULL,
                           upper = NULL,
                           border = TRUE,
@@ -193,9 +193,10 @@ param_integer <- function(id,
                           description = NULL,
                           process = "simulation",
                           function_name){
-
-  assertthat::assert_that(is.character(id),
-                          is.integer(default))
+  if(!is.null(default)){
+    assertthat::assert_that(is.character(id),
+                            is.integer(default))
+  }
   if(type != "integer"){
     stop("This is not fit for other types except for integers")
   }
@@ -211,8 +212,10 @@ param_integer <- function(id,
       stop('Lower value must be smaller than upper value')
     }
     if(!border){
-      if(default == lower | default == upper){
-        stop("The defaul value can not euqal to the lower or the upper\nPlease reset!")
+      if(!is.null(default)){
+        if(default == lower | default == upper){
+          stop("The defaul value can not euqal to the lower or the upper\nPlease reset!")
+        }
       }
     }
   }

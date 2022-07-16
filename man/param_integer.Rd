@@ -7,7 +7,7 @@
 param_integer(
   id,
   type = "integer",
-  default,
+  default = NULL,
   lower = NULL,
   upper = NULL,
   border = TRUE,
