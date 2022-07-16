@@ -47,8 +47,7 @@ change_scGAN_parameters <- function(
     project_name,
     ...
 ){
-  if(requireNamespace("simmethods", quietly = TRUE))
-  scGAN_params <- system.file("scGAN_parameters.json", package = "simmethods")
+  scGAN_params <- system.file("scGAN_parameters.json", package = "simutils")
   params <- rjson::fromJSON(file = scGAN_params)
   names(params[["experiments"]]) <- project_name
   params <- change_values_in_list(list = params, ...)

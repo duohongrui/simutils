@@ -38,9 +38,10 @@ Imports: harmony (>= 0.1.0),
          methods,
          splatter,
          Hmisc,
-         scater
-Suggests: rrapply,
-          rjson
+         scater,
+         rrapply,
+         rjson
+Suggests: 
 Remotes: 
     dynverse/dynparam@master,
     dynverse/dynguidelines@master,

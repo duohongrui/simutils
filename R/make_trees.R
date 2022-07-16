@@ -9,6 +9,7 @@
 #' @param group A Vector. The group information of the cells in ref_data
 #' @param is_Newick If TRUE, return the Newick format.
 #' @param is_parenthetic If TRUE, return the parenthetic format.
+#' @param return_group Whether to return the group information of cells.
 #' @return A file of parenthetic format or Newick format
 #' @export
 #' @importFrom  Seurat CreateSeuratObject NormalizeData FindVariableFeatures

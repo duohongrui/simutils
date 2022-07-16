@@ -21,6 +21,8 @@ a cell and every column represents a gene.}
 \item{is_Newick}{If TRUE, return the Newick format.}
 
 \item{is_parenthetic}{If TRUE, return the parenthetic format.}
+
+\item{return_group}{Whether to return the group information of cells.}
 }
 \value{
 A file of parenthetic format or Newick format
