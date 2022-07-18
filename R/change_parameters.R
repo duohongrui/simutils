@@ -71,11 +71,14 @@ change_values_in_list <- function(
   reset_params <- list(...)
   for(id in names(reset_params)){
     reset_value <- reset_params[[id]]
-    list <- rrapply::rrapply(list,
-                             condition = function(x, .xname) .xname == id,
-                             f = function(x) reset_value,
-                             how = "replace")
-
+    if(id == "GPU"){
+      list$exp_param$GPU <- list(reset_value)
+    }else{
+      list <- rrapply::rrapply(list,
+                               condition = function(x, .xname) .xname == id,
+                               f = function(x) reset_value,
+                               how = "replace")
+    }
   }
   return(list)
 }
