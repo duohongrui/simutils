@@ -40,7 +40,7 @@ Imports: harmony (>= 0.1.0),
          Hmisc,
          scater,
          rrapply,
-         rjson
+         jsonlite
 Suggests: 
 Remotes: 
     dynverse/dynparam@master,

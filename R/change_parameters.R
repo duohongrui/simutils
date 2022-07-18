@@ -39,7 +39,7 @@ change_parameters <- function(
 #'
 #' @param project_name Name your experiment
 #' @param ... Other parameters
-#' @importFrom rjson fromJSON
+#' @importFrom jsonlite fromJSON
 #'
 #' @export
 #'
@@ -48,7 +48,9 @@ change_scGAN_parameters <- function(
     ...
 ){
   scGAN_params <- system.file("scGAN_parameters.json", package = "simutils")
-  params <- rjson::fromJSON(file = scGAN_params)
+  params <- jsonlite::fromJSON(scGAN_params,
+                               simplifyDataFrame = TRUE,
+                               simplifyVector = FALSE)
   names(params[["experiments"]]) <- project_name
   params <- change_values_in_list(list = params, ...)
   return(params)
