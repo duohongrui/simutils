@@ -25,8 +25,7 @@ set_parameters <- function(parameters, other_prior, method){
                            "scDD",
                            "BASiCS",
                            "SparseDC",
-                           "MFA",
-                           "phenopath")
+                           "MFA")
   if(class(parameters) == class_name | method %in% alternative_methods){
     # match names in other_prior and in parameters
     index <- methods::slotNames(parameters)[stats::na.omit(match(names(other_prior),
