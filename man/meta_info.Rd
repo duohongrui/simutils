@@ -17,7 +17,9 @@ meta_info(
   data_type = "count",
   ERCC = FALSE,
   dilution_factor = NULL,
-  volume = NULL
+  volume = NULL,
+  group_condition = NULL,
+  treatment = NULL
 )
 }
 \arguments{
@@ -46,6 +48,10 @@ meta_info(
 \item{dilution_factor}{If there are spike-in genes, dilution factor is neccessary.}
 
 \item{volume}{The volume (nanoliter) of mix liquid used in experiment.}
+
+\item{group_condition}{Vector. The group assignment of cells in the dataset.}
+
+\item{treatment}{Vector. The treatment of cells in the experiment.}
 }
 \value{
 A list of dataset information.
