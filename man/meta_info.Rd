@@ -19,7 +19,9 @@ meta_info(
   dilution_factor = NULL,
   volume = NULL,
   group_condition = NULL,
-  treatment = NULL
+  treatment = NULL,
+  batch_info = NULL,
+  cluster_info = NULL
 )
 }
 \arguments{
@@ -52,6 +54,10 @@ meta_info(
 \item{group_condition}{Vector. The group assignment of cells in the dataset.}
 
 \item{treatment}{Vector. The treatment of cells in the experiment.}
+
+\item{batch_info}{Vector. The batch information of cells in the experiment.}
+
+\item{cluster_info}{Vector. The cluster information of cells.}
 }
 \value{
 A list of dataset information.

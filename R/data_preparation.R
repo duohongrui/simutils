@@ -15,6 +15,8 @@
 #' @param volume The volume (nanoliter) of mix liquid used in experiment.
 #' @param group_condition Vector. The group assignment of cells in the dataset.
 #' @param treatment Vector. The treatment of cells in the experiment.
+#' @param batch_info Vector. The batch information of cells in the experiment.
+#' @param cluster_info Vector. The cluster information of cells.
 #' @importFrom dplyr lst
 #' @return A list of dataset information.
 #' @export
@@ -33,7 +35,9 @@ meta_info <- function(
   dilution_factor = NULL,
   volume = NULL,
   group_condition = NULL,
-  treatment = NULL
+  treatment = NULL,
+  batch_info = NULL,
+  cluster_info = NULL
 ){
   if(ERCC){
     if(is.null(dilution_factor) | is.null(volume)){
@@ -54,5 +58,7 @@ meta_info <- function(
              dilution_factor,
              volume,
              group_condition,
-             treatment)
+             treatment,
+             batch_info,
+             cluster_info)
 }
