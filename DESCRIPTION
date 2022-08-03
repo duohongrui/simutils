@@ -40,7 +40,9 @@ Imports: harmony (>= 0.1.0),
          Hmisc,
          scater,
          rrapply,
-         jsonlite
+         jsonlite,
+         edgeR,
+         WGCNA
 Suggests: 
 Remotes: 
     dynverse/dynparam@master,
