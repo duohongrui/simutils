@@ -4,12 +4,10 @@
 \alias{cell_properties}
 \title{Calculate Cell Properties}
 \usage{
-cell_properties(data, cpm_norm = TRUE, verbose = FALSE)
+cell_properties(data, verbose = FALSE)
 }
 \arguments{
 \item{data}{A count matrix.}
-
-\item{cpm_norm}{Whether CPM normalization will be used. Default is TRUE.}
 
 \item{verbose}{Whether messages are returned during the process.}
 }

@@ -1,7 +1,6 @@
 #' Calculate Cell Properties
 #'
 #' @param data A count matrix.
-#' @param cpm_norm Whether CPM normalization will be used. Default is TRUE.
 #' @param verbose Whether messages are returned during the process.
 #' @importFrom edgeR cpm DGEList calcNormFactors
 #' @importFrom WGCNA cor
@@ -16,14 +15,8 @@
 #' result <- cell_properties(data, verbose = TRUE)
 #' str(result)
 cell_properties <- function(data,
-                            cpm_norm = TRUE,
                             verbose = FALSE){
-  if(cpm_norm){
-    if(verbose){
-      message("Performing log2 CPM nomalization...")
-    }
-    data <- log2(edgeR::cpm(data)+1)
-  }
+
   ## 1) library size
   if(verbose){
     message("Calculating library size of cells...")
@@ -40,7 +33,7 @@ cell_properties <- function(data,
   if(verbose){
     message("Calculating cell correlation...")
   }
-  cell_cor <- WGCNA::cor(data, method = "spearman", nThreads = 1)
+  cell_cor <- WGCNA::cor(data, method = "pearson", nThreads = 1)
   ## 4) TMM normalization factor
   if(verbose){
     message("Calculating TMM normalization factor...")
@@ -50,19 +43,31 @@ cell_properties <- function(data,
   TMM_factor <- dge[["samples"]][["norm.factors"]]
   ## 5) Effective library size
   if(verbose){
-    message("Calculating effective library sizer...")
+    message("Calculating effective library size...")
   }
   effective_library_size <- library_size * TMM_factor
+  ## 6) Proportion of cell outliers
+  if(verbose){
+    message("Calculating proportion of cell outliers...")
+  }
+  q <- quantile(library_size)
+  iqr <- IQR(library_size)
+  outlier_value_min <- q[2] - 1.5*iqr
+  outlier_value_max <- q[4] + 1.5*iqr
+  prop_outliers_cell <- sum(library_size < outlier_value_min | library_size > outlier_value_max)/ncol(data)
+  ### list
   cell_properties <- dplyr::lst(library_size,
                                 zero_fraction_cell,
                                 cell_cor,
                                 TMM_factor,
-                                effective_library_size)
+                                effective_library_size,
+                                prop_outliers_cell)
   if(verbose){
     message("Done...")
   }
   return(cell_properties)
 }
+
 
 
 #' Calculate Gene Properties
@@ -123,12 +128,23 @@ gene_properties <- function(data,
   data_seurat <- Seurat::CreateSeuratObject(counts = data)
   data_seurat <- Seurat::FindVariableFeatures(data_seurat, selection.method = "disp")
   dispersion <- Seurat::HVFInfo(data_seurat)$dispersion
+  ## 7) Proportion of gene outliers
+  if(verbose){
+    message("Calculating proportion of gene outliers...")
+  }
+  q <- quantile(rowSums(data))
+  iqr <- IQR(rowSums(data))
+  outlier_value_min <- q[2] - 1.5*iqr
+  outlier_value_max <- q[4] + 1.5*iqr
+  prop_outliers_gene <- sum(rowSums(data) < outlier_value_min | rowSums(data) > outlier_value_max)/nrow(data)
+  ### list
   gene_properties <- dplyr::lst(mean_expression,
                                 sd,
                                 cv,
                                 gene_cor,
                                 zero_fraction_gene,
-                                dispersion)
+                                dispersion,
+                                prop_outliers_gene)
   if(verbose){
     message("Done...")
   }
