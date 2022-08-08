@@ -43,7 +43,8 @@ Imports: harmony (>= 0.1.0),
          edgeR,
          WGCNA,
          CDI,
-         ROGUE
+         ROGUE,
+         cluster
 Suggests: 
 Remotes: 
     dynverse/dynparam@master,

@@ -80,3 +80,23 @@ calculate_ROGUE <- function(
   return(final_rogue)
 }
 
+
+
+#' Calculate Average Silouette Width
+#'
+#' @param data A matrix of gene expression profile.
+#' @param cluster_info Cluster(or group) assignment of every cells in columns of matrix.
+#' @importFrom stats dist
+#' @importFrom cluster silhouette
+#' @export
+calculate_silhouette <- function(
+  data,
+  cluster_info
+){
+  dist <- stats::dist(t(data))
+  silhouette_width <- cluster::silhouette(x = as.numeric(as.factor(cluster_info)),
+                                          dist)
+  average_silhouette <- mean(silhouette_width[, 3])
+  return(average_silhouette)
+}
+
