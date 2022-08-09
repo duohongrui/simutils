@@ -16,5 +16,5 @@ A tibble
 Utils function of getting the containers information in R.
 }
 \examples{
-containers <- list_docker_container()
+# containers <- list_docker_container()
 }

@@ -44,7 +44,12 @@ Imports: harmony (>= 0.1.0),
          WGCNA,
          CDI,
          ROGUE,
-         cluster
+         cluster,
+         CellMixS,
+         kBET,
+         bluster,
+         igraph,
+         BiocGenerics
 Suggests: 
 Remotes: 
     dynverse/dynparam@master,
@@ -53,7 +58,8 @@ Remotes:
     dynverse/dyneval@master,
     dynverse/dynwrap@master,
     jichunxie/CDI@master,
-    PaulingLiu/ROGUE@master
+    PaulingLiu/ROGUE@master,
+    theislab/kBET@master
 URL: https://github.com/duohongrui/simutils
 BugReports: https://github.com/duohongrui/simutils/issues
 Encoding: UTF-8

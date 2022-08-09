@@ -5,6 +5,7 @@
 #' @importFrom edgeR cpm DGEList calcNormFactors
 #' @importFrom WGCNA cor
 #' @importFrom dplyr lst
+#' @importFrom stats IQR
 #' @return A list
 #' @export
 #' @examples
@@ -51,7 +52,7 @@ cell_properties <- function(data,
     message("Calculating proportion of cell outliers...")
   }
   q <- quantile(library_size)
-  iqr <- IQR(library_size)
+  iqr <- stats::IQR(library_size)
   outlier_value_min <- q[2] - 1.5*iqr
   outlier_value_max <- q[4] + 1.5*iqr
   prop_outliers_cell <- sum(library_size < outlier_value_min | library_size > outlier_value_max)/ncol(data)
@@ -133,7 +134,7 @@ gene_properties <- function(data,
     message("Calculating proportion of gene outliers...")
   }
   q <- quantile(rowSums(data))
-  iqr <- IQR(rowSums(data))
+  iqr <- stats::IQR(rowSums(data))
   outlier_value_min <- q[2] - 1.5*iqr
   outlier_value_max <- q[4] + 1.5*iqr
   prop_outliers_gene <- sum(rowSums(data) < outlier_value_min | rowSums(data) > outlier_value_max)/nrow(data)

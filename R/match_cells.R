@@ -10,7 +10,8 @@
 #' @return A list contains the correlation matrix and a dataframe of the paired
 #' cells in reference and simulation data.
 #' @export
-#' @importFrom stats prcomp cor
+#' @importFrom stats prcomp
+#' @importFrom WGCNA cor
 #' @importFrom harmony HarmonyMatrix
 #' @examples
 #' # Generate a reference data
@@ -101,7 +102,7 @@ match_cells <- function(ref_data, sim_data){
 
 
   ### Calculate correlation matrix
-  cor_result <- cor(t(harmony_embeddings), method = 'spearman')
+  cor_result <- WGCNA::cor(t(harmony_embeddings), method = 'spearman')
 
   index <- dim(cor_result)[1]/2
 

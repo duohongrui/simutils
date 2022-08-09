@@ -12,7 +12,7 @@
 #' @importFrom tibble as_tibble
 #'
 #' @examples
-#' containers <- list_docker_container()
+#' # containers <- list_docker_container()
 list_docker_container <- function(
     ...
 ){
