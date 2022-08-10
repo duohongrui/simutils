@@ -49,7 +49,8 @@ Imports: harmony (>= 0.1.0),
          kBET,
          bluster,
          igraph,
-         BiocGenerics
+         BiocGenerics,
+         scde
 Suggests: 
 Remotes: 
     dynverse/dynparam@master,
@@ -59,7 +60,8 @@ Remotes:
     dynverse/dynwrap@master,
     jichunxie/CDI@master,
     PaulingLiu/ROGUE@master,
-    theislab/kBET@master
+    theislab/kBET@master,
+    hms-dbmi/scde@master
 URL: https://github.com/duohongrui/simutils
 BugReports: https://github.com/duohongrui/simutils/issues
 Encoding: UTF-8
