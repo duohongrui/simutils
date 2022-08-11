@@ -5,12 +5,14 @@
 \title{Perform Differential Expression Analysis
 This function is used to perform DEA for single-cell RNA-seq data by QLF model in edgeR package including the cellular detection rate.}
 \usage{
-perform_DEA(data, group)
+perform_DEA(data, group, method)
 }
 \arguments{
 \item{data}{A matrix of gene expression profile.}
 
 \item{group}{Group(or cluster) assignment of every cells in columns of matrix.}
+
+\item{method}{Which DE method will be used?}
 }
 \value{
 A dataframe of DEA result.
