@@ -50,7 +50,8 @@ Imports: harmony (>= 0.1.0),
          bluster,
          igraph,
          BiocGenerics,
-         scde
+         MAST,
+         limma
 Suggests: 
 Remotes: 
     dynverse/dynparam@master,
@@ -60,8 +61,7 @@ Remotes:
     dynverse/dynwrap@master,
     jichunxie/CDI@master,
     PaulingLiu/ROGUE@master,
-    theislab/kBET@master,
-    hms-dbmi/scde@master
+    theislab/kBET@master
 URL: https://github.com/duohongrui/simutils
 BugReports: https://github.com/duohongrui/simutils/issues
 Encoding: UTF-8

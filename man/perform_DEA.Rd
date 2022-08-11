@@ -5,14 +5,18 @@
 \title{Perform Differential Expression Analysis
 This function is used to perform DEA for single-cell RNA-seq data by QLF model in edgeR package including the cellular detection rate.}
 \usage{
-perform_DEA(data, group, method)
+perform_DEA(data, group, method, species = NULL)
 }
 \arguments{
 \item{data}{A matrix of gene expression profile.}
 
 \item{group}{Group(or cluster) assignment of every cells in columns of matrix.}
 
-\item{method}{Which DE method will be used?}
+\item{method}{Which DE method will be used? Choices: edgeRQLF, edgeRQLFDetRate, MASTcpmDetRate, MASTtpmDetRate, MASTcpm, MASTtpm, limmatrend, limmavoom, ttest and wilcox.}
+
+\item{species}{We only support \code{human} or \code{mouse} to choose the gene length data
+from \code{simutils::hs_gene_length} or \code{simutils::mm_gene_length} and normalize the data
+by TPM. Users must set this parameter when using \code{MASTtpmDetRate}, \code{MASTtpm}, \code{ttest} or \code{wilcox} method.}
 }
 \value{
 A dataframe of DEA result.
@@ -23,4 +27,5 @@ This function is used to perform DEA for single-cell RNA-seq data by QLF model i
 }
 \references{
 Soneson C, Robinson M D. Bias, robustness and scalability in single-cell differential expression analysis. Nature methods, 2018, 15(4): 255-261. \url{https://doi.org/10.1038/nmeth.4612}
+Github URL: \url{https://github.com/csoneson/conquer_comparison}
 }

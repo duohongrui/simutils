@@ -1,6 +1,6 @@
 #' Gene Length of Homo sapiens
 #'
-#' A dataframe containing the gene length of Homo sapiens.
+#' @description A dataframe containing the gene length of Homo sapiens.
 #'
 #' @format A data frame with 25457 rows and 4 variables:
 #' \describe{
@@ -14,7 +14,7 @@
 
 #' Gene Length of Mus musculus
 #'
-#' A dataframe containing the gene length of Mus musculus.
+#' @description A dataframe containing the gene length of Mus musculus.
 #'
 #' @format A data frame with 24115 rows and 4 variables:
 #' \describe{

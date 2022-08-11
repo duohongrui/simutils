@@ -1,3 +1,8 @@
+# pre_data <- readRDS("/Users/duohongrui/Desktop/preprocessed_data/data1_GSE54006.rds")
+# data <- pre_data$data
+# data_info <- pre_data$data_info
+# group <- data_info$treatment
+
 # model_predict <- function(
 #   data,
 #   group,
