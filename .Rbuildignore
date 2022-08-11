@@ -1,5 +1,3 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^data-raw
-^data-raw/gene_length\.R$
-^data
+^data-raw$

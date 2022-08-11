@@ -65,9 +65,9 @@ Remotes:
 URL: https://github.com/duohongrui/simutils
 BugReports: https://github.com/duohongrui/simutils/issues
 Encoding: UTF-8
-LazyData: true
 biocViews:
 Author: Hongrui Duo [aut, cre] (<https://orcid.org/0000-0001-8683-015X>),
     Bo Li [aut] (<https://orcid.org/0000-0001-9944-0003>)
 RoxygenNote: 7.2.1
 Roxygen: list(markdown = TRUE)
+LazyData: true
