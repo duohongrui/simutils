@@ -14,10 +14,10 @@ normalization_simutils <- function(
   ## gene length data
   if(is.null(gene_length)){
     if(species == "human"){
-      gene <- hs_gene_length
+      gene <- simutils::hs_gene_length
     }
     if(species == "mouse"){
-      gene <- mm_gene_length
+      gene <- simutils::mm_gene_length
     }
   }
   ## gene form

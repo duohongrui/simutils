@@ -51,8 +51,10 @@ Imports: harmony (>= 0.1.0),
          igraph,
          BiocGenerics,
          MAST,
-         limma
-Suggests: 
+         limma,
+         rpart,
+         e1071
+Suggests:
 Remotes: 
     dynverse/dynparam@master,
     dynverse/dynguidelines@master,
