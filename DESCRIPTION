@@ -23,6 +23,7 @@ Imports:
     ape,
     assertthat,
     BiocGenerics,
+    caret,
     checkmate,
     ctc,
     dplyr,
@@ -37,6 +38,7 @@ Imports:
     Matrix,
     methods,
     NbClust,
+    pROC,
     processx,
     purrr,
     scater,
@@ -58,6 +60,7 @@ Suggests:
     jsonlite,
     kBET,
     MAST,
+    randomForest,
     ROGUE,
     rpart,
     rrapply

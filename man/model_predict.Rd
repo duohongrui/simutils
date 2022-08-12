@@ -13,7 +13,7 @@ model_predict(data, group, de_genes, method)
 
 \item{de_genes}{A character vector of DEGs.}
 
-\item{method}{The method to establish the model. SVM, Decision tree.}
+\item{method}{The method to establish the model. SVM, Decision tree or RF (Random Forest).}
 }
 \description{
 Establish A Model And Predict Using DEGs
