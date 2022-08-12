@@ -13,8 +13,6 @@
 #' @param group Group(or cluster) assignment of every cells in columns of matrix.
 #' @param de_genes A character vector of DEGs.
 #' @param method The method to establish the model. SVM, Decision tree.
-#' @importFrom e1071 svm
-#' @importFrom rpart rpart
 #' @importFrom stats predict
 #' @export
 model_predict <- function(
@@ -41,14 +39,15 @@ model_predict <- function(
 
   if(method == "SVM"){
     ## SVM
-    if(requireNamespace("e1071")){
-      svm_classifier <- e1071::svm(x = train_data,
-                                   y = train_group,
-                                   cross = 10,
-                                   kernel = 'radial',
-                                   prob = TRUE,
-                                   scale = FALSE)
+    if(!requireNamespace("e1071", quietly = TRUE)){
+      stop("Package \"e1071\" must be installed by \"install.packages('e1071')\" command.")
     }
+    svm_classifier <- e1071::svm(x = train_data,
+                                 y = train_group,
+                                 cross = 10,
+                                 kernel = 'radial',
+                                 prob = TRUE,
+                                 scale = FALSE)
     svm_predict <- stats::predict(svm_classifier,
                                   as.matrix(test_data),
                                   prob = TRUE)
@@ -57,12 +56,13 @@ model_predict <- function(
 
   if(method == "Decision tree"){
     ## Decision tree
-    if(requireNamespace("rpart")){
-      train_data$group <- train_group
-      tree_model <- rpart::rpart(group ~ .,
-                                 data = train_data,
-                                 method = "class")
+    if(!requireNamespace("rpart", quietly = TRUE)){
+      stop("Package \"rpart\" must be installed by \"install.packages('rpart')\" command.")
     }
+    train_data$group <- train_group
+    tree_model <- rpart::rpart(group ~ .,
+                               data = train_data,
+                               method = "class")
     tree_predict <- stats::predict(tree_model,
                                    as.data.frame(test_data),
                                    prob = TRUE)

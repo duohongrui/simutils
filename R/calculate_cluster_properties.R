@@ -3,7 +3,6 @@
 #' @param data A matrix of gene expression profile.
 #' @param cluster_info Cluster(or group) assignment of every cells in columns of matrix.
 #' @param batch_info Default is NULL. Batch information of every cells.
-#' @importFrom CDI feature_gene_selection size_factor calculate_CDI
 #' @return A dataframe of CDI values
 #' @export
 #' @references
@@ -14,6 +13,9 @@ calculate_CDI <- function(
   cluster_info,
   batch_info = NULL
 ){
+  if(!requireNamespace("CDI", quietly = TRUE)){
+    stop("Package \"CDI\" must be installed by \"remotes::install_github('jichunxie/CDI')\" command.")
+  }
   ## cluster
   cell_label <- data.frame("clsuter" = as.numeric(as.factor(cluster_info)))
   ## feature selection
@@ -47,7 +49,6 @@ calculate_CDI <- function(
 #'
 #' @param data A matrix of gene expression profile.
 #' @param cluster_info Cluster(or group) assignment of every cells in columns of matrix.
-#' @importFrom ROGUE matr.filter SE_fun CalculateRogue
 #' @return A numeric ranged from 0 to 1.
 #' @export
 #' @references
@@ -57,6 +58,9 @@ calculate_ROGUE <- function(
   data,
   cluster_info
 ){
+  if(!requireNamespace("ROGUE", quietly = TRUE)){
+    stop("Package \"ROGUE\" must be installed by \"devtools::install_github('PaulingLiu/ROGUE')\" command.")
+  }
   ## cluster name
   cluster_name <- unique(cluster_info)
   rogue <- c()
@@ -87,12 +91,14 @@ calculate_ROGUE <- function(
 #' @param data A matrix of gene expression profile.
 #' @param cluster_info Cluster(or group) assignment of every cells in columns of matrix.
 #' @importFrom stats dist
-#' @importFrom cluster silhouette
 #' @export
 calculate_silhouette <- function(
   data,
   cluster_info
 ){
+  if(!requireNamespace("cluster", quietly = TRUE)){
+    stop("Package \"cluster\" must be installed by \"install.packages('cluster')\" command.")
+  }
   dist <- stats::dist(t(data))
   silhouette_width <- cluster::silhouette(x = as.numeric(as.factor(cluster_info)),
                                           dist)

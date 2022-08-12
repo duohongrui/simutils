@@ -8,10 +8,6 @@
 #' @importFrom scater logNormCounts
 #' @importFrom BiocGenerics var
 #' @importFrom stats prcomp
-#' @importFrom CellMixS evalIntegration
-#' @importFrom kBET kBET batch_sil pcRegression
-#' @importFrom bluster makeKNNGraph
-#' @importFrom igraph components
 #' @export
 calculate_batch_properties <- function(
   data,
@@ -20,6 +16,9 @@ calculate_batch_properties <- function(
   verbose = FALSE
 ){
   ## 1) cms, 2) iLISI, 3) Mixing metric, 4) Shannon entropy
+  if(!requireNamespace("CellMixS", quietly = TRUE)){
+    stop("Package \"CellMixS\" must be installed by \"BiocManager::install('CellMixS')\" command.")
+  }
   colData <- data.frame("batch" = batch_info)
   sce <- SingleCellExperiment::SingleCellExperiment(list(counts = data),
                                                     colData = colData)
@@ -47,6 +46,9 @@ calculate_batch_properties <- function(
   mm <- mean(col_result$mm)
   shannon_entropy <- mean(col_result$entropy)
   ## 5) kBET
+  if(!requireNamespace("kBET", quietly = TRUE)){
+    stop("Package \"kBET\" must be installed by \"devtools::install_github('theislab/kBET')\" command.")
+  }
   if(verbose){
     message("Calculate kBET...")
   }
@@ -69,6 +71,12 @@ calculate_batch_properties <- function(
                                   n_top = 50)
   pcr <- batch_pca$R2Var
   ## 8) Graph connectivity
+  if(!requireNamespace("bluster", quietly = TRUE)){
+    stop("Package \"bluster\" must be installed by \"BiocManager::install('bluster')\" command.")
+  }
+  if(!requireNamespace("igraph", quietly = TRUE)){
+    stop("Package \"igraph\" must be installed by \"install.packages('igraph')\" command.")
+  }
   if(is.null(cluster_info)){
     gc <- NULL
   }else{

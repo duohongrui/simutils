@@ -39,7 +39,6 @@ change_parameters <- function(
 #'
 #' @param project_name Name your experiment
 #' @param ... Other parameters
-#' @importFrom jsonlite fromJSON
 #'
 #' @export
 #'
@@ -47,6 +46,9 @@ change_scGAN_parameters <- function(
     project_name,
     ...
 ){
+  if(!requireNamespace("jsonlite", quietly = TRUE)){
+    stop("Package \"jsonlite\" must be installed by \"install.packages('jsonlite')\" command.")
+  }
   scGAN_params <- system.file("scGAN_parameters.json", package = "simutils")
   params <- jsonlite::fromJSON(scGAN_params,
                                simplifyDataFrame = TRUE,
@@ -60,7 +62,6 @@ change_scGAN_parameters <- function(
 #'
 #' @param list The list
 #' @param ... Other attributes and new values
-#' @importFrom rrapply rrapply
 #'
 #' @export
 #'
@@ -68,6 +69,9 @@ change_values_in_list <- function(
     list,
     ...
 ){
+  if(!requireNamespace("rrapply", quietly = TRUE)){
+    stop("Package \"rrapply\" must be installed by \"install.packages('rrapply')\" command.")
+  }
   reset_params <- list(...)
   for(id in names(reset_params)){
     reset_value <- reset_params[[id]]

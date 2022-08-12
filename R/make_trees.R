@@ -12,10 +12,12 @@
 #' @param return_group Whether to return the group information of cells.
 #' @return A file of parenthetic format or Newick format
 #' @export
-#' @importFrom  Seurat CreateSeuratObject NormalizeData FindVariableFeatures
+#' @importFrom Seurat CreateSeuratObject NormalizeData FindVariableFeatures
 #' ScaleData AverageExpression RunPCA FindNeighbors FindClusters VariableFeatures
 #' @importFrom stringr str_remove_all str_replace_all
 #' @importFrom stats hclust dist
+#' @importFrom ctc hc2Newick
+#' @importFrom ape read.tree
 #'
 #' @examples
 #' ref_data <- matrix(rpois(n = 2500, lambda = 2), nrow = 50)

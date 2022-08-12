@@ -12,7 +12,6 @@
 #' @export
 #' @importFrom stats prcomp
 #' @importFrom WGCNA cor
-#' @importFrom harmony HarmonyMatrix
 #' @examples
 #' # Generate a reference data
 #' set.seed(1)
@@ -28,6 +27,9 @@
 #' match_result <- match_cells(ref_data = ref_data, sim_data)
 match_cells <- function(ref_data, sim_data){
 
+  if(!requireNamespace("harmony", quietly = TRUE)){
+    stop("Package \"harmony\" must be installed by \"install.packages('harmony')\" command.")
+  }
   ### Remove batch effect using Harmony
 
   if(dynwrap::is_wrapper_with_expression(ref_data)){
@@ -94,11 +96,11 @@ match_cells <- function(ref_data, sim_data){
   meta_data <- data.frame('Classification' = c(rep('reference', nrow(ref_data)),
                                                rep('simulation', nrow(ref_data))))
   set.seed(1)
-  harmony_embeddings <- HarmonyMatrix(pca_input,
-                                      meta_data,
-                                      'Classification',
-                                      do_pca=FALSE,
-                                      verbose=FALSE)
+  harmony_embeddings <- harmony::HarmonyMatrix(pca_input,
+                                               meta_data,
+                                               'Classification',
+                                               do_pca=FALSE,
+                                               verbose=FALSE)
 
 
   ### Calculate correlation matrix

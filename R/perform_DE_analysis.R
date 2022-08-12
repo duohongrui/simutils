@@ -9,7 +9,6 @@
 #' @importFrom edgeR DGEList calcNormFactors estimateDisp glmQLFit glmQLFTest topTags cpm
 #' @importFrom limma topTable lmFit eBayes voom
 #' @importFrom stats model.matrix p.adjust t.test
-#' @importFrom MAST FromMatrix zlm lrTest
 #' @importFrom methods new
 #' @return A dataframe of DEA result.
 #' @export
@@ -57,6 +56,9 @@ perform_DEA <- function(
   }
 
   if(method == "MASTcpmDetRate"){
+    if(!requireNamespace("MAST", quietly = TRUE)){
+      stop("Package \"MAST\" must be installed by \"BiocManager::install('MAST')\".")
+    }
     message("Performing DEA using MAST including the cellular detection rate with CPM data")
     timing <- system.time({
       names(group) <- colnames(data)
@@ -77,6 +79,9 @@ perform_DEA <- function(
   }
 
   if(method == "MASTtpmDetRate"){
+    if(!requireNamespace("MAST", quietly = TRUE)){
+      stop("Package \"MAST\" must be installed by \"BiocManager::install('MAST')\".")
+    }
     message("Performing DEA using MAST including the cellular detection rate with TPM data")
     tpm <- simutils::normalization_simutils(data = data,
                                             norm_method = "TPM",
@@ -97,6 +102,9 @@ perform_DEA <- function(
   }
 
   if(method == "MASTcpm"){
+    if(!requireNamespace("MAST", quietly = TRUE)){
+      stop("Package \"MAST\" must be installed by \"BiocManager::install('MAST')\".")
+    }
     message("Performing DEA using MAST with CPM data")
     timing <- system.time({
       names(group) <- colnames(data)
@@ -116,6 +124,9 @@ perform_DEA <- function(
   }
 
   if(method == "MASTtpm"){
+    if(!requireNamespace("MAST", quietly = TRUE)){
+      stop("Package \"MAST\" must be installed by \"BiocManager::install('MAST')\".")
+    }
     message("Performing DEA using MAST with TPM data")
     tpm <- simutils::normalization_simutils(data = data,
                                             norm_method = "TPM",

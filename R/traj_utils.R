@@ -60,6 +60,7 @@
 #' match_result <- match_cells(ref_data = dataset_ref,
 #'                             sim_data = dataset_sim)
 
+
 cal_cor_dist <- function(model_ref, model_sim, match_result){
 
   m <- arrange(match_result$cell_pair,
