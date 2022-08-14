@@ -5,15 +5,15 @@
 #
 # result <- simutils::perform_DEA(data = data, group = group, method = "edgeRQLF")
 # de_genes <- rownames(result)[result$FDR < 0.05]
-#
-#
+
+
 # estimate_result <- simmethods::Splat_estimation(ref_data = data, verbose = TRUE, seed = 111)
 # prob.group = as.numeric(table(group)/ncol(data))
 # de.prob = length(de_genes)/nrow(data)
 # simulate_result <- simmethods::Splat_simulation(
 #   estimate_result$estimate_result,
-#   other_prior = list(prob.group = c(0.3, 0.4, 0.3),
-#                      de.prob = 0.3),
+#   other_prior = list(prob.group = as.numeric(table(group)/ncol(data)),
+#                      de.prob = length(de_genes)/nrow(data)),
 #   return_format = "list",
 #   verbose = TRUE,
 #   seed = 111)
@@ -23,6 +23,9 @@
 # group <- col_data$group
 # row_data <- simulate_result$simulate_result$row_meta
 # de_genes <- rownames(row_data)[row_data$de_gene == "yes"]
+# non_gene_genes <- rownames(row_data)[row_data$de_gene == "no"]
+#
+# data <- data[non_gene_genes, ]
 
 #' Establish A Model And Predict Using DEGs
 #'
@@ -154,6 +157,3 @@ model_predict <- function(
 #                 ylab = "TPR",
 #                 lwd = 3))
 # roc_obj <- pROC::roc(test_group, RF_predict_prob[, 2])
-
-
-

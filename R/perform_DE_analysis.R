@@ -156,8 +156,9 @@ perform_DEA <- function(
       fit <- limma::lmFit(y, design = design)
       fit <- limma::eBayes(fit, trend = TRUE, robust = TRUE)
       tt <- limma::topTable(fit, n = Inf, adjust.method = "BH")
+      colnames(tt)[c(4, 5)] <- c("PValue", "FDR")
     })
-    return(tt$table)
+    return(tt)
   }
 
   if(method == "limmavoom"){
@@ -170,8 +171,9 @@ perform_DEA <- function(
       fit <- limma::lmFit(vm, design = design)
       fit <- limma::eBayes(fit)
       tt <- limma::topTable(fit, n = Inf, adjust.method = "BH")
+      colnames(tt)[c(4, 5)] <- c("PValue", "FDR")
     })
-    return(tt$table)
+    return(tt)
   }
 
   if(method == "ttest"){
