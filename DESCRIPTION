@@ -63,7 +63,8 @@ Suggests:
     randomForest,
     ROGUE,
     rpart,
-    rrapply
+    rrapply,
+    spgs
 Remotes: 
     dynverse/dyneval@master,
     dynverse/dynmethods@master,

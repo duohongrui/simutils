@@ -5,8 +5,8 @@
 #
 # result <- simutils::perform_DEA(data = data, group = group, method = "edgeRQLF")
 # de_genes <- rownames(result)[result$FDR < 0.05]
-
-
+#
+#
 # estimate_result <- simmethods::Splat_estimation(ref_data = data, verbose = TRUE, seed = 111)
 # prob.group = as.numeric(table(group)/ncol(data))
 # de.prob = length(de_genes)/nrow(data)
