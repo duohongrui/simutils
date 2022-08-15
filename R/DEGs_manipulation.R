@@ -229,6 +229,7 @@ perform_DEA <- function(
       result_list[[paste0(group_candidate, collapse = "vs")]] <- df
     }
   }
+  return(result_list)
 }
 
 
