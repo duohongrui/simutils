@@ -17,7 +17,6 @@
 #' str(result)
 cell_properties <- function(data,
                             verbose = FALSE){
-
   ## 1) library size
   if(verbose){
     message("Calculating library size of cells...")
@@ -93,23 +92,23 @@ gene_properties <- function(data,
     if(verbose){
       message("Performing log2 CPM nomalization...")
     }
-    data <- log2(edgeR::cpm(data)+1)
+    norm_data <- log2(edgeR::cpm(data)+1)
   }
   ## 1) mean expression of log2 CPM of genes
   if(verbose){
     message("Calculating mean expression for genes...")
   }
-  mean_expression <- apply(data, 1, mean)
-  ## 2) standard variance of genes
+  mean_expression <- apply(norm_data, 1, mean)
+  ## 2) standard variance of log2 CPM of genes
   if(verbose){
     message("Calculating standard variance of genes...")
   }
-  sd <- apply(data, 1, sd)
+  sd <- apply(norm_data, 1, sd)
   ## 3) coefficient of variance
   if(verbose){
     message("Calculating coefficient of variance...")
   }
-  cv <- sd/mean_expression * 100
+  cv <- apply(data, 1, sd)/apply(data, 1, mean) * 100
   ## 4) gene correlation
   if(verbose){
     message("Calculating gene correlation...")
@@ -126,7 +125,7 @@ gene_properties <- function(data,
   if(verbose){
     message("Calculating gene dispersions using Seurat...")
   }
-  data_seurat <- Seurat::CreateSeuratObject(counts = data)
+  data_seurat <- Seurat::CreateSeuratObject(counts = data, min.cells = 0, min.features = 0)
   data_seurat <- Seurat::FindVariableFeatures(data_seurat, selection.method = "disp")
   dispersion <- Seurat::HVFInfo(data_seurat)$dispersion
   ## 7) Proportion of gene outliers
