@@ -25,198 +25,210 @@ perform_DEA <- function(
   filter_index <- rowSums(data) > 0
   message(paste0(nrow(data) - sum(filter_index), " genes are removed when filtering"))
   data <- data[rowSums(data) > 0, ]
-  group <- as.numeric(as.factor(group))
-  if(method == "edgeRQLF"){
-    message("Performing DEA using edgeR QLF model")
-    timing <- system.time({
-      dge <- edgeR::DGEList(data, group = group)
-      dge <- edgeR::calcNormFactors(dge)
-      design <- stats::model.matrix(~ group)
-      dge <- edgeR::estimateDisp(dge, design = design)
-      fit <- edgeR::glmQLFit(dge, design = design)
-      qlf <- edgeR::glmQLFTest(fit)
-      tt <- edgeR::topTags(qlf, n = Inf)
-    })
-    return(tt$table)
-  }
+  ## paired groups
+  group_unique <- unique(group)
+  group_paired <- utils::combn(group_unique, 2)
+  ## blank result list
+  result_list <- list()
+  for(i in 1:ncol(group_paired)){
+    group_candidate <- group_paired[, i]
+    index <- group %in% group_candidate
+    sub_group <- group[index]
+    sub_data <- data[, index]
+    message("--------------------------------------------------")
+    message(glue::glue("Performing DEA with the {i}/{ncol(group_paired)} paired of groups."))
 
-  if(method == "edgeRQLFDetRate"){
-    message("Performing DEA using edgeR QLF model including the cellular detection rate")
-    timing <- system.time({
-      dge <- edgeR::DGEList(data, group = group)
-      dge <- edgeR::calcNormFactors(dge)
-      cdr <- scale(colMeans(data > 0))
-      design <- stats::model.matrix(~ cdr + group)
-      dge <- edgeR::estimateDisp(dge, design = design)
-      fit <- edgeR::glmQLFit(dge, design = design)
-      qlf <- edgeR::glmQLFTest(fit)
-      tt <- edgeR::topTags(qlf, n = Inf)
-    })
-    return(tt$table)
-  }
-
-  if(method == "MASTcpmDetRate"){
-    if(!requireNamespace("MAST", quietly = TRUE)){
-      stop("Package \"MAST\" must be installed by \"BiocManager::install('MAST')\".")
-    }
-    message("Performing DEA using MAST including the cellular detection rate with CPM data")
-    timing <- system.time({
-      names(group) <- colnames(data)
-      cdr <- scale(colMeans(data > 0))
-      dge <- edgeR::DGEList(counts = data)
-      dge <- edgeR::calcNormFactors(dge)
-      cpms <- edgeR::cpm(dge)
-      sca <- MAST::FromMatrix(exprsArray = log2(cpms + 1),
-                              cData = data.frame(wellKey = names(group),
-                                                 group = group, cdr = cdr))
-      zlmdata <- MAST::zlm(~ cdr + group, sca)
-      mast <- MAST::lrTest(zlmdata, "group")
-      df <- data.frame(PValue = mast[, "hurdle", "Pr(>Chisq)"],
-                       FDR = stats::p.adjust(mast[, "hurdle", "Pr(>Chisq)"], method = "BH"),
-                       row.names = names(mast[, "hurdle", "Pr(>Chisq)"]))
-    })
-    return(df)
-  }
-
-  if(method == "MASTtpmDetRate"){
-    if(!requireNamespace("MAST", quietly = TRUE)){
-      stop("Package \"MAST\" must be installed by \"BiocManager::install('MAST')\".")
-    }
-    message("Performing DEA using MAST including the cellular detection rate with TPM data")
-    tpm <- simutils::normalization_simutils(data = data,
-                                            norm_method = "TPM",
-                                            species = species)
-    timing <- system.time({
-      names(group) <- colnames(tpm)
-      cdr <- scale(colMeans(tpm > 0))
-      sca <- MAST::FromMatrix(exprsArray = log2(tpm + 1),
-                              cData = data.frame(wellKey = names(group),
-                                                 group = group, cdr = cdr))
-      zlmdata <- MAST::zlm(~ cdr + group, sca)
-      mast <- MAST::lrTest(zlmdata, "group")
-      df <- data.frame(PValue = mast[, "hurdle", "Pr(>Chisq)"],
-                       FDR = stats::p.adjust(mast[, "hurdle", "Pr(>Chisq)"], method = "BH"),
-                       row.names = names(mast[, "hurdle", "Pr(>Chisq)"]))
-    })
-    return(df)
-  }
-
-  if(method == "MASTcpm"){
-    if(!requireNamespace("MAST", quietly = TRUE)){
-      stop("Package \"MAST\" must be installed by \"BiocManager::install('MAST')\".")
-    }
-    message("Performing DEA using MAST with CPM data")
-    timing <- system.time({
-      names(group) <- colnames(data)
-      dge <- edgeR::DGEList(counts = data)
-      dge <- edgeR::calcNormFactors(dge)
-      cpms <- edgeR::cpm(dge)
-      sca <- MAST::FromMatrix(exprsArray = log2(cpms + 1),
-                              cData = data.frame(wellKey = names(group),
-                                                 group = group))
-      zlmdata <- MAST::zlm(~ group, sca)
-      mast <- MAST::lrTest(zlmdata, "group")
-      df <- data.frame(PValue = mast[, "hurdle", "Pr(>Chisq)"],
-                       FDR = stats::p.adjust(mast[, "hurdle", "Pr(>Chisq)"], method = "BH"),
-                       row.names = names(mast[, "hurdle", "Pr(>Chisq)"]))
-    })
-    return(df)
-  }
-
-  if(method == "MASTtpm"){
-    if(!requireNamespace("MAST", quietly = TRUE)){
-      stop("Package \"MAST\" must be installed by \"BiocManager::install('MAST')\".")
-    }
-    message("Performing DEA using MAST with TPM data")
-    tpm <- simutils::normalization_simutils(data = data,
-                                            norm_method = "TPM",
-                                            species = species)
-    timing <- system.time({
-      names(group) <- colnames(tpm)
-      sca <- MAST::FromMatrix(exprsArray = log2(tpm + 1),
-                              cData = data.frame(wellKey = names(group),
-                                                 group = group))
-      zlmdata <- MAST::zlm(~ group, sca)
-      mast <- MAST::lrTest(zlmdata, "group")
-      df <- data.frame(PValue = mast[, "hurdle", "Pr(>Chisq)"],
-                       FDR = stats::p.adjust(mast[, "hurdle", "Pr(>Chisq)"], method = "BH"),
-                       row.names = names(mast[, "hurdle", "Pr(>Chisq)"]))
-    })
-    return(df)
-  }
-
-  if(method == "limmatrend"){
-    message("Performing DEA using limma-trend")
-    timing <- system.time({
-      dge <- edgeR::DGEList(data, group = group)
-      dge <- edgeR::calcNormFactors(dge)
-      design <- stats::model.matrix(~ group)
-      y <- methods::new("EList")
-      y$E <- edgeR::cpm(dge, log = TRUE, prior.count = 3)
-      fit <- limma::lmFit(y, design = design)
-      fit <- limma::eBayes(fit, trend = TRUE, robust = TRUE)
-      tt <- limma::topTable(fit, n = Inf, adjust.method = "BH")
-      colnames(tt)[c(4, 5)] <- c("PValue", "FDR")
-    })
-    return(tt)
-  }
-
-  if(method == "limmavoom"){
-    message("Performing DEA using limma-voom")
-    timing <- system.time({
-      dge <- edgeR::DGEList(data, group = group)
-      dge <- edgeR::calcNormFactors(dge)
-      design <- model.matrix(~ group)
-      vm <- limma::voom(dge, design = design, plot = FALSE)
-      fit <- limma::lmFit(vm, design = design)
-      fit <- limma::eBayes(fit)
-      tt <- limma::topTable(fit, n = Inf, adjust.method = "BH")
-      colnames(tt)[c(4, 5)] <- c("PValue", "FDR")
-    })
-    return(tt)
-  }
-
-  if(method == "ttest"){
-    message("Performing DEA using t-test")
-    tpm <- simutils::normalization_simutils(data = data,
-                                            norm_method = "TPM",
-                                            species = species)
-    timing <- system.time({
-      tmm <- edgeR::calcNormFactors(tpm)
-      tpmtmm <- edgeR::cpm(tpm, lib.size = tmm * colSums(tpm))
-      logtpm <- log2(tpmtmm + 1)
-      idx <- seq_len(nrow(logtpm))
-      names(idx) <- rownames(logtpm)
-      ttest_p <- sapply(idx, function(i) {
-        stats::t.test(logtpm[i, ] ~ group)$p.value
+    if(method == "edgeRQLF"){
+      message("Performing DEA using edgeR QLF model")
+      timing <- system.time({
+        dge <- edgeR::DGEList(sub_data, group = sub_group)
+        dge <- edgeR::calcNormFactors(dge)
+        design <- stats::model.matrix(~ sub_group)
+        dge <- edgeR::estimateDisp(dge, design = design)
+        fit <- edgeR::glmQLFit(dge, design = design)
+        qlf <- edgeR::glmQLFTest(fit)
+        tt <- edgeR::topTags(qlf, n = Inf)
       })
-    })
-    df <- data.frame(PValue = ttest_p,
-                     FDR = stats::p.adjust(ttest_p, method = "BH"),
-                     row.names = names(ttest_p))
-    return(df)
-  }
+      result_list[[paste0(group_candidate, collapse = "vs")]] <- tt$table
+    }
 
-  if(method == "wilcox"){
-    message("Performing DEA using wilcox-test")
-    tpm <- simutils::normalization_simutils(data = data,
-                                            norm_method = "TPM",
-                                            species = species)
-    timing <- system.time({
-      tmm <- edgeR::calcNormFactors(tpm)
-      tpmtmm <- edgeR::cpm(tpm, lib.size = tmm * colSums(tpm))
-      idx <- 1:nrow(tpmtmm)
-      names(idx) <- rownames(tpmtmm)
-      wilcox_p <- sapply(idx, function(i) {
-        stats::wilcox.test(tpmtmm[i, ] ~ group)$p.value
+    if(method == "edgeRQLFDetRate"){
+      message("Performing DEA using edgeR QLF model including the cellular detection rate")
+      timing <- system.time({
+        dge <- edgeR::DGEList(sub_data, group = sub_group)
+        dge <- edgeR::calcNormFactors(dge)
+        cdr <- scale(colMeans(sub_data > 0))
+        design <- stats::model.matrix(~ cdr + sub_group)
+        dge <- edgeR::estimateDisp(dge, design = design)
+        fit <- edgeR::glmQLFit(dge, design = design)
+        qlf <- edgeR::glmQLFTest(fit)
+        tt <- edgeR::topTags(qlf, n = Inf)
       })
-    })
-    df <- data.frame(PValue = wilcox_p,
-                     FDR = stats::p.adjust(wilcox_p, method = "BH"),
-                     row.names = names(wilcox_p))
-    return(df)
+      result_list[[paste0(group_candidate, collapse = "vs")]] <- tt$table
+    }
+
+    if(method == "MASTcpmDetRate"){
+      if(!requireNamespace("MAST", quietly = TRUE)){
+        stop("Package \"MAST\" must be installed by \"BiocManager::install('MAST')\".")
+      }
+      message("Performing DEA using MAST including the cellular detection rate with CPM data")
+      timing <- system.time({
+        names(sub_group) <- colnames(sub_data)
+        cdr <- scale(colMeans(sub_data > 0))
+        dge <- edgeR::DGEList(counts = sub_data)
+        dge <- edgeR::calcNormFactors(dge)
+        cpms <- edgeR::cpm(dge)
+        sca <- MAST::FromMatrix(exprsArray = log2(cpms + 1),
+                                cData = data.frame(wellKey = names(sub_group),
+                                                   group = sub_group, cdr = cdr))
+        zlmdata <- MAST::zlm(~ cdr + group, sca)
+        mast <- MAST::lrTest(zlmdata, "group")
+        df <- data.frame(PValue = mast[, "hurdle", "Pr(>Chisq)"],
+                         FDR = stats::p.adjust(mast[, "hurdle", "Pr(>Chisq)"], method = "BH"),
+                         row.names = names(mast[, "hurdle", "Pr(>Chisq)"]))
+      })
+      result_list[[paste0(group_candidate, collapse = "vs")]] <- df
+    }
+
+    if(method == "MASTtpmDetRate"){
+      if(!requireNamespace("MAST", quietly = TRUE)){
+        stop("Package \"MAST\" must be installed by \"BiocManager::install('MAST')\".")
+      }
+      message("Performing DEA using MAST including the cellular detection rate with TPM data")
+      tpm <- simutils::normalization_simutils(data = sub_data,
+                                              norm_method = "TPM",
+                                              species = species)
+      timing <- system.time({
+        names(sub_group) <- colnames(tpm)
+        cdr <- scale(colMeans(tpm > 0))
+        sca <- MAST::FromMatrix(exprsArray = log2(tpm + 1),
+                                cData = data.frame(wellKey = names(sub_group),
+                                                   group = sub_group, cdr = cdr))
+        zlmdata <- MAST::zlm(~ cdr + group, sca)
+        mast <- MAST::lrTest(zlmdata, "group")
+        df <- data.frame(PValue = mast[, "hurdle", "Pr(>Chisq)"],
+                         FDR = stats::p.adjust(mast[, "hurdle", "Pr(>Chisq)"], method = "BH"),
+                         row.names = names(mast[, "hurdle", "Pr(>Chisq)"]))
+      })
+      result_list[[paste0(group_candidate, collapse = "vs")]] <- df
+    }
+
+    if(method == "MASTcpm"){
+      if(!requireNamespace("MAST", quietly = TRUE)){
+        stop("Package \"MAST\" must be installed by \"BiocManager::install('MAST')\".")
+      }
+      message("Performing DEA using MAST with CPM data")
+      timing <- system.time({
+        names(sub_group) <- colnames(sub_data)
+        dge <- edgeR::DGEList(counts = sub_data)
+        dge <- edgeR::calcNormFactors(dge)
+        cpms <- edgeR::cpm(dge)
+        sca <- MAST::FromMatrix(exprsArray = log2(cpms + 1),
+                                cData = data.frame(wellKey = names(sub_group),
+                                                   group = sub_group))
+        zlmdata <- MAST::zlm(~ group, sca)
+        mast <- MAST::lrTest(zlmdata, "group")
+        df <- data.frame(PValue = mast[, "hurdle", "Pr(>Chisq)"],
+                         FDR = stats::p.adjust(mast[, "hurdle", "Pr(>Chisq)"], method = "BH"),
+                         row.names = names(mast[, "hurdle", "Pr(>Chisq)"]))
+      })
+      result_list[[paste0(group_candidate, collapse = "vs")]] <- df
+    }
+
+    if(method == "MASTtpm"){
+      if(!requireNamespace("MAST", quietly = TRUE)){
+        stop("Package \"MAST\" must be installed by \"BiocManager::install('MAST')\".")
+      }
+      message("Performing DEA using MAST with TPM data")
+      tpm <- simutils::normalization_simutils(data = sub_data,
+                                              norm_method = "TPM",
+                                              species = species)
+      timing <- system.time({
+        names(sub_group) <- colnames(tpm)
+        sca <- MAST::FromMatrix(exprsArray = log2(tpm + 1),
+                                cData = data.frame(wellKey = names(sub_group),
+                                                   group = sub_group))
+        zlmdata <- MAST::zlm(~ group, sca)
+        mast <- MAST::lrTest(zlmdata, "group")
+        df <- data.frame(PValue = mast[, "hurdle", "Pr(>Chisq)"],
+                         FDR = stats::p.adjust(mast[, "hurdle", "Pr(>Chisq)"], method = "BH"),
+                         row.names = names(mast[, "hurdle", "Pr(>Chisq)"]))
+      })
+      result_list[[paste0(group_candidate, collapse = "vs")]] <- df
+    }
+
+    if(method == "limmatrend"){
+      message("Performing DEA using limma-trend")
+      timing <- system.time({
+        dge <- edgeR::DGEList(sub_data, group = sub_group)
+        dge <- edgeR::calcNormFactors(dge)
+        design <- stats::model.matrix(~ sub_group)
+        y <- methods::new("EList")
+        y$E <- edgeR::cpm(dge, log = TRUE, prior.count = 3)
+        fit <- limma::lmFit(y, design = design)
+        fit <- limma::eBayes(fit, trend = TRUE, robust = TRUE)
+        tt <- limma::topTable(fit, n = Inf, adjust.method = "BH")
+        colnames(tt)[c(4, 5)] <- c("PValue", "FDR")
+      })
+      result_list[[paste0(group_candidate, collapse = "vs")]] <- tt
+    }
+
+    if(method == "limmavoom"){
+      message("Performing DEA using limma-voom")
+      timing <- system.time({
+        dge <- edgeR::DGEList(sub_data, group = sub_group)
+        dge <- edgeR::calcNormFactors(dge)
+        design <- model.matrix(~ sub_group)
+        vm <- limma::voom(dge, design = design, plot = FALSE)
+        fit <- limma::lmFit(vm, design = design)
+        fit <- limma::eBayes(fit)
+        tt <- limma::topTable(fit, n = Inf, adjust.method = "BH")
+        colnames(tt)[c(4, 5)] <- c("PValue", "FDR")
+      })
+      result_list[[paste0(group_candidate, collapse = "vs")]] <- tt
+    }
+
+    if(method == "ttest"){
+      message("Performing DEA using t-test")
+      tpm <- simutils::normalization_simutils(data = sub_data,
+                                              norm_method = "TPM",
+                                              species = species)
+      timing <- system.time({
+        tmm <- edgeR::calcNormFactors(tpm)
+        tpmtmm <- edgeR::cpm(tpm, lib.size = tmm * colSums(tpm))
+        logtpm <- log2(tpmtmm + 1)
+        idx <- seq_len(nrow(logtpm))
+        names(idx) <- rownames(logtpm)
+        ttest_p <- sapply(idx, function(i) {
+          stats::t.test(logtpm[i, ] ~ sub_group)$p.value
+        })
+      })
+      df <- data.frame(PValue = ttest_p,
+                       FDR = stats::p.adjust(ttest_p, method = "BH"),
+                       row.names = names(ttest_p))
+      result_list[[paste0(group_candidate, collapse = "vs")]] <- df
+    }
+
+    if(method == "wilcox"){
+      message("Performing DEA using wilcox-test")
+      tpm <- simutils::normalization_simutils(data = sub_data,
+                                              norm_method = "TPM",
+                                              species = species)
+      timing <- system.time({
+        tmm <- edgeR::calcNormFactors(tpm)
+        tpmtmm <- edgeR::cpm(tpm, lib.size = tmm * colSums(tpm))
+        idx <- 1:nrow(tpmtmm)
+        names(idx) <- rownames(tpmtmm)
+        wilcox_p <- sapply(idx, function(i) {
+          stats::wilcox.test(tpmtmm[i, ] ~ sub_group)$p.value
+        })
+      })
+      df <- data.frame(PValue = wilcox_p,
+                       FDR = stats::p.adjust(wilcox_p, method = "BH"),
+                       row.names = names(wilcox_p))
+      result_list[[paste0(group_candidate, collapse = "vs")]] <- df
+    }
   }
-  print(timing)
 }
 
 

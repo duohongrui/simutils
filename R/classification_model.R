@@ -1,7 +1,7 @@
-# pre_data <- readRDS("/Users/duohongrui/Desktop/preprocessed_data/data1_GSE54006.rds")
-# data <- pre_data$data
-# data_info <- pre_data$data_info
-# group <- data_info$treatment
+pre_data <- readRDS("/Users/duohongrui/Desktop/preprocessed_data/data48_GSE95436.rds")
+data <- pre_data$data
+data_info <- pre_data$data_info
+group <- data_info$cluster_info
 #
 # result <- simutils::perform_DEA(data = data, group = group, method = "edgeRQLF")
 # de_genes <- rownames(result)[result$FDR < 0.05]
