@@ -126,7 +126,9 @@ gene_properties <- function(data,
     message("Calculating gene dispersions using Seurat...")
   }
   data_seurat <- Seurat::CreateSeuratObject(counts = data, min.cells = 0, min.features = 0)
-  data_seurat <- Seurat::NormalizeData(data_seurat, normalization.method = "RC", scale.factor = 1e6)
+  data_seurat <- Seurat::NormalizeData(data_seurat,
+                                       normalization.method = "LogNormalize",
+                                       scale.factor = 1e6)
   data_seurat <- Seurat::FindVariableFeatures(data_seurat, selection.method = "disp")
   dispersion <- Seurat::HVFInfo(data_seurat)$dispersion
   ## 7) Proportion of gene outliers

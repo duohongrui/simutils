@@ -13,7 +13,7 @@ Author: Hongrui Duo [aut, cre] (<https://orcid.org/0000-0001-8683-015X>),
 Maintainer: Hongrui Duo <duohongrui@cqnu.edu.cn>
 Description: Simutils contains all of the functions that are necessary for
     the middle processing steps of preparation, simluation and evaluation.
-License: GPL-3
+License: GPL (>= 3)
 URL: https://github.com/duohongrui/simutils
 BugReports: https://github.com/duohongrui/simutils/issues
 Depends: 
