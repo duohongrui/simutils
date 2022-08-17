@@ -73,3 +73,86 @@ data_conversion <- function(
   }
   return(simulate_result)
 }
+
+
+
+#' Convert R Matrix to Python h5ad File
+#'
+#' @param data A gene expression matrix with cell on columns and gene on rows.
+#' @param data_id Tha data name to be output.
+#' @param save_to_path The save path on local device.
+#' @param verbose If messages are returned during the process.
+#' @export
+scgan_data_conversion <- function(
+    data,
+    data_id,
+    save_to_path,
+    verbose
+){
+  # Process file path-----------------------------------------------------------
+  ## 1. Create a temp directory to store .rds file or .h5 file for Python
+  temp_dir <- tempdir()
+  ## 2. Set a path for the input data
+  temp_data_path <- file.path(temp_dir, "data.rds") %>% simutils::fix_path()
+
+  # Process datasets------------------------------------------------------------
+  ## 1. Convert ref_data into .rds or .h5 file and save to input path
+  # simutils::write_h5files(data = ref_data, file_path = temp_input_path)
+  saveRDS(data, file = temp_input_path)
+
+  # Prepare the input parameters-----------------------------------------------
+  ## 1. docker image working directory
+  wd <- "/runcode"
+  ## 2. local directory of the mount point
+  local_path <- temp_dir %>% simutils::fix_path()
+  ## 3. docker image directory of the mount point
+  docker_path <- "/data"
+  ## 4. verbose
+  verbose <- verbose
+  ## 5. args
+  args <- NULL
+  ## 6. command
+  command <- NULL
+  ## 7. container id
+  ### (1. Check docker installation
+  docker_install <- dynwrap::test_docker_installation()
+  if(!docker_install){
+    stop("Docker has not been installed or started! Please check it!")
+  }
+  ### (2. Check the installation of simpipe docker image
+  images <- babelwhale::list_docker_images() %>%
+    tidyr::unite("Repository", "Tag", sep = ":", col = "Image") %>%
+    dplyr::pull("Image")
+
+  if(!"duohongrui/simutils_scgan:latest" %in% images){
+    # If not, pull duohongrui/simpipe:latest
+    babelwhale::pull_container(container_id = "duohongrui/simutils_scgan:latest")
+  }
+  ### (3. docker container id
+  container_id <- "duohongrui/simutils_scgan"
+
+  # Save command parameters
+  input_meta <- list(container_id = container_id,
+                     command = command,
+                     args = args,
+                     volums = paste0(local_path, ":", docker_path),
+                     workspace = wd,
+                     verbose = verbose,
+                     data_id = other_prior)
+  saveRDS(input_meta, file.path(local_path, "data_info.rds"))
+
+  # Run container---------------------------------------------------------------
+  output <- babelwhale::run(container_id = input_meta$container_id,
+                            command = input_meta$command,
+                            args = input_meta$args,
+                            volumes = input_meta$volums,
+                            workspace = input_meta$workspace,
+                            verbose = input_meta$verbose,
+                            debug = FALSE)
+
+  # Get result------------------------------------------------------------------
+  file.remove(file.path(local_path, paste0(data_id, ".h5ad")),
+              file.path(save_to_path, paste0(data_id, ".h5ad")))
+  message("Output is saved to ", save_to_path, "\n")
+  return(list(save_path = file.path(save_to_path, paste0(data_id, ".h5ad"))))
+}
