@@ -98,7 +98,7 @@ scgan_data_conversion <- function(
   # Process datasets------------------------------------------------------------
   ## 1. Convert ref_data into .rds or .h5 file and save to input path
   # simutils::write_h5files(data = ref_data, file_path = temp_input_path)
-  saveRDS(data, file = temp_input_path)
+  saveRDS(data, file = temp_data_path)
 
   # Prepare the input parameters-----------------------------------------------
   ## 1. docker image working directory
@@ -138,7 +138,7 @@ scgan_data_conversion <- function(
                      volums = paste0(local_path, ":", docker_path),
                      workspace = wd,
                      verbose = verbose,
-                     data_id = other_prior)
+                     data_id = data_id)
   saveRDS(input_meta, file.path(local_path, "data_info.rds"))
 
   # Run container---------------------------------------------------------------
@@ -151,8 +151,8 @@ scgan_data_conversion <- function(
                             debug = FALSE)
 
   # Get result------------------------------------------------------------------
-  file.remove(file.path(local_path, paste0(data_id, ".h5ad")),
-              file.path(save_to_path, paste0(data_id, ".h5ad")))
-  message("Output is saved to ", save_to_path, "\n")
+  file.copy(from = file.path(local_path, paste0(data_id, ".h5ad")),
+            to = file.path(save_to_path, paste0(data_id, ".h5ad")))
+  message("Output is saved to ", file.path(save_to_path, paste0(data_id, ".h5ad")), "\n")
   return(list(save_path = file.path(save_to_path, paste0(data_id, ".h5ad"))))
 }
