@@ -153,6 +153,8 @@ scgan_data_conversion <- function(
   # Get result------------------------------------------------------------------
   file.copy(from = file.path(local_path, paste0(data_id, ".h5ad")),
             to = file.path(save_to_path, paste0(data_id, ".h5ad")))
+  file.copy(from = file.path(local_path, "cluster_number.rds"),
+            to = file.path(save_to_path, "cluster_number.rds"))
   message("Output is saved to ", file.path(save_to_path, paste0(data_id, ".h5ad")))
   cluster_number <- readRDS(file.path(save_to_path, "cluster_number.rds"))
   return(list(save_path = file.path(save_to_path, paste0(data_id, ".h5ad")),
