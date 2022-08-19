@@ -38,13 +38,13 @@ change_parameters <- function(
 #' Change Parameters About scGAN
 #'
 #' @param project_name Name your experiment
-#' @param ... Other parameters
+#' @param new_values New values. A list.
 #'
 #' @export
 #'
 change_scGAN_parameters <- function(
     project_name,
-    ...
+    new_values
 ){
   if(!requireNamespace("jsonlite", quietly = TRUE)){
     stop("Package \"jsonlite\" must be installed by \"install.packages('jsonlite')\" command.")
@@ -54,25 +54,25 @@ change_scGAN_parameters <- function(
                                simplifyDataFrame = TRUE,
                                simplifyVector = FALSE)
   names(params[["experiments"]]) <- project_name
-  params <- change_values_in_list(list = params, ...)
+  params <- change_values_in_list(list = params, new_values)
   return(params)
 }
 
 #' Change Values From a List
 #'
-#' @param list The list
-#' @param ... Other attributes and new values
+#' @param list The list.
+#' @param new_values Other attr ibutes and new values.
 #'
 #' @export
 #'
 change_values_in_list <- function(
     list,
-    ...
+    new_values
 ){
   if(!requireNamespace("rrapply", quietly = TRUE)){
     stop("Package \"rrapply\" must be installed by \"install.packages('rrapply')\" command.")
   }
-  reset_params <- list(...)
+  reset_params <- new_values
   for(id in names(reset_params)){
     reset_value <- reset_params[[id]]
     if(id == "GPU"){

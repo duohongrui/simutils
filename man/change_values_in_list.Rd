@@ -4,12 +4,12 @@
 \alias{change_values_in_list}
 \title{Change Values From a List}
 \usage{
-change_values_in_list(list, ...)
+change_values_in_list(list, new_values)
 }
 \arguments{
-\item{list}{The list}
+\item{list}{The list.}
 
-\item{...}{Other attributes and new values}
+\item{new_values}{Other attr ibutes and new values.}
 }
 \description{
 Change Values From a List

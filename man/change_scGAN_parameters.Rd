@@ -4,12 +4,12 @@
 \alias{change_scGAN_parameters}
 \title{Change Parameters About scGAN}
 \usage{
-change_scGAN_parameters(project_name, ...)
+change_scGAN_parameters(project_name, new_values)
 }
 \arguments{
 \item{project_name}{Name your experiment}
 
-\item{...}{Other parameters}
+\item{new_values}{New values. A list.}
 }
 \description{
 Change Parameters About scGAN
