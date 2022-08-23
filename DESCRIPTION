@@ -69,7 +69,8 @@ Remotes:
     dynverse/dyneval@master,
     dynverse/dynmethods@master,
     dynverse/dynparam@master,
-    dynverse/dynwrap@master
+    dynverse/dynwrap@master,
+    mojaveazure/seurat-disk@master
 biocViews:
 Encoding: UTF-8
 LazyData: true
