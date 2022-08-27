@@ -1,5 +1,5 @@
 
-<img src="man/figures/simutils_logo.png" align="right" width = "193px" height="168px"/>
+<img src="man/figures/simutils_logo.png" align="right" width = "167px" height="193px"/>
 
 # Simutils implements essential utils functions for estimating parameters from real data, simulating and evaluating the simulated single-cell RNA-seq datastets.
 
