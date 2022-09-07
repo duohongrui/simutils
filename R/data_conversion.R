@@ -81,6 +81,7 @@ data_conversion <- function(
 #' @param data A gene expression matrix with cell on columns and gene on rows.
 #' @param data_id Tha data name to be output.
 #' @param res The clustering resolution.
+#' @param group The group information of each cells. If not NULL, the res will be none and the clustering step will not be performed.
 #' @param save_to_path The save path on local device.
 #' @param verbose If messages are returned during the process.
 #' @export
@@ -88,6 +89,7 @@ scgan_data_conversion <- function(
     data,
     data_id,
     res,
+    group = NULL,
     save_to_path,
     verbose
 ){
@@ -141,7 +143,8 @@ scgan_data_conversion <- function(
                      workspace = wd,
                      verbose = verbose,
                      data_id = data_id,
-                     res = res)
+                     res = res,
+                     group = group)
   saveRDS(input_meta, file.path(local_path, "data_info.rds"))
 
   # Run container---------------------------------------------------------------

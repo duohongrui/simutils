@@ -4,7 +4,7 @@
 \alias{scgan_data_conversion}
 \title{Convert R Matrix to Python h5ad File}
 \usage{
-scgan_data_conversion(data, data_id, res, save_to_path, verbose)
+scgan_data_conversion(data, data_id, res, group = NULL, save_to_path, verbose)
 }
 \arguments{
 \item{data}{A gene expression matrix with cell on columns and gene on rows.}
@@ -12,6 +12,8 @@ scgan_data_conversion(data, data_id, res, save_to_path, verbose)
 \item{data_id}{Tha data name to be output.}
 
 \item{res}{The clustering resolution.}
+
+\item{group}{The group information of each cells. If not NULL, the res will be none and the clustering step will not be performed.}
 
 \item{save_to_path}{The save path on local device.}
 
