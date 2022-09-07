@@ -114,9 +114,9 @@ scgan_data_conversion <- function(
   ## 4. verbose
   verbose <- verbose
   ## 5. args
-  args <- NULL
+  args <- c("/runcode/data_conversion.R")
   ## 6. command
-  command <- NULL
+  command <- "Rscript"
   ## 7. container id
   ### (1. Check docker installation
   docker_install <- dynwrap::test_docker_installation()
