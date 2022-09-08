@@ -11,7 +11,7 @@ scgan_data_conversion(data, data_id, res, group = NULL, save_to_path, verbose)
 
 \item{data_id}{Tha data name to be output.}
 
-\item{res}{The clustering resolution.}
+\item{res}{The clustering resolution. Default is 0.15.}
 
 \item{group}{The group information of each cells. If not NULL, the res will be none and the clustering step will not be performed.}
 

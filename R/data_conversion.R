@@ -80,7 +80,7 @@ data_conversion <- function(
 #'
 #' @param data A gene expression matrix with cell on columns and gene on rows.
 #' @param data_id Tha data name to be output.
-#' @param res The clustering resolution.
+#' @param res The clustering resolution. Default is 0.15.
 #' @param group The group information of each cells. If not NULL, the res will be none and the clustering step will not be performed.
 #' @param save_to_path The save path on local device.
 #' @param verbose If messages are returned during the process.
@@ -134,6 +134,10 @@ scgan_data_conversion <- function(
   }
   ### (3. docker container id
   container_id <- "duohongrui/simutils_scgan"
+
+  if(!is.null(group)){
+    res <- NULL
+  }
 
   # Save command parameters
   input_meta <- list(container_id = container_id,
