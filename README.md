@@ -18,3 +18,7 @@ You can install the development version of simutils from
 # install.packages("devtools")
 devtools::install_github("duohongrui/simutils")
 ```
+
+<em> Simutils contains many useful utils functions to establish the
+standard pipeline for defining a simulation method, preprocessing
+reference datasets with specific requirements </em>
