@@ -46,6 +46,7 @@ model_predict <- function(
   method
 ){
   ## filter genes with constant value across cells
+  message("Preprocessing data...")
   gene_var <- apply(data, 1, BiocGenerics::var)
   data <- data[gene_var != 0, ]
   ## scale
@@ -79,7 +80,9 @@ model_predict <- function(
     predict_class <- stats::predict(svm_classifier,
                                     as.matrix(test_data),
                                     prob = FALSE)
-    conf_matrix <- caret::confusionMatrix(predict_class, test_group)
+    conf_matrix <- caret::confusionMatrix(predict_class,
+                                          test_group,
+                                          mode = "everything")
     predict_prob <- stats::predict(svm_classifier,
                                    as.matrix(test_data),
                                    prob = TRUE)
@@ -106,7 +109,9 @@ model_predict <- function(
     predict_class <- stats::predict(tree_model,
                                     as.data.frame(test_data),
                                     type = "class")
-    conf_matrix <- caret::confusionMatrix(predict_class, test_group)
+    conf_matrix <- caret::confusionMatrix(predict_class,
+                                          test_group,
+                                          mode = "everything")
     predict_prob <- stats::predict(tree_model,
                                    as.data.frame(test_data),
                                    type = "prob")
@@ -137,7 +142,9 @@ model_predict <- function(
     predict_class <- stats::predict(RF_model,
                                     test_data,
                                     type = "class")
-    conf_matrix <- caret::confusionMatrix(predict_class, test_group)
+    conf_matrix <- caret::confusionMatrix(predict_class,
+                                          test_group,
+                                          mode = "everything")
     predict_prob <- stats::predict(RF_model,
                                    test_data,
                                    type = "prob")
