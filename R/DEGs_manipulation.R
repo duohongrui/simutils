@@ -296,7 +296,9 @@ test_uni_distribution <- function(
     PValue
 ){
   if(!requireNamespace("spgs", quietly = TRUE)){
-    stop("Please install \"spgs\" package using \"install.packages('spgs')\" command.")
+    message("spgs is not installed on your device...")
+    message("Installing spgs...")
+    install.packages("spgs")
   }
   result <- spgs::chisq.unif.test(PValue, bins = 20)
   if(result$p.value < 0.05){
@@ -307,3 +309,4 @@ test_uni_distribution <- function(
   return(dplyr::lst(result,
                     score))
 }
+

@@ -27,6 +27,8 @@
 #
 # data <- data[non_gene_genes, ]
 
+
+
 #' Establish A Model And Predict Using DEGs
 #'
 #' @param data A matrix with cells on columns and genes on rows.
@@ -62,7 +64,9 @@ model_predict <- function(
   if(method == "SVM"){
     ## SVM
     if(!requireNamespace("e1071", quietly = TRUE)){
-      stop("Package \"e1071\" must be installed by \"install.packages('e1071')\" command.")
+      message("e1071 is not installed on your device...")
+      message("Installing e1071...")
+      install.packages("e1071")
     }
     message("Modeling by SVM...")
     svm_classifier <- e1071::svm(x = train_data,
@@ -91,7 +95,9 @@ model_predict <- function(
   if(method == "Decision tree"){
     ## Decision tree
     if(!requireNamespace("rpart", quietly = TRUE)){
-      stop("Package \"rpart\" must be installed by \"install.packages('rpart')\" command.")
+      message("rpart is not installed on your device...")
+      message("Installing rpart...")
+      install.packages("rpart")
     }
     train_data$group <- train_group
     tree_model <- rpart::rpart(group ~ .,
@@ -115,7 +121,9 @@ model_predict <- function(
 
   if(method == "RF"){
     if(!requireNamespace("randomForest", quietly = TRUE)){
-      stop("Package \"randomForest\" must be installed by \"install.packages('randomForest')\" command.")
+      message("randomForest is not installed on your device...")
+      message("Installing randomForest...")
+      install.packages("randomForest")
     }
     train_data$group <- train_group
     colnames(train_data) <- gsub(pattern = "-",
