@@ -1,31 +1,31 @@
-pre_data <- readRDS("/Users/duohongrui/Desktop/preprocessed_data/data1_GSE54006.rds")
-data <- pre_data$data
-data_info <- pre_data$data_info
-group <- data_info$cluster_info
-
-result <- simutils::perform_DEA(data = data, group = group, method = "edgeRQLF")
-de_genes <- rownames(result)[result$FDR < 0.05]
-
-
-estimate_result <- simmethods::Splat_estimation(ref_data = data, verbose = TRUE, seed = 111)
-prob.group = as.numeric(table(group)/ncol(data))
-de.prob = length(de_genes)/nrow(data)
-simulate_result <- simmethods::Splat_simulation(
-  estimate_result$estimate_result,
-  other_prior = list(prob.group = c(0.3, 0.4, 0.3),
-                     de.prob = 0.3),
-  return_format = "list",
-  verbose = TRUE,
-  seed = 111)
-
-data <- simulate_result$simulate_result$count_data
-col_data <- simulate_result$simulate_result$col_meta
-group <- col_data$group
-row_data <- simulate_result$simulate_result$row_meta
-de_genes <- rownames(row_data)[row_data$de_gene == "yes"]
-non_gene_genes <- rownames(row_data)[row_data$de_gene == "no"]
-
-data <- data[non_gene_genes, ]
+# pre_data <- readRDS("/Users/duohongrui/Desktop/preprocessed_data/data1_GSE54006.rds")
+# data <- pre_data$data
+# data_info <- pre_data$data_info
+# group <- data_info$cluster_info
+#
+# result <- simutils::perform_DEA(data = data, group = group, method = "edgeRQLF")
+# de_genes <- rownames(result)[result$FDR < 0.05]
+#
+#
+# estimate_result <- simmethods::Splat_estimation(ref_data = data, verbose = TRUE, seed = 111)
+# prob.group = as.numeric(table(group)/ncol(data))
+# de.prob = length(de_genes)/nrow(data)
+# simulate_result <- simmethods::Splat_simulation(
+#   estimate_result$estimate_result,
+#   other_prior = list(prob.group = c(0.3, 0.4, 0.3),
+#                      de.prob = 0.3),
+#   return_format = "list",
+#   verbose = TRUE,
+#   seed = 111)
+#
+# data <- simulate_result$simulate_result$count_data
+# col_data <- simulate_result$simulate_result$col_meta
+# group <- col_data$group
+# row_data <- simulate_result$simulate_result$row_meta
+# de_genes <- rownames(row_data)[row_data$de_gene == "yes"]
+# non_gene_genes <- rownames(row_data)[row_data$de_gene == "no"]
+#
+# data <- data[non_gene_genes, ]
 
 
 
@@ -153,15 +153,15 @@ model_predict <- function(
 }
 
 
-par(pty = "s")
-print(pROC::multiclass.roc(result[["roc"]][["response"]],
-                result[["roc"]][["predictor"]],
-                plot = TRUE,
-                legacy.axes = TRUE,
-                percent = TRUE,
-                col = "#377eb8",
-                print.auc = TRUE,
-                xlab = "FPR",
-                ylab = "TPR",
-                lwd = 3))
+# par(pty = "s")
+# print(pROC::multiclass.roc(result[["roc"]][["response"]],
+#                 result[["roc"]][["predictor"]],
+#                 plot = TRUE,
+#                 legacy.axes = TRUE,
+#                 percent = TRUE,
+#                 col = "#377eb8",
+#                 print.auc = TRUE,
+#                 xlab = "FPR",
+#                 ylab = "TPR",
+#                 lwd = 3))
 # roc_obj <- pROC::roc(test_group, RF_predict_prob[, 2])
