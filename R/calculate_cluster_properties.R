@@ -14,7 +14,8 @@ calculate_CDI <- function(
   batch_info = NULL
 ){
   if(!requireNamespace("CDI", quietly = TRUE)){
-    stop("Package \"CDI\" must be installed by \"remotes::install_github('jichunxie/CDI')\" command.")
+    message("Installing CDI package...")
+    remotes::install_github('jichunxie/CDI')
   }
   ## cluster
   cell_label <- data.frame("clsuter" = as.numeric(as.factor(cluster_info)))
@@ -59,7 +60,8 @@ calculate_ROGUE <- function(
   cluster_info
 ){
   if(!requireNamespace("ROGUE", quietly = TRUE)){
-    stop("Package \"ROGUE\" must be installed by \"devtools::install_github('PaulingLiu/ROGUE')\" command.")
+    message("Installing ROGUE package...")
+    devtools::install_github('PaulingLiu/ROGUE')
   }
   ## cluster name
   cluster_name <- unique(cluster_info)
@@ -97,7 +99,8 @@ calculate_silhouette <- function(
   cluster_info
 ){
   if(!requireNamespace("cluster", quietly = TRUE)){
-    stop("Package \"cluster\" must be installed by \"install.packages('cluster')\" command.")
+    message("Installing cluster package...")
+    install.packages("cluster")
   }
   dist <- stats::dist(t(data))
   silhouette_width <- cluster::silhouette(x = as.numeric(as.factor(cluster_info)),
@@ -108,3 +111,44 @@ calculate_silhouette <- function(
 
 
 
+#' Calculate Dunn Index
+#'
+#' @param data A matrix of gene expression profile.
+#' @param cluster_info Cluster(or group) assignment of every cells in columns of matrix.
+#'
+#' @export
+calculate_dunn <- function(
+  data,
+  cluster_info
+){
+  if(!requireNamespace("clValid", quietly = TRUE)){
+    message("Installing clValid package...")
+    install.packages("clValid")
+  }
+  dist <- stats::dist(t(data))
+  cluster_info <- as.numeric(as.factor(cluster_info))
+  dunn <- clValid::dunn(distance = dist, clusters = cluster_info)
+  return(dunn)
+}
+
+
+
+#' Calculate Connectivity
+#'
+#' @param data A matrix of gene expression profile.
+#' @param cluster_info Cluster(or group) assignment of every cells in columns of matrix.
+#'
+#' @export
+calculate_connectivity <- function(
+  data,
+  cluster_info
+){
+  if(!requireNamespace("clValid", quietly = TRUE)){
+    message("Installing clValid package...")
+    install.packages("clValid")
+  }
+  dist <- stats::dist(t(data))
+  cluster_info <- as.numeric(as.factor(cluster_info))
+  con <- clValid::connectivity(distance = dist, clusters = cluster_info)
+  return(con)
+}
