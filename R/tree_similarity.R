@@ -43,3 +43,30 @@ leaf_node_depth <- function(edge){
   }
   return(depth_count)
 }
+
+
+
+#' Calculate the Discrepency of Nodes' Height
+#'
+#' @param ref_tree Phylo tree derived from reference data
+#' @param sim_tree Phylo tree derived from simulated data
+#' @importFrom stats as.dendrogram
+#'
+#' @return An RMSE value
+#' @export
+#'
+node_height_dis <- function(ref_tree, sim_tree){
+  if(!requireNamespace("dendextend")){
+    install.packages("dendextend")
+  }
+  if(!requireNamespace("dendextend")){
+    install.packages("dendextend")
+  }
+  ref_dendro <- stats::as.dendrogram(a)
+  ref_height <- dendextend::get_branches_heights(ref_dendro)
+  sim_dendro <- stats::as.dendrogram(b)
+  sim_height <- dendextend::get_branches_heights(sim_dendro)
+  discrepency <- MLmetrics::RMSE(ref_height, sim_height)
+  return(discrepency)
+}
+
