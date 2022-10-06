@@ -93,6 +93,7 @@ calculate_ROGUE <- function(
 #' @param data A matrix of gene expression profile.
 #' @param cluster_info Cluster(or group) assignment of every cells in columns of matrix.
 #' @importFrom stats dist
+#' @importFrom utils install.packages
 #' @export
 calculate_silhouette <- function(
   data,
@@ -100,7 +101,7 @@ calculate_silhouette <- function(
 ){
   if(!requireNamespace("cluster", quietly = TRUE)){
     message("Installing cluster package...")
-    install.packages("cluster")
+    utils::install.packages("cluster")
   }
   dist <- stats::dist(t(data))
   silhouette_width <- cluster::silhouette(x = as.numeric(as.factor(cluster_info)),
@@ -123,7 +124,7 @@ calculate_dunn <- function(
 ){
   if(!requireNamespace("clValid", quietly = TRUE)){
     message("Installing clValid package...")
-    install.packages("clValid")
+    utils::install.packages("clValid")
   }
   dist <- stats::dist(t(data))
   cluster_info <- as.numeric(as.factor(cluster_info))
@@ -145,10 +146,52 @@ calculate_connectivity <- function(
 ){
   if(!requireNamespace("clValid", quietly = TRUE)){
     message("Installing clValid package...")
-    install.packages("clValid")
+    utils::install.packages("clValid")
   }
   dist <- stats::dist(t(data))
   cluster_info <- as.numeric(as.factor(cluster_info))
   con <- clValid::connectivity(distance = dist, clusters = cluster_info)
   return(con)
+}
+
+
+
+#' Calculate Davies-Bouldin Index
+#'
+#' @param data A matrix of gene expression profile.
+#' @param cluster_info Cluster(or group) assignment of every cells in columns of matrix.
+#'
+#' @export
+#'
+calculate_DB_index <- function(
+  data,
+  cluster_info
+){
+  if(!requireNamespace("clusterSim", quietly = TRUE)){
+    message("Installing clusterSim package...")
+    utils::install.packages("clusterSim")
+  }
+  DB <- clusterSim::index.DB(t(data), cluster_info)$DB
+  return(DB)
+}
+
+
+
+#' Calculate Calinski-Harabasz Index
+#'
+#' @param data A matrix of gene expression profile.
+#' @param cluster_info Cluster(or group) assignment of every cells in columns of matrix.
+#'
+#' @export
+#'
+calculate_CH_index <- function(
+    data,
+    cluster_info
+){
+  if(!requireNamespace("fpc", quietly = TRUE)){
+    message("Installing fpc package...")
+    utils::install.packages("fpc")
+  }
+  CH <- fpc::calinhara(t(data), cluster_info)
+  return(CH)
 }

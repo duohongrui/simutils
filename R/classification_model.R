@@ -67,7 +67,7 @@ model_predict <- function(
     if(!requireNamespace("e1071", quietly = TRUE)){
       message("e1071 is not installed on your device...")
       message("Installing e1071...")
-      install.packages("e1071")
+      utils::install.packages("e1071")
     }
     message("Modeling by SVM...")
     svm_classifier <- e1071::svm(x = train_data,
@@ -100,7 +100,7 @@ model_predict <- function(
     if(!requireNamespace("rpart", quietly = TRUE)){
       message("rpart is not installed on your device...")
       message("Installing rpart...")
-      install.packages("rpart")
+      utils::install.packages("rpart")
     }
     train_data$group <- train_group
     tree_model <- rpart::rpart(group ~ .,
@@ -128,7 +128,7 @@ model_predict <- function(
     if(!requireNamespace("randomForest", quietly = TRUE)){
       message("randomForest is not installed on your device...")
       message("Installing randomForest...")
-      install.packages("randomForest")
+      utils::install.packages("randomForest")
     }
     train_data$group <- train_group
     colnames(train_data) <- gsub(pattern = "-",
