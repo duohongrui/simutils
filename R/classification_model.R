@@ -62,6 +62,12 @@ model_predict <- function(
   train_group <- group[train_index]
   test_group <- group[-train_index]
 
+  if(!requireNamespace("pROC", quietly = TRUE)){
+    message("pROC is not installed on your device...")
+    message("Installing pROC...")
+    utils::install.packages("pROC")
+  }
+
   if(method == "SVM"){
     ## SVM
     if(!requireNamespace("e1071", quietly = TRUE)){

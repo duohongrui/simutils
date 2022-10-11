@@ -17,6 +17,12 @@
 #' str(result)
 cell_properties <- function(data,
                             verbose = FALSE){
+  if(!requireNamespace("WGCNA", quietly = TRUE)){
+    message("WGCNA is not installed on your device...")
+    message("Installing WGCNA...")
+    utils::install.packages("WGCNA")
+  }
+
   ## 1) library size
   if(verbose){
     message("Calculating library size of cells...")
@@ -88,6 +94,12 @@ cell_properties <- function(data,
 gene_properties <- function(data,
                             cpm_norm = TRUE,
                             verbose = FALSE){
+  if(!requireNamespace("WGCNA", quietly = TRUE)){
+    message("WGCNA is not installed on your device...")
+    message("Installing WGCNA...")
+    utils::install.packages("WGCNA")
+  }
+
   if(cpm_norm){
     if(verbose){
       message("Performing log2 CPM nomalization...")

@@ -104,6 +104,11 @@ match_cells <- function(ref_data, sim_data){
 
 
   ### Calculate correlation matrix
+  if(!requireNamespace("WGCNA", quietly = TRUE)){
+    message("WGCNA is not installed on your device...")
+    message("Installing WGCNA...")
+    utils::install.packages("WGCNA")
+  }
   cor_result <- WGCNA::cor(t(harmony_embeddings), method = 'spearman')
 
   index <- dim(cor_result)[1]/2

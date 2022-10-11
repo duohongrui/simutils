@@ -38,7 +38,6 @@ Imports:
     Matrix,
     methods,
     NbClust,
-    pROC,
     processx,
     purrr,
     scater,
@@ -46,8 +45,7 @@ Imports:
     SeuratDisk,
     SingleCellExperiment,
     splatter,
-    stringr,
-    WGCNA
+    stringr
 Suggests:
     bluster,
     CDI,
@@ -65,7 +63,9 @@ Suggests:
     rpart,
     rrapply,
     spgs,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    WGCNA,
+    pROC
 Remotes: 
     dynverse/dyneval@master,
     dynverse/dynmethods@master,
