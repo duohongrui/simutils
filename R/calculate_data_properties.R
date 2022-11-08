@@ -45,8 +45,13 @@ cell_properties <- function(data,
     message("Calculating TMM normalization factor...")
   }
   dge <- edgeR::DGEList(counts = data)
-  dge <- edgeR::calcNormFactors(dge, method = "TMM")
-  TMM_factor <- dge[["samples"]][["norm.factors"]]
+  error_detect <- try(dge <- edgeR::calcNormFactors(dge, method = "TMM"),
+                      silent = TRUE)
+  if("try-error" %in% class(error_detect)){
+    TMM_factor <- NA
+  }else{
+    TMM_factor <- dge[["samples"]][["norm.factors"]]
+  }
   ## 5) Effective library size
   if(verbose){
     message("Calculating effective library size...")
