@@ -126,19 +126,14 @@ gene_properties <- function(data,
     message("Calculating coefficient of variance...")
   }
   cv <- apply(data, 1, sd)/apply(data, 1, mean) * 100
-  ## 4) gene correlation
-  if(verbose){
-    message("Calculating gene correlation...")
-  }
-  gene_cor <- WGCNA::cor(t(data), method = "spearman", nThreads = 1)
-  ## 5) fraction of zero in genes
+  ## 4) fraction of zero in genes
   if(verbose){
     message("Calculating fraction of zero in genes...")
   }
   zero_fraction_gene <- apply(data, 1, function(x){
     sum(x == 0)/length(x)
   })
-  ## 6) dispersion
+  ## 5) dispersion
   if(verbose){
     message("Calculating gene dispersions using Seurat...")
   }
@@ -148,7 +143,7 @@ gene_properties <- function(data,
                                        scale.factor = 1e6)
   data_seurat <- Seurat::FindVariableFeatures(data_seurat, selection.method = "disp")
   dispersion <- Seurat::HVFInfo(data_seurat)$dispersion
-  ## 7) Proportion of gene outliers
+  ## 6) Proportion of gene outliers
   if(verbose){
     message("Calculating proportion of gene outliers...")
   }
@@ -161,7 +156,6 @@ gene_properties <- function(data,
   gene_properties <- dplyr::lst(mean_expression,
                                 sd,
                                 cv,
-                                gene_cor,
                                 zero_fraction_gene,
                                 dispersion,
                                 prop_outliers_gene)
