@@ -92,7 +92,7 @@ calculate_ROGUE <- function(
 #'
 #' @param data A matrix of gene expression profile or the distance matrix.
 #' @param cluster_info Cluster(or group) assignment of every cells in columns of matrix.
-#' @importFrom stats dist
+#' @importFrom parallelDist parDist
 #' @importFrom utils install.packages
 #' @export
 calculate_silhouette <- function(
@@ -103,10 +103,14 @@ calculate_silhouette <- function(
     message("Installing cluster package...")
     utils::install.packages("cluster")
   }
+  if(!requireNamespace("parallelDist", quietly = TRUE)){
+    message("Installing parallelDist package...")
+    utils::install.packages("parallelDist")
+  }
   if(class(data) == "dist"){
     dist <- data
   }else{
-    dist <- stats::dist(t(data))
+    dist <- parallelDist::parDist(t(data))
   }
   silhouette_width <- cluster::silhouette(x = as.numeric(as.factor(cluster_info)),
                                           dist)
@@ -130,10 +134,14 @@ calculate_dunn <- function(
     message("Installing clValid package...")
     utils::install.packages("clValid")
   }
+  if(!requireNamespace("parallelDist", quietly = TRUE)){
+    message("Installing parallelDist package...")
+    utils::install.packages("parallelDist")
+  }
   if(class(data) == "dist"){
     dist <- data
   }else{
-    dist <- stats::dist(t(data))
+    dist <- parallelDist::parDist(t(data))
   }
   cluster_info <- as.numeric(as.factor(cluster_info))
   dunn <- clValid::dunn(distance = dist, clusters = cluster_info)
@@ -156,10 +164,14 @@ calculate_connectivity <- function(
     message("Installing clValid package...")
     utils::install.packages("clValid")
   }
+  if(!requireNamespace("parallelDist", quietly = TRUE)){
+    message("Installing parallelDist package...")
+    utils::install.packages("parallelDist")
+  }
   if(class(data) == "dist"){
     dist <- data
   }else{
-    dist <- stats::dist(t(data))
+    dist <- parallelDist::parDist(t(data))
   }
   cluster_info <- as.numeric(as.factor(cluster_info))
   con <- clValid::connectivity(distance = dist, clusters = cluster_info)
@@ -183,6 +195,7 @@ calculate_DB_index <- function(
     message("Installing clusterSim package...")
     utils::install.packages("clusterSim")
   }
+  cluster_info <- as.numeric(as.factor(cluster_info))
   DB <- clusterSim::index.DB(t(data), cluster_info)$DB
   return(DB)
 }
@@ -204,6 +217,7 @@ calculate_CH_index <- function(
     message("Installing fpc package...")
     utils::install.packages("fpc")
   }
+  cluster_info <- as.numeric(as.factor(cluster_info))
   CH <- fpc::calinhara(t(data), cluster_info)
   return(CH)
 }
