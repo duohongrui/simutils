@@ -7,7 +7,7 @@
 calculate_connectivity(data, cluster_info)
 }
 \arguments{
-\item{data}{A matrix of gene expression profile.}
+\item{data}{A matrix of gene expression profile or the distance matrix.}
 
 \item{cluster_info}{Cluster(or group) assignment of every cells in columns of matrix.}
 }

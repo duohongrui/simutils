@@ -90,7 +90,7 @@ calculate_ROGUE <- function(
 
 #' Calculate Average Silouette Width
 #'
-#' @param data A matrix of gene expression profile.
+#' @param data A matrix of gene expression profile or the distance matrix.
 #' @param cluster_info Cluster(or group) assignment of every cells in columns of matrix.
 #' @importFrom stats dist
 #' @importFrom utils install.packages
@@ -103,7 +103,11 @@ calculate_silhouette <- function(
     message("Installing cluster package...")
     utils::install.packages("cluster")
   }
-  dist <- stats::dist(t(data))
+  if(class(data) == "dist"){
+    dist <- data
+  }else{
+    dist <- stats::dist(t(data))
+  }
   silhouette_width <- cluster::silhouette(x = as.numeric(as.factor(cluster_info)),
                                           dist)
   average_silhouette <- mean(silhouette_width[, 3])
@@ -114,7 +118,7 @@ calculate_silhouette <- function(
 
 #' Calculate Dunn Index
 #'
-#' @param data A matrix of gene expression profile.
+#' @param data A matrix of gene expression profile or the distance matrix.
 #' @param cluster_info Cluster(or group) assignment of every cells in columns of matrix.
 #'
 #' @export
@@ -126,7 +130,11 @@ calculate_dunn <- function(
     message("Installing clValid package...")
     utils::install.packages("clValid")
   }
-  dist <- stats::dist(t(data))
+  if(class(data) == "dist"){
+    dist <- data
+  }else{
+    dist <- stats::dist(t(data))
+  }
   cluster_info <- as.numeric(as.factor(cluster_info))
   dunn <- clValid::dunn(distance = dist, clusters = cluster_info)
   return(dunn)
@@ -136,7 +144,7 @@ calculate_dunn <- function(
 
 #' Calculate Connectivity
 #'
-#' @param data A matrix of gene expression profile.
+#' @param data A matrix of gene expression profile or the distance matrix.
 #' @param cluster_info Cluster(or group) assignment of every cells in columns of matrix.
 #'
 #' @export
@@ -148,7 +156,11 @@ calculate_connectivity <- function(
     message("Installing clValid package...")
     utils::install.packages("clValid")
   }
-  dist <- stats::dist(t(data))
+  if(class(data) == "dist"){
+    dist <- data
+  }else{
+    dist <- stats::dist(t(data))
+  }
   cluster_info <- as.numeric(as.factor(cluster_info))
   con <- clValid::connectivity(distance = dist, clusters = cluster_info)
   return(con)
