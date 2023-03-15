@@ -17,7 +17,8 @@ calculate_batch_properties <- function(
 ){
   ## 1) cms, 2) iLISI, 3) Mixing metric, 4) Shannon entropy
   if(!requireNamespace("CellMixS", quietly = TRUE)){
-    stop("Package \"CellMixS\" must be installed by \"BiocManager::install('CellMixS')\" command.")
+    message("Install CellMixS...")
+    BiocManager::install('CellMixS')
   }
   colData <- data.frame("batch" = batch_info)
   sce <- SingleCellExperiment::SingleCellExperiment(list(counts = data),
@@ -41,13 +42,14 @@ calculate_batch_properties <- function(
                                       group = "batch",
                                       k = 5)
   col_result <- as.data.frame(SingleCellExperiment::colData(result))
-  cms <- mean(col_result$cms)
-  LISI <- mean(col_result$isi)
-  mm <- mean(col_result$mm)
-  shannon_entropy <- mean(col_result$entropy)
+  cms <- col_result$cms
+  LISI <- col_result$isi
+  mm <- col_result$mm
+  shannon_entropy <- col_result$entropy
   ## 5) kBET
   if(!requireNamespace("kBET", quietly = TRUE)){
-    stop("Package \"kBET\" must be installed by \"devtools::install_github('theislab/kBET')\" command.")
+    message("Install kBET...")
+    devtools::install_github('theislab/kBET')
   }
   if(verbose){
     message("Calculate kBET...")
@@ -56,7 +58,7 @@ calculate_batch_properties <- function(
                                batch_info,
                                plot = FALSE)
   rejection <- batch_estimate[["results"]]
-  kBET <- mean(rejection[, 1])
+  kBET <- rejection[, 1]
   ## 6) Average Silouette Width (ASW for batch)
   if(verbose){
     message("Calculate Average Silouette Width for batch..")
@@ -72,10 +74,12 @@ calculate_batch_properties <- function(
   pcr <- batch_pca$R2Var
   ## 8) Graph connectivity
   if(!requireNamespace("bluster", quietly = TRUE)){
-    stop("Package \"bluster\" must be installed by \"BiocManager::install('bluster')\" command.")
+    message("Install bluster...")
+    BiocManager::install('bluster')
   }
   if(!requireNamespace("igraph", quietly = TRUE)){
-    stop("Package \"igraph\" must be installed by \"install.packages('igraph')\" command.")
+    message("Install igraph...")
+    install.packages('igraph')
   }
   if(is.null(cluster_info)){
     gc <- NULL
