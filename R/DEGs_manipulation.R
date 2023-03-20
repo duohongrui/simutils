@@ -254,30 +254,38 @@ true_DEGs_proportion <- function(
 ){
   true_prop <- list()
   DEGs_num <- c()
+  DEA <- list()
   for(i in 1:ncol(group_combn)){
-    group_compare <- group_combn[, 1]
+    group_compare <- group_combn[, i]
     compare_name <- paste0(group_compare, collapse = "vs")
     sub_data <- sim_data[, which(group %in% group_compare)]
     sub_group <- group[which(group %in% group_compare)]
     sub_DEGs <- sim_DEGs[[compare_name]]
     all_method_DEGs <- purrr::map(DEA_method, function(method){
-      DEA_result <- simutils::perform_DEA(data = sim_data,
+      DEA_result <- simutils::perform_DEA(data = sub_data,
                                           group = sub_group,
                                           method = method)
-      rownames(DEA_result)[DEA_result$"PValue" < 0.05]
-    })
+      list("de_genes" = rownames(DEA_result[[1]])[DEA_result[[1]]$"PValue" < 0.05],
+           "DEA_result" = DEA_result[[1]])
+    }) %>% setNames(DEA_method)
     if(length(DEA_method) > 1){
+      intersect_genes_methods <- list()
+      for(method in DEA_method){
+        intersect_genes_methods[[method]] <- all_method_DEGs[[method]][["de_genes"]]
+      }
       intersect_genes_methods <- BiocGenerics::Reduce(x = all_method_DEGs, f = intersect)
     }else{
-      intersect_genes_methods <- all_method_DEGs[[1]]
+      intersect_genes_methods <- all_method_DEGs[[1]][["de_genes"]]
     }
     intertect_genes <- BiocGenerics::intersect(intersect_genes_methods, sub_DEGs)
     prop <- length(intertect_genes)/length(sub_DEGs)
     DEGs_num <- append(DEGs_num, length(sub_DEGs))
     true_prop[compare_name] <- prop
+    DEA[[compare_name]] <- all_method_DEGs
   }
   weighted_true_prop <- sum(unname(unlist(true_prop)) * (DEGs_num / sum(DEGs_num)))
   return_list <- dplyr::lst(true_prop,
+                            DEA,
                             DEGs_num,
                             weighted_true_prop)
   return(return_list)
