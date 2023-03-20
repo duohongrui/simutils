@@ -260,7 +260,7 @@ true_DEGs_proportion <- function(
     sub_data <- sim_data[, which(group %in% group_compare)]
     sub_group <- group[which(group %in% group_compare)]
     sub_DEGs <- sim_DEGs[[compare_name]]
-    all_method_DEGs <- purrr::map(DGA_method, function(method){
+    all_method_DEGs <- purrr::map(DEA_method, function(method){
       DEA_result <- simutils::perform_DEA(data = sim_data,
                                           group = sub_group,
                                           method = method)
