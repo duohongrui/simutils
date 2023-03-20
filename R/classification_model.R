@@ -94,7 +94,7 @@ model_predict <- function(
                                    prob = TRUE)
     if(nlevels(group) == 2){
       roc <- pROC::roc(response = test_group,
-                       predictor = attr(predict_prob, "probabilities"))
+                       predictor = attr(predict_prob, "probabilities")[, 1])
     }else{
       roc <- pROC::multiclass.roc(response = test_group,
                                   predictor = attr(predict_prob, "probabilities"))
