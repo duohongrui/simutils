@@ -288,6 +288,7 @@ true_DEGs_proportion <- function(
   return_list <- dplyr::lst(true_prop,
                             DEA,
                             DEGs_num,
+                            DEGs_total,
                             weighted_true_prop)
   return(return_list)
 }
