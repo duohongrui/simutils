@@ -255,6 +255,7 @@ true_DEGs_proportion <- function(
   true_prop <- list()
   DEGs_num <- c()
   DEA <- list()
+  DEGs_total <- length(unique(unlist(sim_DEGs)))
   for(i in 1:ncol(group_combn)){
     group_compare <- group_combn[, i]
     compare_name <- paste0(group_compare, collapse = "vs")
@@ -283,7 +284,7 @@ true_DEGs_proportion <- function(
     true_prop[compare_name] <- prop
     DEA[[compare_name]] <- all_method_DEGs
   }
-  weighted_true_prop <- sum(unname(unlist(true_prop)) * (DEGs_num / sum(DEGs_num)))
+  weighted_true_prop <- sum(unname(unlist(true_prop)) * (DEGs_num / DEGs_total))
   return_list <- dplyr::lst(true_prop,
                             DEA,
                             DEGs_num,
