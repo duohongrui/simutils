@@ -284,7 +284,7 @@ true_DEGs_proportion <- function(
     true_prop[compare_name] <- prop
     DEA[[compare_name]] <- all_method_DEGs
   }
-  weighted_true_prop <- sum(unname(unlist(true_prop)) * (DEGs_num / DEGs_total))
+  weighted_true_prop <- sum(unname(unlist(true_prop)) * (DEGs_num / sum(DEGs_num)))
   return_list <- dplyr::lst(true_prop,
                             DEA,
                             DEGs_num,
