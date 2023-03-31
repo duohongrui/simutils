@@ -364,8 +364,8 @@ calculate_DEGs_properties <- function(
       stop("The names of list DEGs are not valid or the length of data you have input is nout equal to that of DEGs list")
     }
   }
-  data_length <- length(data)
-  data_names <- names(data)
+  data_length <- length(count_matrix)
+  data_names <- names(count_matrix)
   DEGs_evaluation <- purrr::map(
     .x = 1:data_length,
     .f = function(data_id){
