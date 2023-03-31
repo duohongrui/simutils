@@ -419,7 +419,7 @@ calculate_DEGs_properties <- function(
       de_genes <- unique(unlist(DEGs))
       SVM_result <- model_predict(data = data,
                                   group = group,
-                                  de_genes = DEGs,
+                                  de_genes = de_genes,
                                   method = "SVM")
       AUC <- as.numeric(SVM_result$roc$auc)
       Accuracy <- unname(SVM_result[["conf_matrix"]][["overall"]][1])
