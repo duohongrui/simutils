@@ -438,12 +438,12 @@ calculate_DEGs_properties <- function(
                                   distribution_score = distribution_score),
         true_proportions = list(DEA_result_combinations = DEGs_result,
                                 true_proportion = true_proportion),
-        SVM_result <- list(SVM_result = SVM_result,
-                           AUC = AUC,
-                           Accuracy = Accuracy,
-                           Precision = Precision,
-                           Recall = Recall,
-                           F1 = F1)
+        SVM_result = list(SVM_result = SVM_result,
+                          AUC = AUC,
+                          Accuracy = Accuracy,
+                          Precision = Precision,
+                          Recall = Recall,
+                          F1 = F1)
       )
     }
   ) %>% stats::setNames(data_names)
