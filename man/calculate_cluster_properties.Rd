@@ -13,15 +13,15 @@ calculate_cluster_properties(
 )
 }
 \arguments{
-\item{data}{A matrix or dataframe of gene expression.}
+\item{data}{A matrix or dataframe of gene expression}
 
-\item{dist}{Optionally, if NULL, the distance matrix is computed.}
+\item{dist}{Optionally, if NULL, the distance matrix is computed}
 
-\item{cluster_info}{The vector of characters which each cell belongs to.}
+\item{cluster_info}{The vector of characters which each cell belongs to}
 
-\item{threads}{How many cores used for parallel computation.}
+\item{threads}{How many cores used for parallel computation}
 
-\item{verbose}{Whether the messages of execution process are returned.}
+\item{verbose}{Whether the messages of execution process are returned}
 }
 \value{
 A list of metric results

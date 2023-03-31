@@ -226,11 +226,11 @@ calculate_CH_index <- function(
 
 #' Summarize the Ability of Simulating Clusters
 #'
-#' @param data A matrix or dataframe of gene expression.
-#' @param dist Optionally, if NULL, the distance matrix is computed.
-#' @param cluster_info The vector of characters which each cell belongs to.
-#' @param threads How many cores used for parallel computation.
-#' @param verbose Whether the messages of execution process are returned.
+#' @param data A matrix or dataframe of gene expression
+#' @param dist Optionally, if NULL, the distance matrix is computed
+#' @param cluster_info The vector of characters which each cell belongs to
+#' @param threads How many cores used for parallel computation
+#' @param verbose Whether the messages of execution process are returned
 #'
 #' @return A list of metric results
 #' @export
