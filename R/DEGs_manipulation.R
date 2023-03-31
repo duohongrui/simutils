@@ -395,7 +395,7 @@ calculate_DEGs_properties <- function(
         index_DEGs <- which(rownames(data) == sub_DGEs)
         index1 <- which(group == group1)
         index2 <- which(group == group2)
-        sub_data <- sim_data[-index_DEGs, c(index1, index2)]
+        sub_data <- data[-index_DEGs, c(index1, index2)]
         sub_group <- c(rep(group1, length(index1)), rep(group2, length(index2)))
         sub_DEA_result <- perform_DEA(data = sub_data,
                                       group = sub_group,
