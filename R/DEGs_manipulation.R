@@ -352,8 +352,10 @@ calculate_DEGs_properties <- function(
     stop("The length of input data is not equal to the length of correponding group information")
   }
   for(id in 1:length(count_matrix)){
-    if(ncol(count_matrix[[id]]) != length(group[[id]])){
-      stop(paste0("The cell number is not equal to the length of group information in the ", id, "th dataset"))
+    if(!is.null(group[[id]])){
+      if(ncol(count_matrix[[id]]) != length(group[[id]])){
+        stop(paste0("The cell number is not equal to the length of group information in the ", id, "th dataset"))
+      }
     }
   }
 
@@ -374,7 +376,13 @@ calculate_DEGs_properties <- function(
         data <- as.matrix(data)
       }
       group <- group[[data_id]]
+      if(is.null(group)){
+        return(NULL)
+      }
       DEGs <- DEGs[[data_id]]
+      if(is.null(DEGs)){
+        return(NULL)
+      }
       group_combn <- utils::combn(unique(group), 2)
 
       ### Distribution of P values
@@ -447,6 +455,7 @@ calculate_DEGs_properties <- function(
       )
     }
   ) %>% stats::setNames(data_names)
+  return(DEGs_evaluation)
 }
 
 
