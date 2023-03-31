@@ -7,6 +7,7 @@
 calculate_batch_properties(
   data,
   batch_info,
+  k,
   cluster_info = NULL,
   verbose = FALSE
 )
@@ -15,6 +16,8 @@ calculate_batch_properties(
 \item{data}{A matrix of gene expression profile.}
 
 \item{batch_info}{Batch assignment of every cells in columns of matrix.}
+
+\item{k}{k nearest neighborhoods of every cell.}
 
 \item{cluster_info}{Cluster(or group) assignment of every cells in columns of matrix.}
 

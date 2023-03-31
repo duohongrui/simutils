@@ -2,6 +2,7 @@
 #'
 #' @param data A matrix of gene expression profile.
 #' @param batch_info Batch assignment of every cells in columns of matrix.
+#' @param k k nearest neighborhoods of every cell.
 #' @param cluster_info Cluster(or group) assignment of every cells in columns of matrix.
 #' @param verbose Whether messages are returned during the process.
 #' @importFrom SingleCellExperiment SingleCellExperiment logcounts reducedDim colData reducedDim<-
@@ -12,6 +13,7 @@
 calculate_batch_properties <- function(
   data,
   batch_info,
+  k,
   cluster_info = NULL,
   verbose = FALSE
 ){
@@ -25,7 +27,12 @@ calculate_batch_properties <- function(
                                                     colData = colData)
   sce <- scater::logNormCounts(sce)
   var_gene <- apply(data, 1, BiocGenerics::var)
-  sort_index <- sort(var_gene, decreasing = TRUE)[1:2000]
+  if(length(var_gene) >= 2000){
+    variable_num <- 2000
+  }else{
+    variable_num <- length(var_gene)/2
+  }
+  sort_index <- sort(var_gene, decreasing = TRUE)[1:variable_num]
   pca <- stats::prcomp(t(SingleCellExperiment::logcounts(sce)[names(sort_index), ]),
                        center = TRUE,
                        scale. = FALSE,
@@ -40,7 +47,7 @@ calculate_batch_properties <- function(
                                                   "entropy"),
                                       sce = sce,
                                       group = "batch",
-                                      k = 5)
+                                      k = k)
   col_result <- as.data.frame(SingleCellExperiment::colData(result))
   cms <- col_result$cms
   LISI <- col_result$isi
@@ -100,7 +107,7 @@ calculate_batch_properties <- function(
                                scale. = FALSE,
                                rank. = 50)
       ## Make KNN graph
-      knn_graph <- bluster::makeKNNGraph(sub_pca$x, k = 5)
+      knn_graph <- bluster::makeKNNGraph(sub_pca$x, k = k)
       ## Generate connected component graph
       com_graph <- igraph::components(knn_graph)
       new_gc_cluster <- max(com_graph$csize)/sum(com_graph$csize)
