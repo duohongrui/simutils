@@ -320,3 +320,136 @@ test_uni_distribution <- function(
                     score))
 }
 
+
+
+#' Summarize the Ability of Simulating DEGs
+#'
+#' @param count_matrix. A matrix or a list with names of gene expression data.
+#' @param group. A vector of characters which indicate which group a cell belongs to. A list is also supported when many matrices of data is input in `count_matrix` parameter.
+#' @param DEGs. A list of DEGs with the names of `xxxvsxxx`. Note that the names of DEGs are in the rownames of the matrix or the dataframe and the names of `xxx` is in the `group` characters. If you have input the lists of `group` and `count_matrix`, the every sub-list in DEGs list should match with every data in `count_matrix` and `group` at the same index or position.
+#' @importFrom utils combn
+#' @importFrom stringr str_split
+#' @importFrom dplyr lst
+#' @importFrom stats setNames
+#' @importFrom purrr map
+#' @return A list
+#' @export
+#'
+calculate_DEGs_properties <- function(
+  count_matrix,
+  group,
+  DEGs
+){
+  ### Check input
+  if(is.matrix(count_matrix)){
+    count_matrix <- list(data = count_matrix)
+  }
+
+  if(!is.list(group)){
+    group <- list(group = group)
+  }
+  if(length(count_matrix) != length(group)){
+    stop("The length of input data is not equal to the length of correponding group information")
+  }
+  for(id in 1:length(count_matrix)){
+    if(ncol(count_matrix[[id]]) != length(group[[id]])){
+      stop(paste0("The cell number is not equal to the length of group information in the ", id, "th dataset"))
+    }
+  }
+
+  if(length(count_matrix) == 1 & length(DEGs) == 3){
+    if(all(stringr::str_detect(names(DEGs), pattern = "vs"))){
+      DEGs <- list(DEGs = DEGs)
+    }else{
+      stop("The names of list DEGs are not valid or the length of data you have input is nout equal to that of DEGs list")
+    }
+  }
+  data_length <- length(data)
+  data_names <- names(data)
+  DEGs_evaluation <- purrr::map(
+    .x = 1:data_length,
+    .f = function(data_id){
+      data <- count_matrix[[data_id]]
+      if(is.data.frame(data)){
+        data <- as.matrix(data)
+      }
+      group <- group[[data_id]]
+      DEGs <- DEGs[[data_id]]
+      group_combn <- utils::combn(unique(group), 2)
+
+      ### Distribution of P values
+      distribution_score <- c()
+      valid_DEGs_distribution <- list()
+      for(i in 1:length(DEGs)){
+        sub_DGEs <- DEGs[[i]]
+        compare_name <- names(sub_DGEs)
+        group1 <- stringr::str_split(compare_name,
+                                     pattern = "vs",
+                                     simplify = TRUE)[1]
+        group2 <- stringr::str_split(compare_name,
+                                     pattern = "vs",
+                                     simplify = TRUE)[2]
+
+        ### Distribution
+        message("Distribution of null data...")
+        index_DEGs <- which(rownames(data) == sub_DGEs)
+        index1 <- which(group == group1)
+        index2 <- which(group == group2)
+        sub_data <- sim_data[-index_DEGs, c(index1, index2)]
+        sub_group <- c(rep(group1, length(index1)), rep(group2, length(index2)))
+        sub_DEA_result <- perform_DEA(data = sub_data,
+                                      group = sub_group,
+                                      method = "edgeRQLFDetRate")
+        p_values <- sub_DEA_result[[1]][["PValue"]]
+        uniform_result <- test_uni_distribution(p_values)
+        distribution_score <- append(distribution_score, uniform_result[["score"]])
+        valid_DEGs_distribution[[compare_name]] <- sub_DEA_result[[1]]
+      }
+
+      ### True proportions of DEGs
+      message("True proportions of DEGs...")
+      DEGs_result <- true_DEGs_proportion(sim_data = data,
+                                          group = group,
+                                          group_combn = utils::combn(unique(group), 2),
+                                          sim_DEGs = DEGs,
+                                          DEA_method = "edgeRQLFDetRate")
+      true_proportion <- DEGs_result[["weighted_true_prop"]]
+
+      ### SVM
+      de_genes <- unique(unlist(DEGs))
+      SVM_result <- model_predict(data = data,
+                                  group = group,
+                                  de_genes = DEGs,
+                                  method = "SVM")
+      AUC <- as.numeric(SVM_result$roc$auc)
+      Accuracy <- unname(SVM_result[["conf_matrix"]][["overall"]][1])
+      if(length(unique(group)) == 2){
+        Precision <- unname(SVM_result[["conf_matrix"]][["byClass"]]["Precision"])
+        Recall <- unname(SVM_result[["conf_matrix"]][["byClass"]]["Recall"])
+        F1 <- unname(SVM_result[["conf_matrix"]][["byClass"]]["F1"])
+      }else{
+        Precision <- mean(SVM_result[["conf_matrix"]][["byClass"]][, "Precision"], na.rm = TRUE)
+        Recall <- mean(SVM_result[["conf_matrix"]][["byClass"]][, "Recall"], na.rm = TRUE)
+        F1 <- mean(SVM_result[["conf_matrix"]][["byClass"]][, "F1"], na.rm = TRUE)
+      }
+
+      dplyr::lst(
+        distribution_score = list(DEA_result_combinations = valid_DEGs_distribution,
+                                  distribution_score = distribution_score),
+        true_proportions = list(DEA_result_combinations = DEGs_result,
+                                true_proportion = true_proportion),
+        SVM_result <- list(SVM_result = SVM_result,
+                           AUC = AUC,
+                           Accuracy = Accuracy,
+                           Precision = Precision,
+                           Recall = Recall,
+                           F1 = F1)
+      )
+    }
+  ) %>% stats::setNames(data_names)
+}
+
+
+
+
+
