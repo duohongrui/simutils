@@ -382,7 +382,7 @@ calculate_DEGs_properties <- function(
       valid_DEGs_distribution <- list()
       for(i in 1:length(DEGs)){
         sub_DGEs <- DEGs[[i]]
-        compare_name <- names(sub_DGEs)
+        compare_name <- names(DEGs)[i]
         group1 <- stringr::str_split(compare_name,
                                      pattern = "vs",
                                      simplify = TRUE)[1]
