@@ -45,7 +45,7 @@ Imports:
     SeuratDisk,
     SingleCellExperiment,
     splatter,
-    stringr
+    stringr,
 Suggests:
     bluster,
     CDI,

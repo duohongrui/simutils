@@ -221,3 +221,91 @@ calculate_CH_index <- function(
   CH <- fpc::calinhara(t(data), cluster_info)
   return(CH)
 }
+
+
+
+#' Summarize the Ability of Simulating Clusters
+#'
+#' @param data A matrix or dataframe of gene expression.
+#' @param dist Optionally, if NULL, the distance matrix is computed.
+#' @param cluster_info The vector of characters which each cell belongs to.
+#' @param threads How many cores used for parallel computation.
+#' @param verbose Whether the messages of execution process are returned.
+#'
+#' @return A list of metric results
+#' @export
+#'
+calculate_cluster_properties <- function(
+  data,
+  dist = NULL,
+  cluster_info,
+  threads = 1,
+  verbose = TRUE
+){
+  if(is.data.frame(data)){
+    data <- as.matrix(data)
+  }
+  if(is.null(dist)){
+    if(!requireNamespace("parallelDist")){
+      install.packages("parallelDist")
+    }
+    dist <- parallelDist::parDist(t(data), threads = threads)
+  }
+
+  if(verbose){
+    message("1-Calculating CDI...")
+  }
+  error <- try(
+    CDI <- simutils::calculate_CDI(data, cluster_info = cluster_info),
+    silent = TRUE
+  )
+  if("try-error" %in% class(error)){
+    warning("The CDI calculation failed")
+    CDI <- NA
+  }else{
+    CDI <- min(CDI[1, 1], CDI[1, 2])
+  }
+
+  if(verbose){
+    message("2-Calculating ROUGE...")
+  }
+  error <- try(
+    ROUGE <- simutils::calculate_ROGUE(data, cluster_info = cluster_info),
+    silent = TRUE
+  )
+  if("try-error" %in% class(error)){
+    warning("The ROUGE calculation failed")
+    ROUGE <- NA
+  }
+
+  if(verbose){
+    message("3-Calculating silhouette...")
+  }
+  silhouette <- simutils::calculate_silhouette(dist, cluster_info = cluster_info)
+
+  if(verbose){
+    message("4-Calculating dunn...")
+  }
+  dunn <- simutils::calculate_dunn(dist, cluster_info = cluster_info)
+
+  if(verbose){
+    message("5-Calculating connectivity...")
+  }
+  connectivity <- simutils::calculate_connectivity(dist, cluster_info = cluster_info)
+
+  if(verbose){
+    message("6-Calculating DB index...")
+  }
+  DB_index <- simutils::calculate_DB_index(data, cluster_info = cluster_info)
+
+  group_metrics <- dplyr::lst(CDI,
+                              ROUGE,
+                              silhouette,
+                              dunn,
+                              connectivity,
+                              DB_index)
+  return(group_metrics)
+}
+
+
+
