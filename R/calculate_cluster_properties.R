@@ -31,15 +31,12 @@ calculate_CDI <- function(
   ## size factor
   size_factor <- CDI::size_factor(data)
   ## calculate CDI
-  t1 <- Sys.time()
   CDI_result <- CDI::calculate_CDI(
     sub_gcmat = sub_data,
     cand_lab_df = cell_label,
     batch_label = batch_info,
     cell_size_factor = size_factor
   )
-  t2 <- Sys.time()
-  print(difftime(t2, t1))
   return(CDI_result)
 }
 

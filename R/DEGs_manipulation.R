@@ -25,7 +25,9 @@ perform_DEA <- function(
 ){
   ## Filter
   filter_index <- rowSums(data) > 0
-  message(paste0(nrow(data) - sum(filter_index), " genes are removed when filtering"))
+  if(verbose){
+    message(paste0(nrow(data) - sum(filter_index), " genes are removed when filtering"))
+  }
   data <- data[rowSums(data) > 0, ]
   ## paired groups
   group_unique <- unique(group)
@@ -42,7 +44,9 @@ perform_DEA <- function(
       message(glue::glue("Performing DEA with the {i}/{ncol(group_paired)} paired of groups. \n"))
     }
     if(method == "edgeRQLF"){
-      message("Performing DEA using edgeR QLF model")
+      if(verbose){
+        message("Performing DEA using edgeR QLF model")
+      }
       timing <- system.time({
         dge <- edgeR::DGEList(sub_data, group = sub_group)
         dge <- edgeR::calcNormFactors(dge)
@@ -56,7 +60,9 @@ perform_DEA <- function(
     }
 
     if(method == "edgeRQLFDetRate"){
-      message("Performing DEA using edgeR QLF model including the cellular detection rate")
+      if(verbose){
+        message("Performing DEA using edgeR QLF model including the cellular detection rate")
+      }
       timing <- system.time({
         dge <- edgeR::DGEList(sub_data, group = sub_group)
         dge <- edgeR::calcNormFactors(dge)
@@ -75,7 +81,9 @@ perform_DEA <- function(
         message("Installing MAST...")
         BiocManager::install("MAST")
       }
-      message("Performing DEA using MAST including the cellular detection rate with CPM data")
+      if(verbose){
+        message("Performing DEA using MAST including the cellular detection rate with CPM data")
+      }
       timing <- system.time({
         names(sub_group) <- colnames(sub_data)
         cdr <- scale(colMeans(sub_data > 0))
@@ -99,7 +107,9 @@ perform_DEA <- function(
         message("Installing MAST...")
         BiocManager::install("MAST")
       }
-      message("Performing DEA using MAST including the cellular detection rate with TPM data")
+      if(verbose){
+        message("Performing DEA using MAST including the cellular detection rate with TPM data")
+      }
       tpm <- simutils::normalization_simutils(data = sub_data,
                                               norm_method = "TPM",
                                               species = species)
@@ -123,7 +133,9 @@ perform_DEA <- function(
         message("Installing MAST...")
         BiocManager::install("MAST")
       }
-      message("Performing DEA using MAST with CPM data")
+      if(verbose){
+        message("Performing DEA using MAST with CPM data")
+      }
       timing <- system.time({
         names(sub_group) <- colnames(sub_data)
         dge <- edgeR::DGEList(counts = sub_data)
@@ -146,7 +158,9 @@ perform_DEA <- function(
         message("Installing MAST...")
         BiocManager::install("MAST")
       }
-      message("Performing DEA using MAST with TPM data")
+      if(verbose){
+        message("Performing DEA using MAST with TPM data")
+      }
       tpm <- simutils::normalization_simutils(data = sub_data,
                                               norm_method = "TPM",
                                               species = species)
@@ -165,7 +179,9 @@ perform_DEA <- function(
     }
 
     if(method == "limmatrend"){
-      message("Performing DEA using limma-trend")
+      if(verbose){
+        message("Performing DEA using limma-trend")
+      }
       timing <- system.time({
         dge <- edgeR::DGEList(sub_data, group = sub_group)
         dge <- edgeR::calcNormFactors(dge)
@@ -181,7 +197,9 @@ perform_DEA <- function(
     }
 
     if(method == "limmavoom"){
-      message("Performing DEA using limma-voom")
+      if(verbose){
+        message("Performing DEA using limma-voom")
+      }
       timing <- system.time({
         dge <- edgeR::DGEList(sub_data, group = sub_group)
         dge <- edgeR::calcNormFactors(dge)
@@ -196,7 +214,9 @@ perform_DEA <- function(
     }
 
     if(method == "ttest"){
-      message("Performing DEA using t-test")
+      if(verbose){
+        message("Performing DEA using t-test")
+      }
       tpm <- simutils::normalization_simutils(data = sub_data,
                                               norm_method = "TPM",
                                               species = species)
@@ -217,7 +237,9 @@ perform_DEA <- function(
     }
 
     if(method == "wilcox"){
-      message("Performing DEA using wilcox-test")
+      if(verbose){
+        message("Performing DEA using wilcox-test")
+      }
       tpm <- simutils::normalization_simutils(data = sub_data,
                                               norm_method = "TPM",
                                               species = species)
