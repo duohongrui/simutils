@@ -35,6 +35,7 @@
 #' @param group Group(or cluster) assignment of every cells in columns of matrix.
 #' @param de_genes A character vector of DEGs.
 #' @param method The method to establish the model. SVM, Decision tree or RF (Random Forest).
+#' @param verbose Whether the process massages are returned.
 #' @importFrom stats predict
 #' @importFrom caret confusionMatrix
 #' @importFrom pROC roc multiclass.roc
@@ -43,10 +44,13 @@ model_predict <- function(
   data,
   group,
   de_genes,
-  method
+  method,
+  verbose
 ){
   ## filter genes with constant value across cells
-  message("Preprocessing data...")
+  if(verbose){
+    message("Preprocessing data...")
+  }
   gene_var <- apply(data, 1, BiocGenerics::var)
   data <- data[gene_var != 0, ]
   ## scale
@@ -75,14 +79,18 @@ model_predict <- function(
       message("Installing e1071...")
       utils::install.packages("e1071")
     }
-    message("Modeling by SVM...")
+    if(verbose){
+      message("Modeling by SVM...")
+    }
     svm_classifier <- e1071::svm(x = train_data,
                                  y = as.factor(train_group),
                                  cross = 10,
                                  probability = TRUE,
                                  kernel = 'radial',
                                  scale = FALSE)
-    message("Predicting...")
+    if(verbose){
+      message("Predicting... \n")
+    }
     predict_class <- stats::predict(svm_classifier,
                                     as.matrix(test_data),
                                     prob = FALSE)

@@ -9,7 +9,7 @@ calculate_batch_properties(
   batch_info,
   k,
   cluster_info = NULL,
-  verbose = FALSE
+  verbose = TRUE
 )
 }
 \arguments{

@@ -6,6 +6,7 @@
 #' @param species We only support `human` or `mouse` to choose the gene length data
 #' from `simutils::hs_gene_length` or `simutils::mm_gene_length` and normalize the data
 #' by TPM. Users must set this parameter when using `MASTtpmDetRate`, `MASTtpm`, `ttest` or `wilcox` method.
+#' @param verbose Whether the process massages are returned.
 #' @importFrom edgeR DGEList calcNormFactors estimateDisp glmQLFit glmQLFTest topTags cpm
 #' @importFrom limma topTable lmFit eBayes voom
 #' @importFrom stats model.matrix p.adjust t.test
@@ -19,7 +20,8 @@ perform_DEA <- function(
   data,
   group,
   method,
-  species = NULL
+  species = NULL,
+  verbose = TRUE
 ){
   ## Filter
   filter_index <- rowSums(data) > 0
@@ -35,9 +37,10 @@ perform_DEA <- function(
     index <- group %in% group_candidate
     sub_group <- group[index]
     sub_data <- data[, index]
-    message("--------------------------------------------------")
-    message(glue::glue("Performing DEA with the {i}/{ncol(group_paired)} paired of groups."))
-
+    if(verbose){
+      message("--------------------------------------------------")
+      message(glue::glue("Performing DEA with the {i}/{ncol(group_paired)} paired of groups. \n"))
+    }
     if(method == "edgeRQLF"){
       message("Performing DEA using edgeR QLF model")
       timing <- system.time({
@@ -69,7 +72,8 @@ perform_DEA <- function(
 
     if(method == "MASTcpmDetRate"){
       if(!requireNamespace("MAST", quietly = TRUE)){
-        stop("Package \"MAST\" must be installed by \"BiocManager::install('MAST')\".")
+        message("Installing MAST...")
+        BiocManager::install("MAST")
       }
       message("Performing DEA using MAST including the cellular detection rate with CPM data")
       timing <- system.time({
@@ -92,7 +96,8 @@ perform_DEA <- function(
 
     if(method == "MASTtpmDetRate"){
       if(!requireNamespace("MAST", quietly = TRUE)){
-        stop("Package \"MAST\" must be installed by \"BiocManager::install('MAST')\".")
+        message("Installing MAST...")
+        BiocManager::install("MAST")
       }
       message("Performing DEA using MAST including the cellular detection rate with TPM data")
       tpm <- simutils::normalization_simutils(data = sub_data,
@@ -115,7 +120,8 @@ perform_DEA <- function(
 
     if(method == "MASTcpm"){
       if(!requireNamespace("MAST", quietly = TRUE)){
-        stop("Package \"MAST\" must be installed by \"BiocManager::install('MAST')\".")
+        message("Installing MAST...")
+        BiocManager::install("MAST")
       }
       message("Performing DEA using MAST with CPM data")
       timing <- system.time({
@@ -137,7 +143,8 @@ perform_DEA <- function(
 
     if(method == "MASTtpm"){
       if(!requireNamespace("MAST", quietly = TRUE)){
-        stop("Package \"MAST\" must be installed by \"BiocManager::install('MAST')\".")
+        message("Installing MAST...")
+        BiocManager::install("MAST")
       }
       message("Performing DEA using MAST with TPM data")
       tpm <- simutils::normalization_simutils(data = sub_data,
@@ -242,6 +249,7 @@ perform_DEA <- function(
 #' @param sim_DEGs A list with `xxxvsxxx` format of names containing the DEGs of different paired groups.
 #' @param DEA_method The method used for differential expression analysis. edgeRQLF, edgeRQLFDetRate, MASTcpmDetRate,
 #' MASTcpm, limmatrend and limmavoom.
+#' @param verbose Whether the process massages are returned.
 #' @importFrom purrr map
 #' @importFrom BiocGenerics Reduce intersect
 #' @export
@@ -250,7 +258,8 @@ true_DEGs_proportion <- function(
     group,
     group_combn,
     sim_DEGs,
-    DEA_method
+    DEA_method,
+    verbose = TRUE
 ){
   true_prop <- list()
   DEGs_num <- c()
@@ -265,7 +274,8 @@ true_DEGs_proportion <- function(
     all_method_DEGs <- purrr::map(DEA_method, function(method){
       DEA_result <- simutils::perform_DEA(data = sub_data,
                                           group = sub_group,
-                                          method = method)
+                                          method = method,
+                                          verbose = verbose)
       list("de_genes" = rownames(DEA_result[[1]])[DEA_result[[1]]$"PValue" < 0.05],
            "DEA_result" = DEA_result[[1]])
     }) %>% setNames(DEA_method)
@@ -327,6 +337,9 @@ test_uni_distribution <- function(
 #' @param count_matrix. A matrix or a list with names of gene expression data.
 #' @param group. A vector of characters which indicate which group a cell belongs to. A list is also supported when many matrices of data is input in `count_matrix` parameter.
 #' @param DEGs. A list of DEGs with the names of `xxxvsxxx`. Note that the names of DEGs are in the rownames of the matrix or the dataframe and the names of `xxx` is in the `group` characters. If you have input the lists of `group` and `count_matrix`, the every sub-list in DEGs list should match with every data in `count_matrix` and `group` at the same index or position.
+#' @param DEA_method The DEA method to get the DEGs. Choices: edgeRQLF, edgeRQLFDetRate, MASTcpmDetRate, MASTtpmDetRate, MASTcpm, MASTtpm, limmatrend, limmavoom, ttest and wilcox.
+#' @param model_method The method to establish the model. SVM, Decision tree or RF (Random Forest).
+#' @param verbose Whether the process massages are returned.
 #' @importFrom utils combn
 #' @importFrom stringr str_split
 #' @importFrom dplyr lst
@@ -338,7 +351,10 @@ test_uni_distribution <- function(
 calculate_DEGs_properties <- function(
   count_matrix,
   group,
-  DEGs
+  DEGs,
+  DEA_method,
+  model_method,
+  verbose = TRUE
 ){
   ### Check input
   if(is.matrix(count_matrix)){
@@ -399,48 +415,76 @@ calculate_DEGs_properties <- function(
                                      simplify = TRUE)[2]
 
         ### Distribution
-        message("Distribution of null data...")
+        if(verbose){
+          message("Distribution of null data...")
+        }
         index_DEGs <- which(rownames(data) %in% sub_DGEs)
         index1 <- which(group %in% group1)
         index2 <- which(group %in% group2)
         sub_data <- data[-index_DEGs, c(index1, index2)]
         sub_group <- c(rep(group1, length(index1)), rep(group2, length(index2)))
-        sub_DEA_result <- perform_DEA(data = sub_data,
-                                      group = sub_group,
-                                      method = "edgeRQLFDetRate")
-        p_values <- sub_DEA_result[[1]][["PValue"]]
-        uniform_result <- test_uni_distribution(p_values)
-        distribution_score <- append(distribution_score, uniform_result[["score"]])
-        valid_DEGs_distribution[[compare_name]] <- sub_DEA_result[[1]]
+        error <- try(sub_DEA_result <- perform_DEA(data = sub_data,
+                                                   group = sub_group,
+                                                   method = DEA_method,
+                                                   verbose = verbose))
+        if(class(error) == "try-error"){
+          warning("The DEA process failed and distribution score is NA")
+          distribution_score <- append(distribution_score, NA)
+          valid_DEGs_distribution[[compare_name]] <- NA
+        }else{
+          p_values <- sub_DEA_result[[1]][["PValue"]]
+          uniform_result <- test_uni_distribution(p_values)
+          distribution_score <- append(distribution_score, uniform_result[["score"]])
+          valid_DEGs_distribution[[compare_name]] <- sub_DEA_result[[1]]
+        }
       }
 
       ### True proportions of DEGs
-      message("True proportions of DEGs...")
-      DEGs_result <- true_DEGs_proportion(sim_data = data,
-                                          group = group,
-                                          group_combn = utils::combn(unique(group), 2),
-                                          sim_DEGs = DEGs,
-                                          DEA_method = "edgeRQLFDetRate")
-      true_proportion <- DEGs_result[["weighted_true_prop"]]
-
-      ### SVM
-      de_genes <- unique(unlist(DEGs))
-      SVM_result <- model_predict(data = data,
-                                  group = group,
-                                  de_genes = de_genes,
-                                  method = "SVM")
-      AUC <- as.numeric(SVM_result$roc$auc)
-      Accuracy <- unname(SVM_result[["conf_matrix"]][["overall"]][1])
-      if(length(unique(group)) == 2){
-        Precision <- unname(SVM_result[["conf_matrix"]][["byClass"]]["Precision"])
-        Recall <- unname(SVM_result[["conf_matrix"]][["byClass"]]["Recall"])
-        F1 <- unname(SVM_result[["conf_matrix"]][["byClass"]]["F1"])
+      if(verbose){
+        message("True proportions of DEGs... \n")
+      }
+      error2 <- try(DEGs_result <- true_DEGs_proportion(sim_data = data,
+                                                        group = group,
+                                                        group_combn = utils::combn(unique(group), 2),
+                                                        sim_DEGs = DEGs,
+                                                        DEA_method = DEA_method,
+                                                        verbose = verbose))
+      if(class(error2) == "try-error"){
+        warning("The DEA process failed and the result of true proportion is NA")
+        true_proportion <- NA
+        DEGs_result <- NULL
       }else{
-        Precision <- mean(SVM_result[["conf_matrix"]][["byClass"]][, "Precision"], na.rm = TRUE)
-        Recall <- mean(SVM_result[["conf_matrix"]][["byClass"]][, "Recall"], na.rm = TRUE)
-        F1 <- mean(SVM_result[["conf_matrix"]][["byClass"]][, "F1"], na.rm = TRUE)
+        true_proportion <- DEGs_result[["weighted_true_prop"]]
       }
 
+      ### model
+      de_genes <- unique(unlist(DEGs))
+      error3 <- try(SVM_result <- model_predict(data = data,
+                                                group = group,
+                                                de_genes = de_genes,
+                                                method = model_method,
+                                                verbose = verbose))
+      if(class(error3) == "try-error"){
+        warning("The model traning or predicting failed and the result is NA")
+        SVM_result <- NULL
+        AUC <- NA
+        Accuracy <- NA
+        Precision <- NA
+        Recall <- NA
+        F1 <- NA
+      }else{
+        AUC <- as.numeric(SVM_result$roc$auc)
+        Accuracy <- unname(SVM_result[["conf_matrix"]][["overall"]][1])
+        if(length(unique(group)) == 2){
+          Precision <- unname(SVM_result[["conf_matrix"]][["byClass"]]["Precision"])
+          Recall <- unname(SVM_result[["conf_matrix"]][["byClass"]]["Recall"])
+          F1 <- unname(SVM_result[["conf_matrix"]][["byClass"]]["F1"])
+        }else{
+          Precision <- mean(SVM_result[["conf_matrix"]][["byClass"]][, "Precision"], na.rm = TRUE)
+          Recall <- mean(SVM_result[["conf_matrix"]][["byClass"]][, "Recall"], na.rm = TRUE)
+          F1 <- mean(SVM_result[["conf_matrix"]][["byClass"]][, "F1"], na.rm = TRUE)
+        }
+      }
       dplyr::lst(
         distribution_score = list(DEA_result_combinations = valid_DEGs_distribution,
                                   distribution_score = distribution_score),
@@ -457,8 +501,3 @@ calculate_DEGs_properties <- function(
   ) %>% stats::setNames(data_names)
   return(DEGs_evaluation)
 }
-
-
-
-
-

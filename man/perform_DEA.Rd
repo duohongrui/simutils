@@ -5,7 +5,7 @@
 \title{Perform Differential Expression Analysis
 This function is used to perform DEA for single-cell RNA-seq data by QLF model in edgeR package including the cellular detection rate.}
 \usage{
-perform_DEA(data, group, method, species = NULL)
+perform_DEA(data, group, method, species = NULL, verbose = TRUE)
 }
 \arguments{
 \item{data}{A matrix of gene expression profile.}
@@ -17,6 +17,8 @@ perform_DEA(data, group, method, species = NULL)
 \item{species}{We only support \code{human} or \code{mouse} to choose the gene length data
 from \code{simutils::hs_gene_length} or \code{simutils::mm_gene_length} and normalize the data
 by TPM. Users must set this parameter when using \code{MASTtpmDetRate}, \code{MASTtpm}, \code{ttest} or \code{wilcox} method.}
+
+\item{verbose}{Whether the process massages are returned.}
 }
 \value{
 A dataframe of DEA result.

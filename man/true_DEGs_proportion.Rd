@@ -4,7 +4,14 @@
 \alias{true_DEGs_proportion}
 \title{Proportion of Matched DEGs}
 \usage{
-true_DEGs_proportion(sim_data, group, group_combn, sim_DEGs, DEA_method)
+true_DEGs_proportion(
+  sim_data,
+  group,
+  group_combn,
+  sim_DEGs,
+  DEA_method,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{sim_data}{The simulated dataset to be evaluated.}
@@ -17,6 +24,8 @@ true_DEGs_proportion(sim_data, group, group_combn, sim_DEGs, DEA_method)
 
 \item{DEA_method}{The method used for differential expression analysis. edgeRQLF, edgeRQLFDetRate, MASTcpmDetRate,
 MASTcpm, limmatrend and limmavoom.}
+
+\item{verbose}{Whether the process massages are returned.}
 }
 \description{
 Proportion of Matched DEGs

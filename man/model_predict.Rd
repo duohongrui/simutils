@@ -4,7 +4,7 @@
 \alias{model_predict}
 \title{Establish A Model And Predict Cell Identity Using DEGs}
 \usage{
-model_predict(data, group, de_genes, method)
+model_predict(data, group, de_genes, method, verbose)
 }
 \arguments{
 \item{data}{A matrix with cells on columns and genes on rows.}
@@ -14,6 +14,8 @@ model_predict(data, group, de_genes, method)
 \item{de_genes}{A character vector of DEGs.}
 
 \item{method}{The method to establish the model. SVM, Decision tree or RF (Random Forest).}
+
+\item{verbose}{Whether the process massages are returned.}
 }
 \description{
 Establish A Model And Predict Cell Identity Using DEGs

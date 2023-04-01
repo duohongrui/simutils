@@ -15,7 +15,7 @@ calculate_batch_properties <- function(
   batch_info,
   k,
   cluster_info = NULL,
-  verbose = FALSE
+  verbose = TRUE
 ){
   ## 1) cms, 2) iLISI, 3) Mixing metric, 4) Shannon entropy
   if(!requireNamespace("CellMixS", quietly = TRUE)){
@@ -73,7 +73,7 @@ calculate_batch_properties <- function(
   AWS_batch <- kBET::batch_sil(pca.data = pca, batch = as.factor(batch_info))
   ## 7) Principal Component Regression (PCR)
   if(verbose){
-    message("Calculate principal component regression...")
+    message("Calculate principal component regression... \n")
   }
   batch_pca <- kBET::pcRegression(pca.data = pca,
                                   batch = batch_info,
@@ -92,7 +92,7 @@ calculate_batch_properties <- function(
     gc <- NULL
   }else{
     if(verbose){
-      message("Calculate graph connectivity...")
+      message("Calculate graph connectivity... \n")
     }
     cluster <- unique(cluster_info)
     gc <- c()

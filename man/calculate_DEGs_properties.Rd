@@ -4,9 +4,22 @@
 \alias{calculate_DEGs_properties}
 \title{Summarize the Ability of Simulating DEGs}
 \usage{
-calculate_DEGs_properties(count_matrix, group, DEGs)
+calculate_DEGs_properties(
+  count_matrix,
+  group,
+  DEGs,
+  DEA_method,
+  model_method,
+  verbose = TRUE
+)
 }
 \arguments{
+\item{DEA_method}{The DEA method to get the DEGs. Choices: edgeRQLF, edgeRQLFDetRate, MASTcpmDetRate, MASTtpmDetRate, MASTcpm, MASTtpm, limmatrend, limmavoom, ttest and wilcox.}
+
+\item{model_method}{The method to establish the model. SVM, Decision tree or RF (Random Forest).}
+
+\item{verbose}{Whether the process massages are returned.}
+
 \item{count_matrix.}{A matrix or a list with names of gene expression data.}
 
 \item{group.}{A vector of characters which indicate which group a cell belongs to. A list is also supported when many matrices of data is input in \code{count_matrix} parameter.}

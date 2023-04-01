@@ -246,7 +246,7 @@ calculate_cluster_properties <- function(
     data <- as.matrix(data)
   }
   if(is.null(dist)){
-    if(!requireNamespace("parallelDist")){
+    if(!requireNamespace("parallelDist", quietly = TRUE)){
       install.packages("parallelDist")
     }
     dist <- parallelDist::parDist(t(data), threads = threads)
