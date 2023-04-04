@@ -37,6 +37,9 @@ default_parameters <- function(method){
   if(method == "BASiCS"){
     parameters <- splatter::newBASiCSParams()
   }
+  if(method == "ESCO"){
+    parameters <- ESCO::newescoParams()
+  }
   if(method == "SPsimSeq"){
     parameters <- NULL
   }
