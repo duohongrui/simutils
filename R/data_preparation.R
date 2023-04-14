@@ -17,6 +17,7 @@
 #' @param treatment Vector. The treatment of cells in the experiment.
 #' @param batch_info Vector. The batch information of cells in the experiment.
 #' @param cluster_info Vector. The cluster information of cells.
+#' @param spatial_coordinate A data frame of x and y coordinates of spatial transcriptomics data
 #' @importFrom dplyr lst
 #' @return A list of dataset information.
 #' @export
@@ -37,7 +38,8 @@ meta_info <- function(
   group_condition = NULL,
   treatment = NULL,
   batch_info = NULL,
-  cluster_info = NULL
+  cluster_info = NULL,
+  spatial_coordinate = NULL
 ){
   if(ERCC){
     if(is.null(dilution_factor) | is.null(volume)){
@@ -60,5 +62,6 @@ meta_info <- function(
              group_condition,
              treatment,
              batch_info,
-             cluster_info)
+             cluster_info,
+             spatial_coordinate)
 }

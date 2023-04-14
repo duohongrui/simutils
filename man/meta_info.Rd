@@ -21,7 +21,8 @@ meta_info(
   group_condition = NULL,
   treatment = NULL,
   batch_info = NULL,
-  cluster_info = NULL
+  cluster_info = NULL,
+  spatial_coordinate = NULL
 )
 }
 \arguments{
@@ -58,6 +59,8 @@ meta_info(
 \item{batch_info}{Vector. The batch information of cells in the experiment.}
 
 \item{cluster_info}{Vector. The cluster information of cells.}
+
+\item{spatial_coordinate}{A data frame of x and y coordinates of spatial transcriptomics data}
 }
 \value{
 A list of dataset information.
