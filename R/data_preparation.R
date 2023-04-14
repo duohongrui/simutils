@@ -68,3 +68,28 @@ meta_info <- function(
              spatial_coordinate,
              start_cell)
 }
+
+
+#' Define A Start Cell of A Trajectory
+#'
+#' @param meta_data The position information of cells or Spots
+#'
+#' @return A cell id
+#' @export
+#'
+start_cell <- function(meta_data){
+  if("true_y" %in% colnames(meta_data)){
+    meta_data <- meta_data %>%
+      mutate(y = true_y)
+  }
+  if("true_x" %in% colnames(meta_data)){
+    meta_data <- meta_data %>%
+      mutate(x = true_x)
+  }
+  meta_data <- meta_data %>%
+    filter(label == "invasive cancer")
+  median_cell <- c(mean(meta_data$x), mean(meta_data$y))
+  distance <- sqrt((meta_data$x - median_cell[1]) ^ 2 + (meta_data$y - median_cell[2]) ^ 2)
+  min_index <- which(distance == min(distance))
+  paste0(meta_data$x[min_index], "x", meta_data$y[min_index])
+}
