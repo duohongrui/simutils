@@ -22,7 +22,8 @@ meta_info(
   treatment = NULL,
   batch_info = NULL,
   cluster_info = NULL,
-  spatial_coordinate = NULL
+  spatial_coordinate = NULL,
+  start_cell = NULL
 )
 }
 \arguments{
@@ -61,6 +62,8 @@ meta_info(
 \item{cluster_info}{Vector. The cluster information of cells.}
 
 \item{spatial_coordinate}{A data frame of x and y coordinates of spatial transcriptomics data}
+
+\item{start_cell}{The cell id which is determined as the start_cell of a trajectory}
 }
 \value{
 A list of dataset information.
