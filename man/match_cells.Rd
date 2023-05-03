@@ -4,12 +4,14 @@
 \alias{match_cells}
 \title{Match Cells in Reference Data with Those in Simulation Data}
 \usage{
-match_cells(ref_data, sim_data)
+match_cells(ref_data, sim_data, algorithm = "Improved_Hungarian")
 }
 \arguments{
 \item{ref_data, sim_data}{A matrix or dynwrap object created by \code{\link[dynwrap]{wrap_expression}}.
 Note that every row represents a cell and every column represents a gene.
 Simulation and reference data must have the same size.}
+
+\item{algorithm}{Optional. Which algorithm used for matching cells in simulated and real data. Improved_Hungarian (default), Hungarian.}
 }
 \value{
 A list contains the correlation matrix and a dataframe of the paired
