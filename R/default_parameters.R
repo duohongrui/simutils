@@ -38,6 +38,14 @@ default_parameters <- function(method){
     parameters <- splatter::newBASiCSParams()
   }
   if(method == "ESCO"){
+    if(!requireNamespace("ESCO", quietly = TRUE)){
+      message("Install ESCO...")
+      if(!requireNamespace("devtools", quietly = TRUE)){
+        message("Install devtools...")
+        utils::install.packages("devtools")
+      }
+      devtools::install_github("JINJINT/ESCO")
+    }
     parameters <- ESCO::newescoParams()
   }
   if(method == "SPsimSeq"){

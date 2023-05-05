@@ -7,7 +7,6 @@
 #' @param local_path If \code{in_docker} is TRUE, you must input the directory
 #' path on your local device
 #' @importFrom SeuratDisk SaveH5Seurat Convert
-#' @importFrom glue glue
 #' @return The object you want, list or Seurat or h5ad or SingleCellExperiment.
 #' @export
 #'
@@ -67,7 +66,7 @@ data_conversion <- function(
     data_path <- stringr::str_replace(data_save_name,
                                       pattern = "h5Seurat",
                                       replacement = "h5ad")
-    cat(glue::glue("Your data has been save to {data_path}", "\n"))
+    cat(paste0("Your data has been save to ", data_path, "\n"))
     simulate_result <- list(file_type = "h5ad",
                             save_path = data_path)
   }
@@ -124,6 +123,10 @@ scgan_data_conversion <- function(
     stop("Docker has not been installed or started! Please check it!")
   }
   ### (2. Check the installation of simpipe docker image
+  if(!requireNamespace("babelwhale", quietly = TRUE)){
+    message("Install babelwhale...")
+    BiocManager::install('babelwhale')
+  }
   images <- babelwhale::list_docker_images() %>%
     tidyr::unite("Repository", "Tag", sep = ":", col = "Image") %>%
     dplyr::pull("Image")

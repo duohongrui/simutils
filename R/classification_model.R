@@ -37,8 +37,6 @@
 #' @param method The method to establish the model. SVM, Decision tree or RF (Random Forest).
 #' @param verbose Whether the process massages are returned.
 #' @importFrom stats predict
-#' @importFrom caret confusionMatrix
-#' @importFrom pROC roc multiclass.roc
 #' @export
 model_predict <- function(
   data,
@@ -70,6 +68,11 @@ model_predict <- function(
     message("pROC is not installed on your device...")
     message("Installing pROC...")
     utils::install.packages("pROC")
+  }
+  if(!requireNamespace("caret", quietly = TRUE)){
+    message("caret is not installed on your device...")
+    message("Installing caret...")
+    utils::install.packages("caret")
   }
 
   if(method == "SVM"){

@@ -190,23 +190,19 @@ calculate_traj_metrics <- function(model_ref,
 
 add_data_to_model <- function(model, dataset){
 
+  if(!requireNamespace("checkmate", quietly = TRUE)){
+    message("Install checkmate...")
+    install.packages('checkmate')
+  }
   checkmate::assertClass(model, "dynwrap::with_trajectory")
   checkmate::assertClass(dataset, "dynwrap::data_wrapper")
-
   if(is.null(model[["counts"]])){
-
     model <- dynwrap::add_expression(dataset = model,
                                      counts = dataset[['counts']])
-
   }
-
   if(is.null(model[["expression"]])){
-
     model <- dynwrap::add_expression(dataset = model,
                                      expression = dataset[['expression']])
-
   }
-
   return(model)
-
 }

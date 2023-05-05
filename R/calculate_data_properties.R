@@ -3,7 +3,6 @@
 #' @param data A count matrix.
 #' @param verbose Whether messages are returned during the process.
 #' @importFrom edgeR cpm DGEList calcNormFactors
-#' @importFrom WGCNA cor
 #' @importFrom dplyr lst
 #' @importFrom stats IQR
 #' @return A list
@@ -14,15 +13,8 @@
 #'                dimnames = list(paste0('Gene', 1:100),
 #'                                paste0('Cell', 1:100)))
 #' result <- cell_properties(data, verbose = TRUE)
-#' str(result)
 cell_properties <- function(data,
                             verbose = FALSE){
-  if(!requireNamespace("WGCNA", quietly = TRUE)){
-    message("WGCNA is not installed on your device...")
-    message("Installing WGCNA...")
-    utils::install.packages("WGCNA")
-  }
-
   ## 1) library size
   if(verbose){
     message("Calculating library size of cells...")
@@ -39,7 +31,14 @@ cell_properties <- function(data,
   if(verbose){
     message("Calculating cell correlation...")
   }
-  cell_cor <- WGCNA::cor(data, method = "pearson", nThreads = 1)
+  if(!requireNamespace("WGCNA", quietly = TRUE)){
+    message("WGCNA is not installed on your device...")
+    message("Installing WGCNA...")
+    utils::install.packages("WGCNA")
+    cell_cor <- WGCNA::cor(data, method = "pearson", nThreads = 1)
+  }else{
+    cell_cor <- WGCNA::cor(data, method = "pearson", nThreads = 1)
+  }
   ## 4) TMM normalization factor
   if(verbose){
     message("Calculating TMM normalization factor...")
@@ -95,16 +94,9 @@ cell_properties <- function(data,
 #'                dimnames = list(paste0('Gene', 1:100),
 #'                                paste0('Cell', 1:100)))
 #' result <- gene_properties(data, verbose = TRUE)
-#' str(result)
 gene_properties <- function(data,
                             cpm_norm = TRUE,
                             verbose = FALSE){
-  if(!requireNamespace("WGCNA", quietly = TRUE)){
-    message("WGCNA is not installed on your device...")
-    message("Installing WGCNA...")
-    utils::install.packages("WGCNA")
-  }
-
   if(cpm_norm){
     if(verbose){
       message("Performing log2 CPM nomalization...")

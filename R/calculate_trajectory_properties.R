@@ -8,7 +8,6 @@
 #' @param seed Random seed
 #' @param verbose Whether the messages are returned to users when processing
 #' @importFrom dynwrap is_data_wrapper add_grouping infer_trajectory
-#' @importFrom tislingshot ti_slingshot
 #'
 #' @return A list
 #' @export
@@ -48,6 +47,10 @@ calculate_trajectory_properties <- function(
                                       grouping = sim_data_grouping)
   }
   ### trajectory inference
+  if(!requireNamespace("tislingshot", quietly = TRUE)){
+    message("Install tislingshot...")
+    devtools::install_github("dynverse/ti_slingshot/package/")
+  }
   if(!dynwrap::is_wrapper_with_trajectory(ref_data)){
     ref_model <- dynwrap::infer_trajectory(dataset = ref_data,
                                            method = tislingshot::ti_slingshot(),

@@ -17,28 +17,18 @@ License: GPL (>= 3)
 URL: https://github.com/duohongrui/simutils
 BugReports: https://github.com/duohongrui/simutils/issues
 Depends: 
-    R (>= 4.0),
-    tibble
+    R (>= 4.0)
 Imports: 
-    ape,
     assertthat,
     BiocGenerics,
-    caret,
-    checkmate,
-    ctc,
     dplyr,
     dyneval (>= 0.9.9),
     dynutils,
     dynwrap (>= 1.2.2),
     edgeR,
-    glue,
-    hdf5r,
-    Hmisc,
     limma,
     Matrix,
     methods,
-    NbClust,
-    processx,
     purrr,
     scater,
     Seurat (>= 4.1.0),
@@ -46,8 +36,10 @@ Imports:
     SingleCellExperiment,
     splatter,
     stringr,
+    BiocManager
 Suggests:
     bluster,
+    glue,
     CDI,
     CellMixS,
     cluster,
@@ -64,8 +56,31 @@ Suggests:
     rrapply,
     spgs,
     testthat (>= 3.0.0),
+    parallelDist,
+    clusterSim,
+    fpc,
+    clValid,
     WGCNA,
-    pROC
+    tislingshot,
+    processx,
+    caret,
+    pROC,
+    babelwhale,
+    devtools,
+    ESCO,
+    ctc,
+    ape,
+    RcppHungarian,
+    checkmate,
+    progress,
+    dendextend,
+    MLmetrics,
+    hdf5r,
+    remotes,
+    tibble,
+    tidyr,
+    Hmisc,
+    NbClust
 Remotes: 
     dynverse/dyneval@master,
     dynverse/dynmethods@master,

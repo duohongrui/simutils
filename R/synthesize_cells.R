@@ -39,6 +39,10 @@ synthesize_cells <- function(dataset,
     if(verbose){
       message("Performing k-means and determin the best number of clusters...")
     }
+    if(!requireNamespace("NbClust", quietly = TRUE)){
+      message("Install NbClust...")
+      install.packages('NbClust')
+    }
     clust <- NbClust::NbClust(data = dataset[['expression']],
                               distance = 'euclidean',
                               min.nc = 2,

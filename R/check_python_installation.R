@@ -1,7 +1,6 @@
 #' Check Python Installation
 #'
 #' @param ... NULL
-#' @importFrom processx run
 #' @importFrom stringr str_split
 #' @importFrom utils compareVersion
 #' @export
@@ -11,6 +10,9 @@
 check_python_installation <- function(...){
   if(!requireNamespace("crayon", quietly = TRUE)){
     stop("Package \"crayon\" must be installed by \"install.packages('crayon')\" command.")
+  }
+  if(!requireNamespace("processx", quietly = TRUE)){
+    utils::install.packages("processx")
   }
   ### check python version
   python_symbol <- "python3"

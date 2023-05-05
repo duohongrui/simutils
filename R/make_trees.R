@@ -16,8 +16,6 @@
 #' ScaleData AverageExpression RunPCA FindNeighbors FindClusters VariableFeatures
 #' @importFrom stringr str_remove_all str_replace_all
 #' @importFrom stats hclust dist
-#' @importFrom ctc hc2Newick
-#' @importFrom ape read.tree
 #'
 #' @examples
 #' ref_data <- matrix(rpois(n = 2500, lambda = 2), nrow = 50)
@@ -30,6 +28,14 @@ make_trees <- function(ref_data,
                        is_Newick = TRUE,
                        is_parenthetic = FALSE,
                        return_group = FALSE){
+  if(!requireNamespace("ctc", quietly = TRUE)){
+    message("Install ctc...")
+    BiocManager::install("ctc")
+  }
+  if(!requireNamespace("ape", quietly = TRUE)){
+    message("Install ape...")
+    install.packages('ape')
+  }
   data <- Seurat::CreateSeuratObject(counts = ref_data, verbose = FALSE)
   data <- Seurat::NormalizeData(data,
                                 normalization.method = "LogNormalize",

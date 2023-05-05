@@ -23,5 +23,4 @@ data <- matrix(rpois(100*100, 2),
                dimnames = list(paste0('Gene', 1:100),
                                paste0('Cell', 1:100)))
 result <- cell_properties(data, verbose = TRUE)
-str(result)
 }

@@ -5,17 +5,23 @@
 #' @param ... Nothing to input
 #' @return A tibble
 #' @export
-#' @importFrom processx run
 #' @importFrom purrr map
 #' @importFrom stats setNames
 #' @importFrom utils read.delim
-#' @importFrom tibble as_tibble
 #'
 #' @examples
 #' # containers <- list_docker_container()
 list_docker_container <- function(
     ...
 ){
+  if(!requireNamespace("processx", quietly = TRUE)){
+    message("Install processx...")
+    install.packages('processx')
+  }
+  if(!requireNamespace("tibble", quietly = TRUE)){
+    message("Install tibble...")
+    install.packages('tibble')
+  }
   columns <- c("ID", "Image", "Command", "Status", "Names")
   format <- paste(paste0("{{.", columns, "}}"), collapse = "\t")
   stdout <- processx::run("docker",

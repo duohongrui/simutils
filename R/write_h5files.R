@@ -7,7 +7,6 @@
 #' @param file_path The file path of the h5file. Default is NULL and h5 file will
 #' be generated automatically
 #' @importFrom dynutils is_sparse
-#' @importFrom hdf5r h5attr H5File
 #' @importFrom methods as
 #' @return An h5 file
 #' @export
@@ -40,6 +39,10 @@
 #' # Load the h5 file
 #' file.h5 <- hdf5r::H5File$new(file_path, mode = "r")
 write_h5files <- function(data, file_path = NULL){
+  if(!requireNamespace("hdf5r", quietly = TRUE)){
+    message("Install hdf5r...")
+    install.packages('hdf5r')
+  }
   if(is.null(file_path)){
     file_name <- tempfile(fileext = ".h5")
   }else{

@@ -89,8 +89,8 @@ calculate_ROGUE <- function(
 #'
 #' @param data A matrix of gene expression profile or the distance matrix.
 #' @param cluster_info Cluster(or group) assignment of every cells in columns of matrix.
-#' @importFrom parallelDist parDist
 #' @importFrom utils install.packages
+#' @importFrom methods is
 #' @export
 calculate_silhouette <- function(
   data,
@@ -104,7 +104,7 @@ calculate_silhouette <- function(
     message("Installing parallelDist package...")
     utils::install.packages("parallelDist")
   }
-  if(class(data) == "dist"){
+  if(methods::is(data, "dist")){
     dist <- data
   }else{
     dist <- parallelDist::parDist(t(data))
@@ -121,6 +121,7 @@ calculate_silhouette <- function(
 #'
 #' @param data A matrix of gene expression profile or the distance matrix.
 #' @param cluster_info Cluster(or group) assignment of every cells in columns of matrix.
+#' @importFrom methods is
 #'
 #' @export
 calculate_dunn <- function(
@@ -135,7 +136,7 @@ calculate_dunn <- function(
     message("Installing parallelDist package...")
     utils::install.packages("parallelDist")
   }
-  if(class(data) == "dist"){
+  if(methods::is(data, "dist")){
     dist <- data
   }else{
     dist <- parallelDist::parDist(t(data))
@@ -151,6 +152,7 @@ calculate_dunn <- function(
 #'
 #' @param data A matrix of gene expression profile or the distance matrix.
 #' @param cluster_info Cluster(or group) assignment of every cells in columns of matrix.
+#' @importFrom methods is
 #'
 #' @export
 calculate_connectivity <- function(
@@ -165,7 +167,7 @@ calculate_connectivity <- function(
     message("Installing parallelDist package...")
     utils::install.packages("parallelDist")
   }
-  if(class(data) == "dist"){
+  if(methods::is(data, "dist")){
     dist <- data
   }else{
     dist <- parallelDist::parDist(t(data))

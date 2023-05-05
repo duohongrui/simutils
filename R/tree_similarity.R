@@ -59,12 +59,12 @@ node_height_dis <- function(ref_tree, sim_tree){
   if(!requireNamespace("dendextend")){
     install.packages("dendextend")
   }
-  if(!requireNamespace("dendextend")){
-    install.packages("dendextend")
+  if(!requireNamespace("MLmetrics")){
+    install.packages("MLmetrics")
   }
-  ref_dendro <- stats::as.dendrogram(a)
+  ref_dendro <- stats::as.dendrogram(ref_tree)
   ref_height <- dendextend::get_branches_heights(ref_dendro)
-  sim_dendro <- stats::as.dendrogram(b)
+  sim_dendro <- stats::as.dendrogram(sim_tree)
   sim_height <- dendextend::get_branches_heights(sim_dendro)
   discrepency <- MLmetrics::RMSE(ref_height, sim_height)
   return(discrepency)

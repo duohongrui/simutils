@@ -23,5 +23,4 @@ test_that("gene proporties length", {
   expect_length(result_gene$zero_fraction_gene, 100)
   expect_length(result_gene$dispersion, 100)
   expect_length(result_gene$prop_outliers_gene, 1)
-  expect_equal(class(result_gene$gene_cor), c("matrix", "array"))
 })

@@ -9,6 +9,7 @@
 #' @importFrom scater logNormCounts
 #' @importFrom BiocGenerics var
 #' @importFrom stats prcomp
+#' @importFrom BiocManager install
 #' @export
 calculate_batch_properties <- function(
   data,

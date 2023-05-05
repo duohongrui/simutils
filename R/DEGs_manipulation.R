@@ -356,9 +356,9 @@ test_uni_distribution <- function(
 
 #' Summarize the Ability of Simulating DEGs
 #'
-#' @param count_matrix. A matrix or a list with names of gene expression data.
-#' @param group. A vector of characters which indicate which group a cell belongs to. A list is also supported when many matrices of data is input in `count_matrix` parameter.
-#' @param DEGs. A list of DEGs with the names of `xxxvsxxx`. Note that the names of DEGs are in the rownames of the matrix or the dataframe and the names of `xxx` is in the `group` characters. If you have input the lists of `group` and `count_matrix`, the every sub-list in DEGs list should match with every data in `count_matrix` and `group` at the same index or position.
+#' @param count_matrix A matrix or a list with names of gene expression data.
+#' @param group A vector of characters which indicate which group a cell belongs to. A list is also supported when many matrices of data is input in `count_matrix` parameter.
+#' @param DEGs A list of DEGs with the names of `xxxvsxxx`. Note that the names of DEGs are in the rownames of the matrix or the dataframe and the names of `xxx` is in the `group` characters. If you have input the lists of `group` and `count_matrix`, the every sub-list in DEGs list should match with every data in `count_matrix` and `group` at the same index or position.
 #' @param DEA_method The DEA method to get the DEGs. Choices: edgeRQLF, edgeRQLFDetRate, MASTcpmDetRate, MASTtpmDetRate, MASTcpm, MASTtpm, limmatrend, limmavoom, ttest and wilcox.
 #' @param model_method The method to establish the model. SVM, Decision tree or RF (Random Forest).
 #' @param verbose Whether the process massages are returned.
@@ -449,7 +449,7 @@ calculate_DEGs_properties <- function(
                                                    group = sub_group,
                                                    method = DEA_method,
                                                    verbose = verbose))
-        if(class(error) == "try-error"){
+        if(methods::is(error, "try-error")){
           warning("The DEA process failed and distribution score is NA")
           distribution_score <- append(distribution_score, NA)
           valid_DEGs_distribution[[compare_name]] <- NA
@@ -471,7 +471,7 @@ calculate_DEGs_properties <- function(
                                                         sim_DEGs = DEGs,
                                                         DEA_method = DEA_method,
                                                         verbose = verbose))
-      if(class(error2) == "try-error"){
+      if(methods::is(error2, "try-error")){
         warning("The DEA process failed and the result of true proportion is NA")
         true_proportion <- NA
         DEGs_result <- NULL
@@ -486,7 +486,7 @@ calculate_DEGs_properties <- function(
                                                 de_genes = de_genes,
                                                 method = model_method,
                                                 verbose = verbose))
-      if(class(error3) == "try-error"){
+      if(methods::is(error3, "try-error")){
         warning("The model traning or predicting failed and the result is NA")
         SVM_result <- NULL
         AUC <- NA

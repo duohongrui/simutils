@@ -12,7 +12,7 @@
 #' cells in reference and simulation data.
 #' @export
 #' @importFrom stats prcomp
-#' @importFrom WGCNA cor
+#' @importFrom utils head
 #' @examples
 #' # Generate a reference data
 #' set.seed(1)
@@ -77,8 +77,10 @@ match_cells <- function(ref_data,
     message("WGCNA is not installed on your device...")
     message("Installing WGCNA...")
     utils::install.packages("WGCNA")
+    cor_result <- WGCNA::cor(t(harmony_embeddings), method = 'spearman')
+  }else{
+    cor_result <- WGCNA::cor(t(harmony_embeddings), method = 'spearman')
   }
-  cor_result <- WGCNA::cor(t(harmony_embeddings), method = 'spearman')
   index <- dim(cor_result)[1]/2
   cor_result <- cor_result[(index+1):(index*2), 1:index]
 
@@ -135,7 +137,7 @@ match_cells <- function(ref_data,
     }
     match_value <- apply(as.matrix(cell_pair), 1, value)
     cell_pair <- cbind(cell_pair, match_value)
-    print(head(cell_pair))
+    print(utils::head(cell_pair))
     cost <- sum(-match_value)
   }
   if(algorithm == "Hungarian"){
@@ -152,7 +154,7 @@ match_cells <- function(ref_data,
     cell_pair <- data.frame("reference" = colnames(cor_result)[Hungarian_result[["pairs"]][, 2]],
                             "simulation" = rownames(cor_result)[Hungarian_result[["pairs"]][, 1]],
                             "match_value" = match_value)
-    print(head(cell_pair))
+    print(utils::head(cell_pair))
     cost <- Hungarian_result[["cost"]]
   }
   return(list("PCA_raw" = pca_input,
