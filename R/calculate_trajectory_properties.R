@@ -7,7 +7,7 @@
 #' @param algorithm Optional. Which algorithm used for matching cells in simulated and real data. Improved_Hungarian (default), Hungarian.
 #' @param seed Random seed
 #' @param verbose Whether the messages are returned to users when processing
-#' @importFrom dynwrap is_data_wrapper add_grouping infer_trajectory
+#' @importFrom dynwrap is_data_wrapper add_grouping infer_trajectory add_expression
 #'
 #' @return A list
 #' @export
@@ -17,7 +17,7 @@ calculate_trajectory_properties <- function(
   ref_data_grouping = NULL,
   sim_data,
   sim_data_grouping = NULL,
-  algorithm = "Improved_Hungarian",
+  algorithm = "Hungarian",
   seed = 1,
   verbose = TRUE
 ){
@@ -32,10 +32,16 @@ calculate_trajectory_properties <- function(
   if(!dynwrap::is_data_wrapper(ref_data)){
     ref_data <- dynwrap::wrap_expression(counts = t(ref_data),
                                          expression = log2(t(ref_data) + 1))
+    ref_data_transformation <- TRUE
+  }else{
+    ref_data_transformation <- FALSE
   }
   if(!dynwrap::is_data_wrapper(sim_data)){
     sim_data <- dynwrap::wrap_expression(counts = t(sim_data),
                                          expression = log2(t(sim_data) + 1))
+    sim_data_transformation <- TRUE
+  }else{
+    sim_data_transformation <- FALSE
   }
   ### grouping
   if(!is.null(ref_data_grouping)){
@@ -52,6 +58,7 @@ calculate_trajectory_properties <- function(
     devtools::install_github("dynverse/ti_slingshot/package/")
   }
   if(!dynwrap::is_wrapper_with_trajectory(ref_data)){
+    message("Performing trajectory inference by Slingshot for reference data...")
     ref_model <- dynwrap::infer_trajectory(dataset = ref_data,
                                            method = tislingshot::ti_slingshot(),
                                            parameters = NULL,
@@ -62,6 +69,7 @@ calculate_trajectory_properties <- function(
     ref_model <- ref_data
   }
   if(!dynwrap::is_wrapper_with_trajectory(sim_data)){
+    message("Performing trajectory inference by Slingshot for simulated data...")
     sim_model <- dynwrap::infer_trajectory(dataset = sim_data,
                                            method = tislingshot::ti_slingshot(),
                                            parameters = NULL,
@@ -70,6 +78,17 @@ calculate_trajectory_properties <- function(
                                            verbose = verbose)
   }else{
     sim_model <- sim_data
+  }
+  ### counts and expression
+  if(ref_data_transformation){
+    ref_model <- dynwrap::add_expression(ref_model,
+                                         counts = ref_data$counts,
+                                         expression = ref_data$expression)
+  }
+  if(sim_data_transformation){
+    sim_model <- dynwrap::add_expression(sim_model,
+                                         counts = sim_data$counts,
+                                         expression = sim_data$expression)
   }
   ### Calculate metrics
   result <- calculate_traj_metrics(model_ref = ref_model,

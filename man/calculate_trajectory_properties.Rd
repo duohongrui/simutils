@@ -9,7 +9,7 @@ calculate_trajectory_properties(
   ref_data_grouping = NULL,
   sim_data,
   sim_data_grouping = NULL,
-  algorithm = "Improved_Hungarian",
+  algorithm = "Hungarian",
   seed = 1,
   verbose = TRUE
 )
