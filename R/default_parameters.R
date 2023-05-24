@@ -51,6 +51,8 @@ default_parameters <- function(method){
   if(method == "SPsimSeq"){
     parameters <- NULL
   }
-
+  if(method == "SimBPDD"){
+    parameters <- NULL
+  }
   return(parameters)
 }
