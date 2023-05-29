@@ -39,7 +39,7 @@ Here we demonstrate some useful functions in simutils package:
 </ul>
 
 
-<h2><a name="a1">Check Python Installation</a>
+<h2><a name="a1">Check Python Installation</a></h2>
 
 Simutils contains a function for checking the Python installation and environmrnt configuration for [**PROSSTT**](https://github.com/duohongrui/simmethods/blob/master/R/28-PROSSTT.R) method.
 
@@ -48,7 +48,7 @@ simutils::check_python_installation()
 ```
 
 
-<h2><a name="a2">Match Cells From Real And Simulated Data</a>
+<h2><a name="a2">Match Cells From Real And Simulated Data</a></h2>
 
 We adopted the Hungarian algorithm to match the cells from reference and simulated datasets. In addition, we also provide an improved Hungarian algorithm.
 
@@ -91,7 +91,7 @@ match_result2 <- simutils::match_cells(ref_data = ref_data,
 head(match_result2[["cell_pair"]][order(match_result2[["cell_pair"]]$match_value, decreasing = TRUE), ])
 ```
 
-<h2><a name="a3">Format Conversion of Single-Cell Data</a>
+<h2><a name="a3">Format Conversion of Single-Cell Data</a></h2>
 
 Simsite provides the function of converting single-cell data formats from _SingleCellExperimental_ to _Seurat_, _list_ and _h5ad_.
 
