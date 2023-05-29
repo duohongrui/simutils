@@ -25,7 +25,7 @@ You can install the development version of simutils from [GitHub](https://github
 devtools::install_github("duohongrui/simutils")
 ```
 
-```{r library_simutils, warning=FALSE}
+```{r library_simutils, warning=FALSE, message=FALSE}
 library(simutils)
 ```
 
@@ -78,6 +78,43 @@ match_result2 <- simutils::match_cells(ref_data = ref_data,
 
 ```{r match_result2}
 head(match_result2[["cell_pair"]][order(match_result2[["cell_pair"]]$match_value, decreasing = TRUE), ])
+```
+
+## Format Conversion of Single-Cell Data
+
+Simsite provides the function of converting single-cell data formats from _SingleCellExperimental_ to _Seurat_, _list_ and _h5ad_.
+
+Here we construct a data with _SingleCellExperimental_ format:
+
+```{r SingleCellExperiment, message=FALSE}
+library(SingleCellExperiment)
+```
+
+```{r SCE_object}
+set.seed(111)
+data <- matrix(rpois(10 ^ 6, 2),
+               ncol = 1000,
+               nrow = 1000,
+               dimnames = list(paste0("ref_gene", 1:1000),
+                               paste0("ref_cell", 1:1000)))
+SCE <- SingleCellExperiment::SingleCellExperiment(list(counts = data),
+                                                  colData = data.frame("cell_name" = colnames(data)),
+                                                  rowData = data.frame("gene_name" = rownames(data)))
+SCE
+```
+
+To Seurat object:
+
+```{r seurat_obj, warning=FALSE}
+Seurat <- simutils::data_conversion(SCE_object = SCE, return_format = "Seurat")
+Seurat
+```
+
+To h5ad file (and you will get a path at which the file locates):
+
+```{r h5ad_file, warning=FALSE}
+h5ad <- simutils::data_conversion(SCE_object = SCE, return_format = "h5ad")
+h5ad
 ```
 
 

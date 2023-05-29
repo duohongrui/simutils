@@ -23,12 +23,6 @@ devtools::install_github("duohongrui/simutils")
 library(simutils)
 ```
 
-    ## Registered S3 method overwritten by 'SeuratDisk':
-    ##   method            from  
-    ##   as.sparse.H5Group Seurat
-
-    ## Welcome to simutils
-
 ## Check Python Installation
 
 Simutils contains a function for checking the Python installation and
@@ -141,3 +135,90 @@ head(match_result2[["cell_pair"]][order(match_result2[["cell_pair"]]$match_value
     ## 775 ref_cell775 sim_cell186   0.5933733
     ## 62   ref_cell62  sim_cell70   0.5922209
     ## 660 ref_cell660 sim_cell840   0.5893397
+
+## Format Conversion of Single-Cell Data
+
+Simsite provides the function of converting single-cell data formats
+from *SingleCellExperimental* to *Seurat*, *list* and *h5ad*.
+
+Here we construct a data with *SingleCellExperimental* format:
+
+``` r
+library(SingleCellExperiment)
+```
+
+``` r
+set.seed(111)
+data <- matrix(rpois(10 ^ 6, 2),
+               ncol = 1000,
+               nrow = 1000,
+               dimnames = list(paste0("ref_gene", 1:1000),
+                               paste0("ref_cell", 1:1000)))
+SCE <- SingleCellExperiment::SingleCellExperiment(list(counts = data),
+                                                  colData = data.frame("cell_name" = colnames(data)),
+                                                  rowData = data.frame("gene_name" = rownames(data)))
+SCE
+```
+
+    ## class: SingleCellExperiment 
+    ## dim: 1000 1000 
+    ## metadata(0):
+    ## assays(1): counts
+    ## rownames(1000): ref_gene1 ref_gene2 ... ref_gene999 ref_gene1000
+    ## rowData names(1): gene_name
+    ## colnames(1000): ref_cell1 ref_cell2 ... ref_cell999 ref_cell1000
+    ## colData names(1): cell_name
+    ## reducedDimNames(0):
+    ## mainExpName: NULL
+    ## altExpNames(0):
+
+To Seurat object:
+
+``` r
+Seurat <- simutils::data_conversion(SCE_object = SCE, return_format = "Seurat")
+Seurat
+```
+
+    ## An object of class Seurat 
+    ## 1000 features across 1000 samples within 1 assay 
+    ## Active assay: originalexp (1000 features, 0 variable features)
+
+To h5ad file (and you will get a path at which the file locates):
+
+``` r
+h5ad <- simutils::data_conversion(SCE_object = SCE, return_format = "h5ad")
+```
+
+    ## Creating h5Seurat file for version 3.1.5.9900
+
+    ## Adding counts for originalexp
+
+    ## Adding data for originalexp
+
+    ## No variable features found for originalexp
+
+    ## Adding feature-level metadata for originalexp
+
+    ## Validating h5Seurat file
+
+    ## Adding data from originalexp as X
+
+    ## Transfering meta.features to var
+
+    ## Adding counts from originalexp as raw
+
+    ## Transfering meta.features to raw/var
+
+    ## Transfering meta.data to obs
+
+    ## Your data has been save to /var/folders/1l/xmc98tgx0m37wxtbtwnl6h7c0000gn/T//RtmpxCKVti/20230529170604.h5ad
+
+``` r
+h5ad
+```
+
+    ## $file_type
+    ## [1] "h5ad"
+    ## 
+    ## $save_path
+    ## [1] "/var/folders/1l/xmc98tgx0m37wxtbtwnl6h7c0000gn/T//RtmpxCKVti/20230529170604.h5ad"
