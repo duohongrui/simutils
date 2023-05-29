@@ -36,6 +36,7 @@ Here we demonstrate some useful functions in simutils package:
   <li><a href="#a1">Check Python Installation</a></li>
   <li><a href="#a2">Match Cells From Real And Simulated Data</a></li>
   <li><a href="#a3">Format Conversion of Single-Cell Data</a></li>
+  <li><a href="#a4">Make Lineage Trees for Single-Cell Data</a></li>
 </ul>
 
 
@@ -128,4 +129,37 @@ h5ad <- simutils::data_conversion(SCE_object = SCE, return_format = "h5ad")
 h5ad
 ```
 
+
+<h2><a name="a4">Make Lineage Trees for Single-Cell Data</a></h2>
+
+The tree lineage of cell clusters within single-cell data can be traced by `make_trees` function in simutils.
+
+```{r tree_data}
+set.seed(555)
+data <- cbind(matrix(rpois(2.5e5, 2), ncol = 250, nrow = 1000),
+              matrix(rpois(2.5e5, 4), ncol = 250, nrow = 1000),
+              matrix(rpois(2.5e5, 8), ncol = 250, nrow = 1000),
+              matrix(rpois(2.5e5, 12), ncol = 250, nrow = 1000))
+colnames(data) <- paste0("Cell", 1:ncol(data))
+rownames(data) <- paste0("Gene", 1:nrow(data))
+```
+
+Newick format:
+```{r newick, warning=FALSE}
+newick <- simutils::make_trees(ref_data = data,
+                               is_Newick = TRUE,
+                               is_parenthetic = FALSE,
+                               return_group = TRUE)
+newick$phyla
+```
+
+
+Phylo format:
+```{r phylo, warning=FALSE}
+phylo <- simutils::make_trees(ref_data = data,
+                              is_Newick = FALSE,
+                              is_parenthetic = TRUE,
+                              return_group = TRUE)
+str(phylo$phyla)
+```
 

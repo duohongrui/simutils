@@ -35,6 +35,9 @@ Here we demonstrate some useful functions in simutils package:
 <li>
 <a href="#a3">Format Conversion of Single-Cell Data</a>
 </li>
+<li>
+<a href="#a4">Make Lineage Trees for Single-Cell Data</a>
+</li>
 </ul>
 <h2>
 <a name="a1">Check Python Installation</a>
@@ -230,7 +233,7 @@ h5ad <- simutils::data_conversion(SCE_object = SCE, return_format = "h5ad")
 
     ## Transfering meta.data to obs
 
-    ## Your data has been save to /var/folders/1l/xmc98tgx0m37wxtbtwnl6h7c0000gn/T//RtmpCLzHQ9/20230529172735.h5ad
+    ## Your data has been save to /var/folders/1l/xmc98tgx0m37wxtbtwnl6h7c0000gn/T//Rtmp9kqkJv/20230529193826.h5ad
 
 ``` r
 h5ad
@@ -240,4 +243,72 @@ h5ad
     ## [1] "h5ad"
     ## 
     ## $save_path
-    ## [1] "/var/folders/1l/xmc98tgx0m37wxtbtwnl6h7c0000gn/T//RtmpCLzHQ9/20230529172735.h5ad"
+    ## [1] "/var/folders/1l/xmc98tgx0m37wxtbtwnl6h7c0000gn/T//Rtmp9kqkJv/20230529193826.h5ad"
+
+<h2>
+<a name="a4">Make Lineage Trees for Single-Cell Data</a>
+</h2>
+
+The tree lineage of cell clusters within single-cell data can be traced
+by `make_trees` function in simutils.
+
+``` r
+set.seed(555)
+data <- cbind(matrix(rpois(2.5e5, 2), ncol = 250, nrow = 1000),
+              matrix(rpois(2.5e5, 4), ncol = 250, nrow = 1000),
+              matrix(rpois(2.5e5, 8), ncol = 250, nrow = 1000),
+              matrix(rpois(2.5e5, 12), ncol = 250, nrow = 1000))
+colnames(data) <- paste0("Cell", 1:ncol(data))
+rownames(data) <- paste0("Gene", 1:nrow(data))
+```
+
+Newick format:
+
+``` r
+newick <- simutils::make_trees(ref_data = data,
+                               is_Newick = TRUE,
+                               is_parenthetic = FALSE,
+                               return_group = TRUE)
+```
+
+    ## Loading required package: amap
+
+    ## Computing nearest neighbor graph
+
+    ## Computing SNN
+
+    ## Your data has 3 groups
+
+``` r
+newick$phyla
+```
+
+    ## [1] "(group2:3.5470224281145,(group1:5.70650677442804,group3:5.70650677442804):3.5470224281145);"
+
+Phylo format:
+
+``` r
+phylo <- simutils::make_trees(ref_data = data,
+                              is_Newick = FALSE,
+                              is_parenthetic = TRUE,
+                              return_group = TRUE)
+```
+
+    ## Computing nearest neighbor graph
+
+    ## Computing SNN
+
+    ## Your data has 3 groups
+
+``` r
+str(phylo$phyla)
+```
+
+    ## List of 1
+    ##  $ :List of 4
+    ##   ..$ edge       : int [1:4, 1:2] 4 4 5 5 1 5 2 3
+    ##   ..$ edge.length: num [1:4] 3.55 3.55 5.71 5.71
+    ##   ..$ Nnode      : int 2
+    ##   ..$ tip.label  : chr [1:3] "group2" "group1" "group3"
+    ##   ..- attr(*, "class")= chr "phylo"
+    ##   ..- attr(*, "order")= chr "cladewise"
