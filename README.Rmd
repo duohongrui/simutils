@@ -7,7 +7,7 @@ editor_options:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, warning = FALSE, error = FALSE, message = FALSE)
+knitr::opts_chunk$set(warning = FALSE, error = FALSE)
 ```
 
 <img src="man/figures/simutils_logo.png" align="right" width = "167px" height="193px"/>
@@ -25,12 +25,15 @@ You can install the development version of simutils from [GitHub](https://github
 devtools::install_github("duohongrui/simutils")
 ```
 
+```{r library_simutils, warning=FALSE}
+library(simutils)
+```
 
 ## Check Python Installation
 
 Simutils contains a function for checking the Python installation and environmrnt configuration for [**PROSSTT**](https://github.com/duohongrui/simmethods/blob/master/R/28-PROSSTT.R) method.
 
-```{r check_python, warning=FALSE}
+```{r check_python}
 simutils::check_python_installation()
 ```
 
