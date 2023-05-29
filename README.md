@@ -23,7 +23,22 @@ devtools::install_github("duohongrui/simutils")
 library(simutils)
 ```
 
-## Check Python Installation
+Here we demonstrate some useful functions in simutils package:
+
+<ul>
+<li>
+<a href="#a1">Check Python Installation</a>
+</li>
+<li>
+<a href="#a2">Match Cells From Real And Simulated Data</a>
+</li>
+<li>
+<a href="#a3">Format Conversion of Single-Cell Data</a>
+</li>
+</ul>
+<h2>
+
+<a name="a1">Check Python Installation</a>
 
 Simutils contains a function for checking the Python installation and
 environmrnt configuration for
@@ -48,7 +63,9 @@ simutils::check_python_installation()
 
     ## ✔ prosstt module is installed.
 
-## Match Cells From Real And Simulated Data
+<h2>
+
+<a name="a2">Match Cells From Real And Simulated Data</a>
 
 We adopted the Hungarian algorithm to match the cells from reference and
 simulated datasets. In addition, we also provide an improved Hungarian
@@ -136,7 +153,9 @@ head(match_result2[["cell_pair"]][order(match_result2[["cell_pair"]]$match_value
     ## 62   ref_cell62  sim_cell70   0.5922209
     ## 660 ref_cell660 sim_cell840   0.5893397
 
-## Format Conversion of Single-Cell Data
+<h2>
+
+<a name="a3">Format Conversion of Single-Cell Data</a>
 
 Simsite provides the function of converting single-cell data formats
 from *SingleCellExperimental* to *Seurat*, *list* and *h5ad*.
@@ -211,7 +230,7 @@ h5ad <- simutils::data_conversion(SCE_object = SCE, return_format = "h5ad")
 
     ## Transfering meta.data to obs
 
-    ## Your data has been save to /var/folders/1l/xmc98tgx0m37wxtbtwnl6h7c0000gn/T//RtmpxCKVti/20230529170604.h5ad
+    ## Your data has been save to /var/folders/1l/xmc98tgx0m37wxtbtwnl6h7c0000gn/T//RtmpqTtbgA/20230529172242.h5ad
 
 ``` r
 h5ad
@@ -221,4 +240,4 @@ h5ad
     ## [1] "h5ad"
     ## 
     ## $save_path
-    ## [1] "/var/folders/1l/xmc98tgx0m37wxtbtwnl6h7c0000gn/T//RtmpxCKVti/20230529170604.h5ad"
+    ## [1] "/var/folders/1l/xmc98tgx0m37wxtbtwnl6h7c0000gn/T//RtmpqTtbgA/20230529172242.h5ad"
