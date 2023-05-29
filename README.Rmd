@@ -20,15 +20,61 @@ Simutils contains many useful utils functions to establish the standard pipeline
 
 You can install the development version of simutils from [GitHub](https://github.com/) with:
 
-``` r
+```{r installation, eval=FALSE}
 # install.packages("devtools")
 devtools::install_github("duohongrui/simutils")
 ```
 
-<em>
-Simutils contains many useful utils functions to establish the standard
-pipeline for defining a simulation method, preprocessing reference
-datasets with specific requirements
-</em>
+
+## Check Python Installation
+
+Simutils contains a function for checking the Python installation and environmrnt configuration for [**PROSSTT**](https://github.com/duohongrui/simmethods/blob/master/R/28-PROSSTT.R) method.
+
+```{r check_python, warning=FALSE}
+simutils::check_python_installation()
+```
+
+## Match Cells From Real And Simulated Data
+
+We adopted the Hungarian algorithm to match the cells from reference and simulated datasets. In addition, we also provide an improved Hungarian algorithm.
+
+```{r data_preparation}
+set.seed(666)
+ref_data <- matrix(rpois(10 ^ 6, 2),
+                   ncol = 1000,
+                   nrow = 1000,
+                   dimnames = list(paste0("ref_gene", 1:1000),
+                                   paste0("ref_cell", 1:1000)))
+set.seed(666)
+sim_data <- matrix(rpois(10 ^ 6, 2.5),
+                   ncol = 1000,
+                   nrow = 1000,
+                   dimnames = list(paste0("sim_gene", 1:1000),
+                                   paste0("sim_cell", 1:1000)))
+```
+
+```{r match_cells1}
+match_result <- simutils::match_cells(ref_data = ref_data,
+                                      sim_data = sim_data,
+                                      t = TRUE,
+                                      algorithm = "Hungarian")
+```
+
+```{r match_result1}
+head(match_result[["cell_pair"]][order(match_result[["cell_pair"]]$match_value, decreasing = TRUE), ])
+```
+
+We can also use improved Hungarian algorithm:
+
+```{r match_cells2}
+match_result2 <- simutils::match_cells(ref_data = ref_data,
+                                       sim_data = sim_data,
+                                       t = TRUE,
+                                       algorithm = "Improved_Hungarian")
+```
+
+```{r match_result2}
+head(match_result2[["cell_pair"]][order(match_result2[["cell_pair"]]$match_value, decreasing = TRUE), ])
+```
 
 

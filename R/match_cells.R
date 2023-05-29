@@ -7,6 +7,7 @@
 #' @param ref_data,sim_data A matrix or dynwrap object created by \code{\link[dynwrap]{wrap_expression}}.
 #' Note that every row represents a cell and every column represents a gene.
 #' Simulation and reference data must have the same size.
+#' @param t Whether the data matrix should be transposed when performing the PCA.
 #' @param algorithm Optional. Which algorithm used for matching cells in simulated and real data. Improved_Hungarian (default), Hungarian.
 #' @return A list contains the correlation matrix and a dataframe of the paired
 #' cells in reference and simulation data.
@@ -28,6 +29,7 @@
 #' match_result <- match_cells(ref_data = ref_data, sim_data)
 match_cells <- function(ref_data,
                         sim_data,
+                        t = FALSE,
                         algorithm = "Improved_Hungarian")
 {
   if(!requireNamespace("harmony", quietly = TRUE)){
@@ -47,7 +49,11 @@ match_cells <- function(ref_data,
     }
   }
   if(is.matrix(ref_data)){
-    pca_ref <- prcomp(ref_data, rank. = 50)
+    if(t){
+      pca_ref <- prcomp(t(ref_data), rank. = 50)
+    }else{
+      pca_ref <- prcomp(ref_data, rank. = 50)
+    }
   }
   if(dynwrap::is_data_wrapper(sim_data)){
     if(is.null(sim_data$expression)){
@@ -59,7 +65,11 @@ match_cells <- function(ref_data,
     }
   }
   if(is.matrix(sim_data)){
-    pca_sim <- prcomp(sim_data, rank. = 50)
+    if(t){
+      pca_sim <- prcomp(t(sim_data), rank. = 50)
+    }else{
+      pca_sim <- prcomp(sim_data, rank. = 50)
+    }
   }
   pca_input <- rbind(pca_ref$x, pca_sim$x)
   meta_data <- data.frame('Classification' = c(rep('reference', nrow(ref_data)),
@@ -135,7 +145,7 @@ match_cells <- function(ref_data,
                  which(rownames(cor_result) == x[2]))
       value_tmp <- cor_result[index[2], index[1]]
     }
-    match_value <- apply(as.matrix(cell_pair), 1, value)
+    match_value <- apply(cell_pair, 1, value)
     cell_pair <- cbind(cell_pair, match_value)
     print(utils::head(cell_pair))
     cost <- sum(-match_value)
