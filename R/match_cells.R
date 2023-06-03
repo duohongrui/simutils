@@ -73,7 +73,7 @@ match_cells <- function(ref_data,
   }
   pca_input <- rbind(pca_ref$x, pca_sim$x)
   meta_data <- data.frame('Classification' = c(rep('reference', nrow(ref_data)),
-                                               rep('simulation', nrow(ref_data))))
+                                               rep('simulation', nrow(sim_data))))
   cat("Performing Harmony...\n")
   set.seed(1)
   harmony_embeddings <- harmony::HarmonyMatrix(pca_input,
