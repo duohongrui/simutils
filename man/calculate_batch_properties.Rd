@@ -4,13 +4,7 @@
 \alias{calculate_batch_properties}
 \title{Calculate Batch Quantifying Metrics}
 \usage{
-calculate_batch_properties(
-  data,
-  batch_info,
-  k,
-  cluster_info = NULL,
-  verbose = TRUE
-)
+calculate_batch_properties(data, batch_info, k, verbose = TRUE)
 }
 \arguments{
 \item{data}{A matrix of gene expression profile.}
@@ -18,8 +12,6 @@ calculate_batch_properties(
 \item{batch_info}{Batch assignment of every cells in columns of matrix.}
 
 \item{k}{k nearest neighborhoods of every cell.}
-
-\item{cluster_info}{Cluster(or group) assignment of every cells in columns of matrix.}
 
 \item{verbose}{Whether messages are returned during the process.}
 }

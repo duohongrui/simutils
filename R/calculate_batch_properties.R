@@ -3,7 +3,6 @@
 #' @param data A matrix of gene expression profile.
 #' @param batch_info Batch assignment of every cells in columns of matrix.
 #' @param k k nearest neighborhoods of every cell.
-#' @param cluster_info Cluster(or group) assignment of every cells in columns of matrix.
 #' @param verbose Whether messages are returned during the process.
 #' @importFrom SingleCellExperiment SingleCellExperiment logcounts reducedDim colData reducedDim<-
 #' @importFrom scater logNormCounts
@@ -15,10 +14,9 @@ calculate_batch_properties <- function(
   data,
   batch_info,
   k,
-  cluster_info = NULL,
   verbose = TRUE
 ){
-  ## 1) cms, 2) iLISI, 3) Mixing metric, 4) Shannon entropy
+  ## 1) cms, 2) ISI, 3) Mixing metric, 4) Shannon entropy
   if(!requireNamespace("CellMixS", quietly = TRUE)){
     message("Install CellMixS...")
     BiocManager::install('CellMixS')
@@ -51,7 +49,7 @@ calculate_batch_properties <- function(
                                       k = k)
   col_result <- as.data.frame(SingleCellExperiment::colData(result))
   cms <- col_result$cms
-  LISI <- col_result$isi
+  ISI <- col_result$isi
   mm <- col_result$mm
   shannon_entropy <- col_result$entropy
   ## 5) kBET
@@ -64,14 +62,17 @@ calculate_batch_properties <- function(
   }
   batch_estimate <- kBET::kBET(df = t(data),
                                batch_info,
-                               plot = FALSE)
+                               plot = FALSE,
+                               k0 = k)
   rejection <- batch_estimate[["results"]]
   kBET <- rejection[, 1]
   ## 6) Average Silouette Width (ASW for batch)
   if(verbose){
     message("Calculate Average Silouette Width for batch..")
   }
-  AWS_batch <- kBET::batch_sil(pca.data = pca, batch = as.factor(batch_info))
+  AWS_batch <- kBET::batch_sil(pca.data = pca,
+                               batch = as.factor(batch_info),
+                               nPCs = 50)
   ## 7) Principal Component Regression (PCR)
   if(verbose){
     message("Calculate principal component regression... \n")
@@ -80,49 +81,23 @@ calculate_batch_properties <- function(
                                   batch = batch_info,
                                   n_top = 50)
   pcr <- batch_pca$R2Var
-  ## 8) Graph connectivity
-  if(!requireNamespace("bluster", quietly = TRUE)){
-    message("Install bluster...")
-    BiocManager::install('bluster')
+  ## 8) LISI
+  if(!requireNamespace("lisi", quietly = TRUE)){
+    message("Install lisi...")
+    devtools::install_github("immunogenomics/lisi")
   }
-  if(!requireNamespace("igraph", quietly = TRUE)){
-    message("Install igraph...")
-    install.packages('igraph')
-  }
-  if(is.null(cluster_info)){
-    gc <- NULL
-  }else{
-    if(verbose){
-      message("Calculate graph connectivity... \n")
-    }
-    cluster <- unique(cluster_info)
-    gc <- c()
-    for(i in 1:length(cluster)){
-      cluster_name <- cluster[i]
-      index <- cluster_info == cluster_name
-      ## Filter data
-      sub_data <- SingleCellExperiment::logcounts(sce)[names(sort_index), index]
-      ## Perform PCA
-      sub_pca <- stats::prcomp(t(sub_data),
-                               center = TRUE,
-                               scale. = FALSE,
-                               rank. = 50)
-      ## Make KNN graph
-      knn_graph <- bluster::makeKNNGraph(sub_pca$x, k = k)
-      ## Generate connected component graph
-      com_graph <- igraph::components(knn_graph)
-      new_gc_cluster <- max(com_graph$csize)/sum(com_graph$csize)
-      gc <- append(gc, new_gc_cluster)
-    }
-    gc <- sum(gc)/length(cluster)
-  }
+  LISI <- lisi::compute_lisi(pca$x,
+                             meta_data = colData,
+                             label_colnames = "batch",
+                             perplexity = k)
+  LISI <- mean(LISI$batch)
   dplyr::lst(cms,
+             ISI,
              LISI,
              mm,
              shannon_entropy,
              kBET,
              AWS_batch,
-             pcr,
-             gc)
+             pcr)
 }
 

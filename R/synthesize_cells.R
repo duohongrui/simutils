@@ -77,11 +77,16 @@ synthesize_cells <- function(dataset,
     }
     for(i in 1:group_num){
       index <- which(dataset$grouping == group[i])
+      ext_cell <- ceiling(num_allo[i] * 0.5)
       set.seed(seed)
-      add_syn <- matrix(data = runif(10*num_allo[i], min = 0, max = 0.2),
+      add_syn <- matrix(data = runif(ext_cell * num_allo[i], min = 0, max = 1),
                         nrow = num_allo[i])
+      ### meet the sum-to-1 restriction for row weights
+      add_syn <- t(apply(add_syn,
+                         MARGIN = 1,
+                         FUN = function(x){x/sum(x)}))
       set.seed(seed)
-      tmp <- dataset[["counts"]][sample(index, 10, replace = TRUE), ]
+      tmp <- dataset[["counts"]][sample(index, ext_cell, replace = TRUE), ]
       add_syn_matrix <- add_syn %*% tmp
       add_syn_matrix <- round(add_syn_matrix)
       add_syn_result <- rbind(add_syn_result, add_syn_matrix)
