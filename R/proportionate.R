@@ -38,7 +38,9 @@ proportionate <- function(
 ){
   # Check
   if(!is.null(prop_sum_strict)){
-    if(sum(prop) != prop_sum_strict) stop("The sum of proportions is not equal to the specific value")
+    if(sum(prop) != prop_sum_strict){
+      prop[length(prop)] <- prop_sum_strict - sum(prop[1:(length(prop) - 1)])
+    }
   }
   # Assign
   len_prop <- length(prop)
