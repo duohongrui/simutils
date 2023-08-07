@@ -438,7 +438,7 @@ calculate_DEGs_properties <- function(
 
         ### Distribution
         if(verbose){
-          message("Distribution of null data...")
+          cat("1--Distribution of null data... \n")
         }
         index_DEGs <- which(rownames(data) %in% sub_DGEs)
         index1 <- which(group %in% group1)
@@ -463,7 +463,7 @@ calculate_DEGs_properties <- function(
 
       ### True proportions of DEGs
       if(verbose){
-        message("True proportions of DEGs... \n")
+        cat("2--True proportions of DEGs...\n")
       }
       error2 <- try(DEGs_result <- true_DEGs_proportion(sim_data = data,
                                                         group = group,
@@ -480,6 +480,9 @@ calculate_DEGs_properties <- function(
       }
 
       ### model
+      if(verbose){
+        cat("3--Modeling using DEGs...\n")
+      }
       de_genes <- unique(unlist(DEGs))
       error3 <- try(SVM_result <- model_predict(data = data,
                                                 group = group,

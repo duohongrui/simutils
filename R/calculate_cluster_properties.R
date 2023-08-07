@@ -273,7 +273,7 @@ calculate_cluster_properties <- function(
     silent = TRUE
   )
   if("try-error" %in% class(error)){
-    warning("The ROUGE calculation failed")
+    warning("The ROUGE calculation failed \n")
     ROUGE <- NA
   }
 
