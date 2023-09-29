@@ -111,7 +111,6 @@ model_predict <- function(
                                   predictor = attr(predict_prob, "probabilities"))
     }
   }
-
   if(method == "Decision tree"){
     ## Decision tree
     if(!requireNamespace("rpart", quietly = TRUE)){

@@ -6,6 +6,7 @@
 #' @param authors Methods creator.
 #' @param description Descriptions to the method.
 #' @param manuscript Manuscript information.
+#' @param vignette The URL of method vignette
 #'
 #' @return A list.
 #' @export
@@ -33,7 +34,8 @@ method_definition <- function(
   url = NULL,
   authors = list(),
   manuscript = list(),
-  description = NULL){
+  description = NULL,
+  vignette = NULL){
   as.list(environment())
 }
 
