@@ -10,7 +10,8 @@ method_definition(
   url = NULL,
   authors = list(),
   manuscript = list(),
-  description = NULL
+  description = NULL,
+  vignette = NULL
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ method_definition(
 \item{manuscript}{Manuscript information.}
 
 \item{description}{Descriptions to the method.}
+
+\item{vignette}{The URL of method vignette}
 }
 \value{
 A list.

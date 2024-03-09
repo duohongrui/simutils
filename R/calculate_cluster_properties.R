@@ -21,7 +21,7 @@ calculate_CDI <- function(
   cell_label <- data.frame("clsuter" = as.numeric(as.factor(cluster_info)))
   ## feature selection
   feature_gene_index <- CDI::feature_gene_selection(
-    gcmat = data,
+    X = data,
     batch_label = batch_info,
     method = "wds",
     nfeature = 1000
@@ -32,14 +32,13 @@ calculate_CDI <- function(
   size_factor <- CDI::size_factor(data)
   ## calculate CDI
   CDI_result <- CDI::calculate_CDI(
-    sub_gcmat = sub_data,
+    X = sub_data,
     cand_lab_df = cell_label,
     batch_label = batch_info,
     cell_size_factor = size_factor
   )
   return(CDI_result)
 }
-
 
 
 #' Calculate ROUGE Value
